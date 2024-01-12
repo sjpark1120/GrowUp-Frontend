@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import PostBox from '../../components/common/PostBox';
 import GrowRoomNavigation from '../../components/GrowRoom/GrowRoomNavigation';
 
-import btn_left from '../../assets/GrowRoomAssets/btn-left.svg';
-import btn_right from '../../assets/GrowRoomAssets/btn-right.svg';
+import btn_left from '../../icon/Page button_1.png';
+import btn_right from '../../icon/Page button_2.png';
+import Dropdown from '../../components/GrowRoom/DropDown';
+import SearchBar from '../../components/GrowRoom/SearchBar';
 
 
 const Title = styled.h2`
@@ -20,6 +22,27 @@ const ThisWeekContainer = styled.div`
   padding-bottom: 150px;
 `;
 
+const Button = styled.button`
+  height: 42px;
+  padding: 6px 16px;
+  align-items: center;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 140%;
+`;
+
+export const FilterBtn = styled(Button)`
+  border: 1px solid #B0B0B0;
+  background: #FFF;
+  color:#3E3E3E;
+`;
+
+export const WriteBtn = styled(Button)`
+  border: 1px solid #00D749;
+  background: #00D749;
+  color:#FFF;
+  `;
 const dummy = [
   {
     deadline: "2023.12.05",
@@ -111,9 +134,23 @@ const GrowRoomPage = () => {
       </ThisWeekContainer>
       <div style={{ paddingBottom: '50px', display: 'flex'}}>
         <Title>GROW ROOM </Title>
-        <GrowRoomNavigation/>
+        <GrowRoomNavigation />
       </div>
-      <div style={{ paddingBottom: '30px', display: 'flex'}}>
+      <div style={{ paddingBottom: '30px', display: 'flex', gap: '10px'}}>
+        <Dropdown 
+          title="분야"
+          options={['IT/미디어', '스포츠/헬스', '공부/자격증', '미술/디자인', '공모전/프로젝트']}
+           />
+        <Dropdown 
+          title="기간"
+          options={['1주일', '1개월', '1년']} />
+        <FilterBtn
+          onClick
+          >👀모집 중만 보기</FilterBtn>
+        <div style={{display: 'flex', marginLeft:'auto', gap: '10px'}} >
+          <SearchBar/>
+          <WriteBtn>글쓰기</WriteBtn>
+        </div>
       </div>
     </div>
   );
