@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+
 import tag_close from '../../icon/모집완료.png';
 import tag_open from '../../icon/모집중.png';
 import tag_popular from '../../icon/인기.png';
@@ -43,8 +44,8 @@ color: #848484;
 font-size: 12px; 
 font-weight: 400
 `
-const PostBox = ({ popular, study, status, deadline, maintext, views, like}) => {
 
+const PostBox = ({ popular, study, status, deadline, maintext, views, like}) => {
     const getStatus = () => {
         switch (status) {
           case 'open':
@@ -72,7 +73,6 @@ const PostBox = ({ popular, study, status, deadline, maintext, views, like}) => 
     return (
         <Box style={{ opacity: status === 'close' ? 0.5 : 1 }}>
             <div style={{ paddingBottom: '28px' }}>
-
                 <div style={{ justifyContent: 'flex-start', gap: '10px', display: 'flex', paddingBottom: '20px' }}>
                     {popular && <img src={tag_popular} alt="popular" />}
                     {study && <img src={tag_study} alt="study" />}
