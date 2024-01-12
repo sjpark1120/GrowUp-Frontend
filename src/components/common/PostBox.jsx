@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-import tag_close from '../../assets/GrowRoomAssets/tag-close.svg';
-import tag_open from '../../assets/GrowRoomAssets/tag-open.svg';
-import tag_popular from '../../assets/GrowRoomAssets/tag-popular.svg';
-import tag_study from '../../assets/GrowRoomAssets/tag-study.svg';
-import img_like from '../../assets/GrowRoomAssets/img-like.svg';
-import img_unlike from '../../assets/GrowRoomAssets/img-unlike.svg';
+import tag_close from '../../icon/모집완료.png';
+import tag_open from '../../icon/모집중.png';
+import tag_popular from '../../icon/인기.png';
+import tag_study from '../../icon/스터디.png';
+import img_like from '../../icon/img-like.svg';
+import img_unlike from '../../icon/img-unlike.svg';
 
 const Box = styled.div`
   display: flex;
