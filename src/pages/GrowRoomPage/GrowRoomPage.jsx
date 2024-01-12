@@ -22,7 +22,6 @@ const GrowRoomPage = () => {
     {
       deadline: "2023.12.05",
       maintext: "이제 막 공부 시작한 디자이너와 프론트엔드 개발자를 구합니다! 어서 오세요요용",
-      hashtags: ["카테고리1","카테고리2","카테고리3"],
       views: 1500,
       status: "open", //close or open
       like: "like", //like or unlike
@@ -32,7 +31,6 @@ const GrowRoomPage = () => {
     {
       deadline: "2023.12.05",
       maintext: "예시글입니다예시글입니다아아아아아안녕하세요모집합니다구합니다",
-      hashtags: ["카테고리1","카테고리2"],
       views: 143,
       status: "close",
       like: "like",
@@ -42,7 +40,6 @@ const GrowRoomPage = () => {
     {
       deadline: "2023.12.05",
       maintext: "범위초과시 ...으로표시합니다",
-      hashtags: ["카테고리1"],
       views: 12,
       status: "close",
       like: "unlike",
@@ -52,7 +49,6 @@ const GrowRoomPage = () => {
     {
       deadline: "2023.12.05",
       maintext: "dummy data 현재 활용중입니다 이후 api 연결시 dummy 지움",
-      hashtags: ["카테고리1","카테고리2","카테고리3"],
       views: 998,
       status: "open",
       like: "like",
@@ -62,7 +58,6 @@ const GrowRoomPage = () => {
     {
       deadline: "2023.12.05",
       maintext: "5번째글입니다 안녕하세요안녕하세요안녕하세요",
-      hashtags: ["카테고리1","카테고리2","카테고리3"],
       views: 998,
       status: "open",
       like: "like",
@@ -102,7 +97,6 @@ const GrowRoomPage = () => {
             key={index}
             deadline={data.deadline}
             maintext={data.maintext}
-            hashtags={data.hashtags}
             views={data.views}
             status={data.status}
             like={data.like}
