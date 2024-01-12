@@ -49,7 +49,7 @@ color: #848484;
 font-size: 12px; 
 font-weight: 400
 `
-const PostBox = ({ popular, study, status, deadline, maintext, hashtags, views, like}) => {
+const PostBox = ({ popular, study, status, deadline, maintext, views, like}) => {
 
     const getStatus = () => {
         switch (status) {
@@ -88,13 +88,6 @@ const PostBox = ({ popular, study, status, deadline, maintext, hashtags, views, 
                 <DeadLine>{`마감일 | ${deadline}`}</DeadLine>
 
                 <MainText>{`${maintext}`}</MainText>
-
-                <div style={{ paddingTop: '12px', paddingRight: '8px', display: 'flex', flexWrap: 'wrap' }}>
-                {hashtags.map((hashtag, index) => (
-                    <Hashtag key={index}>{`# ${hashtag}`}</Hashtag>
-                ))}
-                </div>
-
             </div>
 
             <div style={{ padding: '12px 0px 14px 0px', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex', alignSelf: 'stretch' }}>
