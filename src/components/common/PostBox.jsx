@@ -19,14 +19,7 @@ const Box = styled.div`
   background: #FFF;
 `;
 
-const Hashtag = styled.div`
-  color: #797979;
-  font-size: 12px;
-  text-transform: uppercase;
-  padding-right: 5px;
-`;
-
-const MainText = styled.div`
+const MainText = styled.p`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -34,17 +27,18 @@ const MainText = styled.div`
   color: #1C1C1C;
   font-size: 16px;
   font-weight: 800;
-  height: 44px;
+  line-height: 22.40px;
 `;
 
-const DeadLine = styled.div`
+const DeadLine = styled.p`
 padding-bottom:8px;
 color: #999999;
 font-size: 12px;
 font-weight: 400;
+line-height: 16.8px;
 `
 
-const Views = styled.div`
+const Views = styled.p`
 color: #848484; 
 font-size: 12px; 
 font-weight: 400
