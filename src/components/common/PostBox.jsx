@@ -71,7 +71,7 @@ const PostBox = ({ popular, study, status, deadline, maintext, views, like}) => 
 
     return (
         <Box style={{ opacity: status === 'close' ? 0.5 : 1 }}>
-            <div style={{ borderBottom: '1px #E6E6E6 solid', paddingBottom: '28px' }}>
+            <div style={{ paddingBottom: '28px' }}>
 
                 <div style={{ justifyContent: 'flex-start', gap: '10px', display: 'flex', paddingBottom: '20px' }}>
                     {popular && <img src={tag_popular} alt="popular" />}
@@ -84,7 +84,7 @@ const PostBox = ({ popular, study, status, deadline, maintext, views, like}) => 
                 <MainText>{`${maintext}`}</MainText>
             </div>
 
-            <div style={{ padding: '12px 0px 14px 0px', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex', alignSelf: 'stretch' }}>
+            <div style={{ borderTop: '1px #E6E6E6 solid', marginTop: 'auto', padding: '12px 0px 14px 0px', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex', alignSelf: 'stretch' }}>
                 <Views>{`조회수 ${formattedViews}회`}</Views>
                 <img src={isLiked()} alt="Like"/>
             </div>
