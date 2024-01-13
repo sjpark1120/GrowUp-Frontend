@@ -6,6 +6,7 @@ import UserRanking from '../../components/LiveUpPage/UserRanking';
 import LiveUpNavigation from '../../components/LiveUpPage/LiveUpNavigation';
 import RankingFilterBtn from '../../components/LiveUpPage/RankingFilterBtn';
 import RankingBox from '../../components/LiveUpPage/RankingBox';
+import LiveUpPagination from '../../components/LiveUpPage/LiveUpPagnation';
 
 const MainWrapper = styled.div`
   display: flex;
@@ -67,14 +68,7 @@ const MyLiveUpTitle = styled.h1`
   display: inline;
 `
 
-const Paginaion = styled.div`
-  margin-top: 150px;
-  margin-bottom: 150px;
-  display: flex;
-  padding: 0px 360px;
-  justify-content: center;
-  align-items: center;
-`
+
 function LiveUpPage() {
   return (
     <MainWrapper>
@@ -87,20 +81,7 @@ function LiveUpPage() {
       <MyLiveUpContainer>
       <MyLiveUpTitle>MY LIVE UP</MyLiveUpTitle>
       <LiveUpNavigation/>
-      <PostBoxContainer>
-        {Array.from({ length:12 }).map((_, idx) => (
-          <PostBoxBlack key={idx}
-            deadline= "2023.12.05"
-            maintext= "이제 막 공부 시작한 디자이너와 프론트엔드 개발자를 구합니다! 어서 오세요요용"
-            views= {1500}
-            status= "open" //close or open
-            like= "like" //like or unlike
-            popular= {true}  //인기태그 표시 여부
-            study= {true} //스터디 태그 표시 여부
-          />
-        ))}
-      </PostBoxContainer>
-      <Paginaion>글 목록 번호</Paginaion>
+      <LiveUpPagination/>
     </MyLiveUpContainer>
     </MainWrapper>
   )
