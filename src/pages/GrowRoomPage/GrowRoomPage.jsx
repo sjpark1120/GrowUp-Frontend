@@ -18,6 +18,8 @@ const Title = styled.h2`
 
 const ThisWeekContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   gap: 10px;
   padding-bottom: 150px;
 `;
@@ -43,6 +45,17 @@ export const WriteBtn = styled(Button)`
   background: #00D749;
   color:#FFF;
   `;
+
+const navigation = ['전체', '✨내 모집글', '💚관심글', '📂프로젝트', '✏️스터디', '🥇챌린지'];
+const dropdown_feild = {
+  'IT/미디어': ['스터디', '인공지능', '데이터분석'],
+  '스포츠/헬스': ['스포츠1', '스포츠2', '스포츠3'],
+  '공부/자격증': ['스터디1', '스터디2', '스터디3'],
+  '미술/디자인': ['미술1', '미술2', '미술3'],
+  '공모전/프로젝트': ['플젝1', '플젝2', '플젝3'],
+};
+
+
 const dummy = [
   {
     deadline: "2023.12.05",
@@ -92,6 +105,8 @@ const dummy = [
 ];
 
 const GrowRoomPage = () => {
+
+  //이번주 인기 growroom 구현
   const itemsPerPage = 4;
   const totalItems = dummy.length;
   
@@ -107,7 +122,7 @@ const GrowRoomPage = () => {
     setCurrentIndex(prevIndex < 0 ? Math.floor(totalItems / itemsPerPage) * itemsPerPage : prevIndex);
   };
 
-  const Posts = dummy.slice(currentIndex, currentIndex + itemsPerPage);
+  const weekPost = dummy.slice(currentIndex, currentIndex + itemsPerPage);
 
   return (
     <div style={{width: '1220px' , alignItems: 'center', justifyContent: 'center' ,margin: '0 auto' }}>
@@ -119,7 +134,7 @@ const GrowRoomPage = () => {
           </div>
       </div>
       <ThisWeekContainer>
-        {Posts.map((data, index) => (
+        {weekPost.map((data, index) => (
           <PostBox
             key={index}
             deadline={data.deadline}
@@ -132,14 +147,16 @@ const GrowRoomPage = () => {
           />
         ))}
       </ThisWeekContainer>
+
       <div style={{ paddingBottom: '50px', display: 'flex'}}>
         <Title>GROW ROOM </Title>
-        <GrowRoomNavigation />
+        <GrowRoomNavigation navItems={navigation} />
       </div>
+      
       <div style={{ paddingBottom: '30px', display: 'flex', gap: '10px'}}>
         <Dropdown 
           title="분야"
-          options={['IT/미디어', '스포츠/헬스', '공부/자격증', '미술/디자인', '공모전/프로젝트']}
+          optionsMap={dropdown_feild}
            />
         <Dropdown 
           title="기간"
@@ -152,6 +169,20 @@ const GrowRoomPage = () => {
           <WriteBtn>글쓰기</WriteBtn>
         </div>
       </div>
+      <ThisWeekContainer>
+        {dummy.map((data, index) => (
+          <PostBox
+            key={index}
+            deadline={data.deadline}
+            maintext={data.maintext}
+            views={data.views}
+            status={data.status}
+            like={data.like}
+            popular={data.popular}
+            study={data.study}
+          />
+        ))}
+      </ThisWeekContainer>
     </div>
   );
 };
