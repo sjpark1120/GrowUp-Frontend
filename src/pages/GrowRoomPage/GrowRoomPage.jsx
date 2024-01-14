@@ -3,11 +3,25 @@ import styled from 'styled-components';
 import PostBox from '../../components/common/PostBox';
 import GrowRoomNavigation from '../../components/GrowRoom/GrowRoomNavigation';
 
+import banner from '../../icon/Banner.png'
 import btn_left from '../../icon/Page button_1.png';
 import btn_right from '../../icon/Page button_2.png';
 import Dropdown from '../../components/GrowRoom/DropDown';
 import SearchBar from '../../components/GrowRoom/SearchBar';
+import PageNavigation from '../../components/GrowRoom/PageNavigation';
 
+const BannerImg =styled.div`
+  background-image: url(${banner});
+  width: 100%;
+  height: 511px;
+  `;
+
+const MainWrapper = styled.div`
+  width: 1220px;
+  align-items: center;
+  justify-content: center;
+  margin: 100px auto;
+`;
 
 const Title = styled.h2`
   color: black;
@@ -125,7 +139,9 @@ const GrowRoomPage = () => {
   const weekPost = dummy.slice(currentIndex, currentIndex + itemsPerPage);
 
   return (
-    <div style={{width: '1220px' , alignItems: 'center', justifyContent: 'center' ,margin: '0 auto' }}>
+    <div>
+    <BannerImg />
+    <MainWrapper>
       <div style={{justifyContent: 'space-between', display: 'flex', paddingBottom: '35px'}}>
       <Title>🔥 이번주 인기 GROW ROOM </Title>
           <div style={{ display: 'flex'}}>
@@ -162,7 +178,6 @@ const GrowRoomPage = () => {
           title="기간"
           options={['1주일', '1개월', '1년']} />
         <FilterBtn
-          onClick
           >👀모집 중만 보기</FilterBtn>
         <div style={{display: 'flex', marginLeft:'auto', gap: '10px'}} >
           <SearchBar/>
@@ -183,6 +198,8 @@ const GrowRoomPage = () => {
           />
         ))}
       </ThisWeekContainer>
+      <PageNavigation/>
+    </MainWrapper>
     </div>
   );
 };

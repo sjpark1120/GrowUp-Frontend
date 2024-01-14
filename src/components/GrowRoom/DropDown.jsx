@@ -3,11 +3,16 @@ import styled from 'styled-components';
 import down from '../../icon/arrow_dropdown.png';
 import DropDownOption from './DropDownOption';
 
-const DropDownContainer = styled.div`
-  display: flex;
-  margin-top: 10px;
-  gap: 5px;
+const Container = styled.div`
+  position: relative;
 `
+const DropDownContainer = styled.div`
+  position: absolute;
+  top: 100%; 
+  display: flex;
+  padding-top: 10px;
+  gap: 5px;
+`;
 
 const DropDownHeader = styled.div`
   display: flex;
@@ -24,42 +29,47 @@ const DropDownHeader = styled.div`
   line-height: 140%;
 `;
 
-const Dropdown = ({ title, optionsMap, options}) => {
+const Dropdown = ({ title, optionsMap, options }) => {
   const [mainDropdownOpen, setMainDropdownOpen] = useState(false);
   const [detailDropdownOpen, setDetailDropdownOpen] = useState(false);
   const [selectedMain, setSelectedMain] = useState('');
-  const [selectedDetail, setSelectedDetail] = useState('');
 
   const toggleMainDropdown = () => {
     setMainDropdownOpen(!mainDropdownOpen);
+    setDetailDropdownOpen(optionsMap ? true : false);
   };
 
   const mainSelected = (option) => {
     setSelectedMain(option);
-    setDetailDropdownOpen(true);
+    if (!optionsMap) {
+      setMainDropdownOpen(false);
+    }
   };
 
   const detailSelected = (option) => {
-    setSelectedDetail(option);
-    setMainDropdownOpen(false);
+    setSelectedMain('');
     setDetailDropdownOpen(false);
+    setMainDropdownOpen(false);
   };
 
   return (
-      <div>
-        <DropDownHeader onClick={toggleMainDropdown}>
-          {title}
-          <img src={down} alt="drop down arrow"/> 
-        </DropDownHeader>
-        <DropDownContainer>
-        {mainDropdownOpen && (
+    <Container>
+      <DropDownHeader onClick={toggleMainDropdown}>
+        {title}
+        <img src={down} alt="drop down arrow" />
+      </DropDownHeader>
+      <DropDownContainer>
+        {mainDropdownOpen && optionsMap && (
           <DropDownOption options={Object.keys(optionsMap)} onClick={mainSelected} />
         )}
-      {selectedMain && detailDropdownOpen && (
-        <DropDownOption options={optionsMap[selectedMain]} onClick={detailSelected} />
-      )}
+        {mainDropdownOpen && options && !optionsMap && (
+          <DropDownOption options={options} onClick={mainSelected} />
+        )}
+        {selectedMain && detailDropdownOpen && (
+          <DropDownOption options={optionsMap ? optionsMap[selectedMain] : options} onClick={detailSelected} />
+        )}
       </DropDownContainer>
-    </div>
+    </Container>
   );
 };
 
