@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import PostBox from '../../components/common/PostBox';
 import GrowRoomNavigation from '../../components/GrowRoom/GrowRoomNavigation';
+import { useNavigate } from 'react-router-dom';
+
 
 import btn_left from '../../icon/Page button_1.png';
 import btn_right from '../../icon/Page button_2.png';
@@ -94,8 +96,11 @@ const dummy = [
 const GrowRoomPage = () => {
   const itemsPerPage = 4;
   const totalItems = dummy.length;
-  
+    
+  const navigate = useNavigate(); // useNavigate를 사용
+
   const [currentIndex, setCurrentIndex] = useState(0);
+
   
   const handleNext = () => {
     const nextIndex = currentIndex + itemsPerPage;
@@ -108,6 +113,12 @@ const GrowRoomPage = () => {
   };
 
   const Posts = dummy.slice(currentIndex, currentIndex + itemsPerPage);
+
+  const handleWriteButtonClick = () => {
+    // "/growroom/write" 경로로 이동
+    navigate('/growroom/write');
+  };
+
 
   return (
     <div style={{width: '1220px' , alignItems: 'center', justifyContent: 'center' ,margin: '0 auto' }}>
@@ -149,7 +160,9 @@ const GrowRoomPage = () => {
           >👀모집 중만 보기</FilterBtn>
         <div style={{display: 'flex', marginLeft:'auto', gap: '10px'}} >
           <SearchBar/>
-          <WriteBtn>글쓰기</WriteBtn>
+          
+          <WriteBtn onClick={handleWriteButtonClick}>글쓰기</WriteBtn>
+          
         </div>
       </div>
     </div>
