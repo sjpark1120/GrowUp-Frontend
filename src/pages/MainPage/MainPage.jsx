@@ -8,11 +8,7 @@ import banner2 from '../../icon/banner4.png';
 import PopularPosts from '../../components/GrowRoom/PopolarPosts';
 import dummyData from '../../DummyData';
 
-<PopularPosts
-data = {dummyData} 
-/>
-
-const TopBanner =styled.img`
+const TopBanner = styled.img`
 background-image: url(${banner});
 background-size: cover;
 width: 100%;
@@ -34,11 +30,14 @@ const Banner = styled.img`
 function MainPage() {
   return (
     <div>
-    <TopBanner />
-    <MainWrapper>
-      <Banner src={banner1} alt="banner1"/>
-      <Banner src={banner2} alt="banner2"/>
-    </MainWrapper>
+      <TopBanner />
+      <MainWrapper>
+        <PopularPosts
+          data={dummyData}
+        />
+        <Banner src={banner1} alt="banner1" />
+        <Banner src={banner2} alt="banner2" />
+      </MainWrapper>
 
     </div>
   )
