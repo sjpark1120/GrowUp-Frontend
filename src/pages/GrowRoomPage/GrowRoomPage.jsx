@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import PostBox from '../../components/common/PostBox';
 import GrowRoomNavigation from '../../components/GrowRoom/GrowRoomNavigation';
+import { useNavigate } from 'react-router-dom';
+
 
 import dummyData from '../.././DummyData'
 import banner from '../../icon/banner2.png'
@@ -74,13 +76,21 @@ const dropdown_feild = {
 
 const dropdown_period=['1주일', '1개월', '1년'];
 
-const GrowRoomPage = () => {
 
+const GrowRoomPage = () => {
   const [isActive, setIsActive] = useState(false);
 
   const handleButtonClick = () => {
+    //모집중만 보기 버튼 클릭
     setIsActive(!isActive);
   };
+  const navigate = useNavigate(); // useNavigate를 사용
+  
+  const handleWriteButtonClick = () => {
+    // "/growroom/write" 경로로 이동
+    navigate('/growroom/write');
+  };
+
 
   return (
     <div>
@@ -109,7 +119,7 @@ const GrowRoomPage = () => {
 
         <div style={{display: 'flex', marginLeft:'auto', gap: '10px'}} >
           <SearchBar/>
-          <WriteBtn>글쓰기</WriteBtn>
+          <WriteBtn onClick={handleWriteButtonClick}>글쓰기</WriteBtn>
         </div>
       </div>
       <PostContainer>
