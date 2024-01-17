@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 import tag_close from '../../icon/모집완료.png';
 import tag_open from '../../icon/모집중.png';
 import tag_popular from '../../icon/인기.png';
@@ -16,7 +15,7 @@ const Box = styled.div`
   padding-top: 24px;
   flex-direction: column;
   border-radius: 16px;
-  border: 1px solid #E2E2E2;
+  border: 1px solid #F7F7F7;
   background: #FFF;
 `;
 
@@ -46,16 +45,6 @@ font-weight: 400
 `
 
 const PostBox = ({ popular, study, status, deadline, maintext, views, like}) => {
-    const getStatus = () => {
-        switch (status) {
-          case 'open':
-            return tag_open;
-          case 'close':
-            return tag_close;
-          default: 
-            return '';
-        }
-      };
 
       const isLiked = () => {
         switch (like) {
@@ -76,7 +65,7 @@ const PostBox = ({ popular, study, status, deadline, maintext, views, like}) => 
                 <div style={{ justifyContent: 'flex-start', gap: '10px', display: 'flex', paddingBottom: '20px' }}>
                     {popular && <img src={tag_popular} alt="popular" />}
                     {study && <img src={tag_study} alt="study" />}
-                    <img src={getStatus()} alt="Recruit Status" style={{ marginLeft: 'auto' }} />
+                    {status=="close" && <img src={tag_close} alt="Recruit Status"style={{ marginLeft: 'auto' }} />}
                 </div>
 
                 <DeadLine>{`마감일 | ${deadline}`}</DeadLine>
@@ -84,7 +73,7 @@ const PostBox = ({ popular, study, status, deadline, maintext, views, like}) => 
                 <MainText>{`${maintext}`}</MainText>
             </div>
 
-            <div style={{ borderTop: '1px #E6E6E6 solid', marginTop: 'auto', padding: '12px 0px 14px 0px', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex', alignSelf: 'stretch' }}>
+            <div style={{ borderTop: '1px #F7F7F7 solid', marginTop: 'auto', padding: '12px 0px 14px 0px', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex', alignSelf: 'stretch' }}>
                 <Views>{`조회수 ${formattedViews}회`}</Views>
                 <img src={isLiked()} alt="Like"/>
             </div>
