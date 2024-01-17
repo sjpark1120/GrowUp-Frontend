@@ -15,7 +15,7 @@ import PostBox from '../common/PostBox';
 const PostContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 40px 16px;
   padding-bottom: 150px;
 `;
 
