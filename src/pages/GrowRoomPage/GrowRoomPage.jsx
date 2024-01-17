@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import PostBox from '../../components/common/PostBox';
 import GrowRoomNavigation from '../../components/GrowRoom/GrowRoomNavigation';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,14 +32,6 @@ const Title = styled.h2`
   align-items: center;
 `;
 
-const PostContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 10px;
-  padding-bottom: 150px;
-`;
-
 const Button = styled.button`
   height: 42px;
   padding: 6px 16px;
@@ -63,7 +54,6 @@ export const WriteBtn = styled(Button)`
   color:#FFF;
   `;
 
-
 const navigation = ['전체', '✨내 모집글', '💚관심글', '📂프로젝트', '✏️스터디', '🥇챌린지'];
 
 const dropdown_feild = {
@@ -85,7 +75,7 @@ const GrowRoomPage = () => {
     setIsActive(!isActive);
   };
   const navigate = useNavigate(); // useNavigate를 사용
-  
+
   const handleWriteButtonClick = () => {
     // "/growroom/write" 경로로 이동
     navigate('/growroom/write');
@@ -122,21 +112,7 @@ const GrowRoomPage = () => {
           <WriteBtn onClick={handleWriteButtonClick}>글쓰기</WriteBtn>
         </div>
       </div>
-      <PostContainer>
-        {dummyData.map((data, index) => (
-          <PostBox
-            key={index}
-            deadline={data.deadline}
-            maintext={data.maintext}
-            views={data.views}
-            status={data.status}
-            like={data.like}
-            popular={data.popular}
-            study={data.study}
-          />
-        ))}
-      </PostContainer>
-      <PageNavigation/>
+      <PageNavigation data={dummyData}/>
     </MainWrapper>
     </div>
   );
