@@ -10,13 +10,16 @@ import img_unlike from "../../icon/img-unlike.svg";
 const Box = styled.div`
   display: flex;
   width: 292px;
+  height: 254px;
   padding-left: 26px;
   padding-right: 26px;
   padding-top: 24px;
   flex-direction: column;
   border-radius: 16px;
   border: 1px solid #e2e2e2;
-  background: #fff;
+  background: #1c1c1c;
+  opacity: ${(props) => (props.status === "close" ? 0.5 : 1)};
+  margin-bottom: 30px;
 `;
 
 const MainText = styled.p`
@@ -24,7 +27,7 @@ const MainText = styled.p`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  color: #1c1c1c;
+  color: #fff;
   font-size: 16px;
   font-weight: 800;
   line-height: 22.4px;
@@ -43,7 +46,7 @@ const Views = styled.p`
   font-size: 12px;
   font-weight: 400;
 `;
-const PostBox = ({
+const DarkPostBox = ({
   popular,
   study,
   status,
@@ -51,6 +54,7 @@ const PostBox = ({
   maintext,
   views,
   like,
+  style,
 }) => {
   const getStatus = () => {
     switch (status) {
@@ -77,7 +81,7 @@ const PostBox = ({
   const formattedViews = views >= 1000 ? "999+" : views;
 
   return (
-    <Box style={{ opacity: status === "close" ? 0.5 : 1 }}>
+    <Box status={status.toString()} style={style}>
       <div style={{ paddingBottom: "28px" }}>
         <div
           style={{
@@ -119,4 +123,4 @@ const PostBox = ({
   );
 };
 
-export default PostBox;
+export default DarkPostBox;
