@@ -19,6 +19,7 @@ const Box = styled.div`
   border: 1px solid #e2e2e2;
   background: #1c1c1c;
   opacity: ${(props) => (props.status === "close" ? 0.5 : 1)};
+  margin-bottom: 30px;
 `;
 
 const MainText = styled.p`

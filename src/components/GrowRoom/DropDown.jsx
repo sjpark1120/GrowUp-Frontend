@@ -1,81 +1,89 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import down from '../../icon/arrow_dropdown.png';
+import down_white from '../../icon/arrow_down_white.png';
+import DropDownOption from './DropDownOption';
 
-const DropDownHeader = styled.div`
-    display: flex;
-    width: 107px;
-    height: 42px;
-    padding: 6px 16px;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 30px;
-    border: 1px solid #B0B0B0;
-    background: #FFF;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 140%;
-`
+const Container = styled.div`
+  position: relative;
+`;
 
 const DropDownContainer = styled.div`
-  width: 122px;
-  margin-top:20px;
-  flex-direction: column;
-  align-items: flex-start;
-
-  border-radius: 8px;
-  border: 1px solid #B0B0B0;
-  box-shadow: 0px 0px 50px 6px rgba(0, 0, 0, 0.1);
-`
-const OptionContainer = styled.div`
+  position: absolute;
+  top: 100%;
   display: flex;
+  padding-top: 10px;
+  gap: 5px;
+`;
+
+const DropDownHeader = styled.div`
+  display: flex;
+  width: 107px;
   height: 42px;
   padding: 6px 16px;
+  justify-content: space-between;
   align-items: center;
-  gap: 38px;
-  align-self: stretch;
-  border-bottom: 1px solid #B0B0B0;
-
-  color: #B0B0B0;
-
+  border-radius: 30px;
+  border: 1px solid ${({ isOpen }) => (isOpen ? '#00D749' : '#B0B0B0')};
+  background: ${({ isOpen }) => (isOpen ? '#00D749' : '#FFF')};
+  color: ${({ isOpen }) => (isOpen ? '#FFF' : '#3E3E3E')};
   font-size: 14px;
   font-weight: 500;
   line-height: 140%;
+  cursor: pointer;
+`;
 
-`
-const CustomDropdown = ({ options, title }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('');
+const ArrowIcon = styled.img`
+  transition: transform 0.3s;
+  transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+`;
+const Dropdown = ({ title, optionsMap, options }) => {
+  const [mainDropdownOpen, setMainDropdownOpen] = useState(false);
+  const [selectedMain, setSelectedMain] = useState('');
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const toggleMainDropdown = () => {
+    setMainDropdownOpen(!mainDropdownOpen);
+    setSelectedMain('');
   };
 
-  const handleOptionClick = (option) => {
-    setIsOpen(!isOpen);
-    setSelectedValue(option);
+  const mainSelected = (option) => {
+    if (!optionsMap) {
+      setTimeout(() => {
+        setMainDropdownOpen(false);
+        setSelectedMain('');
+      }, 500);
+    }
+    else{
+      setSelectedMain(option);
+    }
+  };
+
+  const detailSelected = (option) => {
+    setTimeout(() => {
+      setMainDropdownOpen(false);
+      setSelectedMain('');
+    }, 500);
   };
 
   return (
-    <div className="custom-dropdown">
-      <DropDownHeader onClick={toggleDropdown}>
+    <Container>
+      <DropDownHeader isOpen={mainDropdownOpen} onClick={toggleMainDropdown}>
         {title}
-        <img src={down} alt="drop down arrow"/>
+        <ArrowIcon isOpen={mainDropdownOpen} src={mainDropdownOpen ? down_white : down} alt="drop down arrow" />
       </DropDownHeader>
-      {isOpen && (
-        <DropDownContainer>
-          {options.map((option, index) => (
-            <OptionContainer
-              key={index}
-              onClick={() => handleOptionClick(option)}
-            >
-              {option}
-            </OptionContainer>
-          ))}
-        </DropDownContainer>
-      )}
-    </div>
+      <DropDownContainer isOpen={mainDropdownOpen}>
+        {mainDropdownOpen && optionsMap && (
+          <DropDownOption options={Object.keys(optionsMap)} onClick={mainSelected} />
+        )}
+        {mainDropdownOpen && options && !optionsMap && (
+          <DropDownOption options={options} onClick={mainSelected} />
+        )}
+        {selectedMain && (
+          <DropDownOption options={optionsMap ? optionsMap[selectedMain] : options} onClick={detailSelected} />
+        )}
+      </DropDownContainer>
+    </Container>
   );
 };
 
-export default CustomDropdown;
+export default Dropdown;

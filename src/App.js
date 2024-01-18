@@ -8,6 +8,10 @@ import GrowRoomPostPage from './pages/GrowRoomPage/GrowRoomPostPage';
 import LiveUpPage from './pages/LiveUpPage/LiveUpPage';
 import LiveUpJoinPage from './pages/LiveUpPage/LiveUpJoinPage';
 
+import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
+
+
 function Layout() {
   return (
     <>
@@ -27,6 +31,9 @@ function App() {
         <Route path="/growroom/:postId" element={<GrowRoomPostPage />} /> 
         <Route path='/liveup' element={<LiveUpPage />} />
         <Route path='/liveup/:roomid' element={<LiveUpJoinPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+
       </Route>
     </Routes>
   );

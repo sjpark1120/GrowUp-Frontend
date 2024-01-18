@@ -10,37 +10,35 @@ const Label = styled.p`
 `;
 
 const NavItem = ({ label, selected, onClick }) => {
-    return (
-        <div
-            style={{ opacity: selected ? 1 : 0.5, display: 'flex', cursor: 'pointer' }}
-            onClick={onClick}
-        >
-            <Label>{label}</Label>
-        </div>
-    );
+  return (
+    <div
+      style={{ opacity: selected ? 1 : 0.5, display: 'flex', cursor: 'pointer' }}
+      onClick={onClick}
+    >
+      <Label>{label}</Label>
+    </div>
+  );
 };
 
-const navItems = ['전체', '✨내 모집글', '💚관심글', '📂프로젝트', '✏️스터디', '🥇챌린지'];
+const GrowRoomNavigation = ({ navItems }) => {
+  const [selectedNavItem, setSelectedNavItem] = useState('전체');
 
+  const handleNavItemClick = (label) => {
+    setSelectedNavItem(label);
+  };
 
-const GrowRoomNavigation = () => {
-    const [selectedNavItem, setSelectedNavItem] = useState('전체');
-
-    const handleNavItemClick = (label) => {
-        setSelectedNavItem(label);
-
-    };
-
-    return (
-        <div style={{ paddingLeft: '30px', gap: 30, display: 'inline-flex' }}>
-
-            {navItems.map((item, index) => (
-                <NavItem label={item}
-                    selected={selectedNavItem === item}
-                    onClick={() => handleNavItemClick(item)} />
-            ))}
-        </div>
-    );
+  return (
+    <div style={{ paddingLeft: '30px', gap: 30, display: 'inline-flex' }}>
+      {navItems.map((item, index) => (
+        <NavItem
+          key={index}
+          label={item}
+          selected={selectedNavItem === item}
+          onClick={() => handleNavItemClick(item)}
+        />
+      ))}
+    </div>
+  );
 };
 
 export default GrowRoomNavigation;
