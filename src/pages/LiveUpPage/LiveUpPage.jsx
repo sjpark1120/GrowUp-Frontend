@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import banner from '../../icon/Banner.png'
+import banner from '../../icon/banner1.png'
 import PostBoxBlack from '../../components/LiveUpPage/PostBoxBlack';
 import UserRanking from '../../components/LiveUpPage/UserRanking';
 import LiveUpNavigation from '../../components/LiveUpPage/LiveUpNavigation';
@@ -16,10 +16,9 @@ const MainWrapper = styled.div`
   background-color: #1c1c1c;
 `
 
-const BannerImg =styled.div`
-  background-image: url(${banner});
+const BannerImg =styled.img`
   width: 1920px;
-  height: 511px;
+  height: 500px;
   `;
 
 const PostBoxContainer = styled.div`
@@ -72,7 +71,7 @@ const MyLiveUpTitle = styled.h1`
 function LiveUpPage() {
   return (
     <MainWrapper>
-      <BannerImg />
+      <BannerImg src={banner} alt="banner" />
       <RankingContainer>
         <RankingTitle>🥇LIVE UP 누적 랭킹</RankingTitle>
         <RankingFilterBtn />
