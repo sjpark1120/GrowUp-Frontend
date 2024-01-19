@@ -3,8 +3,8 @@ import styled from "styled-components";
 
 import button_1 from "../../icon/Page button_c1.png";
 import timer from "../../icon/타이머.png";
-import share from "../../icon/화면 공유_false.png";
-import video from "../../icon/비디오 공유.png";
+import share from "../../icon/화면 공유_false.png";
+import video from "../../icon/비디오 공유.png";
 import rank from "../../icon/Frame 790.png";
 import name from "../../icon/Frame 791.png";
 import register from "../../icon/Frame 792.png";
@@ -20,9 +20,9 @@ import arrow6 from "../../icon/arrow6.png";
 import logo from "../../icon/Logo.png";
 import cancel from "../../icon/cancel.png";
 import screen_img from "../../icon/image 39.png";
-import screen_img_true from "../../icon/화면 공유-1.png";
-import timer_true from "../../icon/화면 공유.png";
-import video_true from "../../icon/비디오 공유true.png";
+import screen_img_true from "../../icon/화면 공유-1.png";
+import timer_true from "../../icon/화면 공유.png";
+import video_true from "../../icon/비디오 공유true.png";
 
 const dummy = [
   {
