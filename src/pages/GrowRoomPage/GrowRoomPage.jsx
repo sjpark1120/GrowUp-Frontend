@@ -4,7 +4,7 @@ import GrowRoomNavigation from '../../components/GrowRoom/GrowRoomNavigation';
 import { useNavigate } from 'react-router-dom';
 
 
-import dummyData from '../.././DummyData'
+import {dummyData} from '../.././DummyData'
 import banner from '../../icon/banner2.png'
 import Dropdown from '../../components/GrowRoom/DropDown';
 import SearchBar from '../../components/GrowRoom/SearchBar';

@@ -1,4 +1,34 @@
-const dummyData = [
+export const dummyEvents = [
+  {
+    date: new Date(2024, 0, 1),
+    text: '새해 첫날, 운동 가기',
+  },
+  {
+    date: new Date(2024, 0, 5),
+    text: '친구와 저녁 약속, React 학습하기',
+  },
+  {
+    date: new Date(2024, 0, 10),
+    text: '책 읽기 모임',
+  },
+  {
+    date: new Date(2024, 0, 15),
+    text: '영화 보기',
+  },
+  {
+    date: new Date(2024, 1, 1),
+    text: '2월 첫째주 휴가 계획 세우기',
+  },
+  {
+    date: new Date(2024, 1, 14),
+    text: '밸런타인데이 기념 데이트',
+  },
+  // Add more dummy events as needed
+];
+
+
+
+export const dummyData = [
   {
     deadline: "2023.12.05",
     maintext: "이제 막 공부 시작한 디자이너와 프론트엔드 개발자를 구합니다! 어서 오세요요용",
@@ -612,5 +642,3 @@ const dummyData = [
     study: true,
   },
 ];
-
-export default dummyData;

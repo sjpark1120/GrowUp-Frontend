@@ -6,7 +6,7 @@ import banner1 from '../../icon/banner3.png';
 import banner2 from '../../icon/banner4.png';
 
 import PopularPosts from '../../components/GrowRoom/PopolarPosts';
-import dummyData from '../../DummyData';
+import {dummyData} from '../../DummyData';
 
 const TopBanner = styled.img`
 background-image: url(${banner});
