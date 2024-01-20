@@ -90,6 +90,7 @@ function ChangePasswordPage() {
         <ChangePasswordTitle>비밀번호 재설정</ChangePasswordTitle>
         <ChangePasswordText>변경할 비밀번호를 정확히 입력해 주세요.</ChangePasswordText>
         <form>
+        <ChangePasswordLabel htmlFor='password'>비밀번호</ChangePasswordLabel>
           <PasswordContainer>
             <ChangePasswordInput id='password' type={showPassword ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" />
             <EyeIcon src={showPassword ? eye_green : eye} onClick={() => setShowPassword(!showPassword)} />
