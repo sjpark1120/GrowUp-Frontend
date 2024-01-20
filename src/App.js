@@ -9,7 +9,7 @@ import LiveUpPage from './pages/LiveUpPage/LiveUpPage';
 import LiveUpJoinPage from './pages/LiveUpPage/LiveUpJoinPage';
 
 import LoginPage from './pages/LoginPage';
-import SignUpPage from './pages/SignUpPage';
+import SignUpPage from './pages/JoinPage/SignUpPage';
 
 
 function Layout() {
