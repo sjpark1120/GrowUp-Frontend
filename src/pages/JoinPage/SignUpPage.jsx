@@ -65,7 +65,7 @@ const SignUpSubmit = styled.input`
   border-radius: 5.333px;
   background: ${props => (props.disabled ? '#8D8D8D' : '#00D749')};
   width: 423px;
-  padding: 14px 168px;
+  padding: 14px;
   font-size: 25px;
   font-style: normal;
   font-weight: 800;
