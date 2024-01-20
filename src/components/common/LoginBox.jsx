@@ -4,7 +4,23 @@ import eye from '../../icon/eye.png'
 import eye_green from '../../icon/eye_green.png'
 import logo from '../../icon/Logo.png'
 import x from '../../icon/cancel.png'
+import { Link } from 'react-router-dom'
+
+const LoginBackGround = styled.div`
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFFFFF;
+  opacity: 0.8;
+  backdrop-filter: blur(5px);
+`
 const LoginWindow = styled.div`
+  position: absolute;
   width: 540px;
   height: 580px;
   box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.10);
@@ -60,6 +76,7 @@ const LoginLabel = styled.label`
 `
 
 const LoginInput = styled.input`
+  color: #6A6A6A;
   width: 425px;
   height: 55px;
   padding: 0px 20px;
@@ -82,6 +99,8 @@ const LoginSubmit = styled.input`
   line-height: 140%;
   color: white;
   margin-bottom: 5px;
+  border: 0;
+  cursor: ${props => props.disabled ? 'default' : 'pointer'};
 `
 const PasswordContainer = styled.div`
   position: relative;
@@ -106,18 +125,54 @@ const Logo = styled.img`
 const Xicon =styled.img`
   cursor: pointer;
 `
+const ErrorText = styled.span`
+  margin: 5px;
+  color: #FF4747;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%;
+`
 function LoginBox() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [emailError, setEmailError] = useState(true);
+  const [passwordError, setPasswordError] = useState(true);
+
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
+  const [isLoginWindowVisible, setLoginWindowVisible] = useState(true);
+
+  const handleXiconClick = () => {
+    setLoginWindowVisible(false);
+  };
+
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
+    setEmailTouched(true);
+    // 이메일 유효성 검사
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(e.target.value)) {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
   }
 
   const onChangePassword = (e) => {
     setPassword(e.target.value);
+    setPasswordTouched(true);
+    // 비밀번호 유효성 검사
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+    if (!passwordRegex.test(e.target.value)) {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
   }
 
   const onSubmit = async(e) => {
@@ -125,31 +180,59 @@ function LoginBox() {
   }
   return (
     <>
+    {isLoginWindowVisible && (
+    <LoginBackGround>
       <LoginWindow>
         <LoginTopBar>
           <Logo src={logo} />
-          <Xicon src={x} />
+          <Xicon src={x} 
+          onClick={handleXiconClick}/>
         </LoginTopBar>
         <LoginContainer>
           <LoginTitle>로그인</LoginTitle>
           <LoginText>그로우업에서 즐겁게 성장하세요!</LoginText>
           <form onSubmit={onSubmit}>
-            <LoginLabel htmlFor='email'>이메일</LoginLabel>
-            <LoginInput id='email' type='email' placeholder='dahul4603@naver.com' autoComplete="email" value={email} onChange={onChangeEmail} />
-            <LoginLabel htmlFor='passwordcheck'>비밀번호</LoginLabel>
+            <LoginLabel htmlFor='email'>
+              이메일
+              {emailTouched && emailError && <ErrorText>ⓘ 이메일이 올바르지 않습니다.</ErrorText>}
+              </LoginLabel>
+            <LoginInput id='email' 
+            type='email' 
+            placeholder='dahul4603@naver.com' 
+            autoComplete="email" 
+            value={email} 
+            onChange={onChangeEmail} 
+            style={emailTouched && emailError ? {borderColor: '#FF4747'} : {borderColor: '#E7E7E7'}} />
+            <LoginLabel htmlFor='password'>
+              비밀번호
+              {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자 모두 포함되어야 합니다.</ErrorText>}
+              </LoginLabel>
             <PasswordContainer>
-              <LoginInput id='passwordcheck' type={showPassword ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" value={password} onChange={onChangePassword}/>
+              <LoginInput id='password' 
+              type={showPassword ? 'text' : 'password'} 
+              placeholder='*******' 
+              autoComplete="new-password" 
+              value={password} 
+              onChange={onChangePassword}
+              style={passwordTouched && passwordError ? {borderColor: '#FF4747'} : {borderColor: '#E7E7E7'}} />
               <EyeIcon src={showPassword ? eye_green : eye} onClick={() => setShowPassword(!showPassword)} />
             </PasswordContainer>
-            <LoginSubmit type='submit' value="로그인" disabled />
+            <LoginSubmit type='submit' value="로그인" 
+            disabled={emailError || passwordError} />
           </form>
           <Loginbottom>
-            <span>비밀번호 찾기 </span>
+            <Link to='/findpassword' style={{ textDecoration: 'none' }}>
+              <span>비밀번호 찾기 </span>
+            </Link>
             <span>| </span>
-            <span>회원가입</span>
+            <Link to='/signup' style={{ textDecoration: 'none' }}>
+              <span>회원가입</span>
+            </Link>
           </Loginbottom>
         </LoginContainer>
       </LoginWindow>
+      </LoginBackGround>
+    )}
     </>
   )
 }

@@ -44,6 +44,7 @@ const ChangePasswordLabel = styled.label`
 `
 
 const ChangePasswordInput = styled.input`
+  color: #6A6A6A;
   width: 425px;
   height: 55px;
   padding: 0px 20px;
@@ -73,6 +74,8 @@ const ChangePasswordSubmit = styled.input`
   font-weight: 800;
   line-height: 140%;
   color: white;
+  border: 0;
+  cursor: ${props => props.disabled ? 'default' : 'pointer'};
 `
 const PasswordContainer = styled.div`
   position: relative;
@@ -83,6 +86,14 @@ const EyeIcon = styled.img`
   right: 55px;
   cursor: pointer;
 `
+const ErrorText = styled.span`
+  margin: 5px;
+  color: #FF4747;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%;
+`
 function ChangePasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordCheck, setShowPasswordCheck] = useState(false);
@@ -90,12 +101,33 @@ function ChangePasswordPage() {
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
 
+  const [passwordError, setPasswordError] = useState(true);
+  const [passwordCheckError, setPasswordCheckError] = useState(true);
+
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [passwordCheckTouched, setPasswordCheckTouched] = useState(false);
+
   const onChangePassword = (e) => {
     setPassword(e.target.value);
+    setPasswordTouched(true);
+    // 비밀번호 유효성 검사
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+    if (!passwordRegex.test(e.target.value)) {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
   }
 
   const onChangePasswordCheck = (e) => {
     setPasswordCheck(e.target.value);
+    setPasswordCheckTouched(true);
+    // 비밀번호 확인 유효성 검사
+    if (e.target.value !== password) {
+      setPasswordCheckError(true);
+    } else {
+      setPasswordCheckError(false);
+    }
   }
 
   const onSubmit = async(e) => {
@@ -107,18 +139,38 @@ function ChangePasswordPage() {
         <ChangePasswordTitle>비밀번호 재설정</ChangePasswordTitle>
         <ChangePasswordText>변경할 비밀번호를 정확히 입력해 주세요.</ChangePasswordText>
         <form onSubmit={onSubmit}>
-        <ChangePasswordLabel htmlFor='password'>비밀번호</ChangePasswordLabel>
+        <ChangePasswordLabel htmlFor='password'>
+          비밀번호
+          {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자 모두 포함되어야 합니다.</ErrorText>}
+          </ChangePasswordLabel>
           <PasswordContainer>
-            <ChangePasswordInput id='password' type={showPassword ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" value={password} onChange={onChangePassword} />
+            <ChangePasswordInput id='password' 
+            type={showPassword ? 'text' : 'password'} 
+            placeholder='*******' 
+            autoComplete="new-password" 
+            value={password} 
+            onChange={onChangePassword} 
+            style={passwordTouched && passwordError ? {borderColor: '#FF4747'} : {borderColor: '#E7E7E7'}}/>
             <EyeIcon src={showPassword ? eye_green : eye} onClick={() => setShowPassword(!showPassword)} />
           </PasswordContainer>
-          <ChangePasswordLabel htmlFor='passwordcheck'>비밀번호 확인</ChangePasswordLabel>
+          <ChangePasswordLabel htmlFor='passwordcheck'>
+            비밀번호 확인
+            {passwordCheckTouched && passwordCheckError && <ErrorText>ⓘ 비밀번호가 동일하지 않습니다.</ErrorText>}
+            </ChangePasswordLabel>
           <PasswordContainer>
-            <ChangePasswordInput id='passwordcheck' type={showPasswordCheck ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" value={passwordCheck} onChange={onChangePasswordCheck}/>
+            <ChangePasswordInput id='passwordcheck'
+            type={showPasswordCheck ? 'text' : 'password'} 
+            placeholder='*******' 
+            autoComplete="new-password" 
+            value={passwordCheck} 
+            onChange={onChangePasswordCheck}
+            style={passwordCheckTouched && passwordCheckError ? {borderColor: '#FF4747'} : {borderColor: '#E7E7E7'}}/>
             <EyeIcon src={showPasswordCheck ? eye_green : eye} onClick={() => setShowPasswordCheck(!showPasswordCheck)} />
           </PasswordContainer>
           <ChangePasswordLine />
-          <ChangePasswordSubmit type='submit' value="비밀번호 변경" disabled />
+          <ChangePasswordSubmit type='submit' 
+          value="비밀번호 변경" 
+          disabled={passwordError || passwordCheckError} />
         </form>
       </ChangePasswordContainer>
     </>
