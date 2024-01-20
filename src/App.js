@@ -10,6 +10,8 @@ import LiveUpJoinPage from './pages/LiveUpPage/LiveUpJoinPage';
 
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/JoinPage/SignUpPage';
+import FindPasswordPage from './pages/JoinPage/FindPasswordPage';
+import ChangePasswordPage from './pages/JoinPage/ChangePasswordPage';
 
 
 function Layout() {
@@ -33,7 +35,8 @@ function App() {
         <Route path='/liveup/:roomid' element={<LiveUpJoinPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-
+        <Route path="/findpassword" element={<FindPasswordPage />} />
+        <Route path="/changepassword" element={<ChangePasswordPage />} /> 
       </Route>
     </Routes>
   );
