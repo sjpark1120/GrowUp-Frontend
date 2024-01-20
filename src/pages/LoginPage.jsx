@@ -1,8 +1,9 @@
 import React from 'react'
+import LoginBox from '../components/common/LoginBox'
 
 function LoginPage() {
   return (
-    <div>LoginPage입니다</div>
+    <div><LoginBox/></div>
   )
 }
 

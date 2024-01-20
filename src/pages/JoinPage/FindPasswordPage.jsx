@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 const FindPasswordContainer = styled.div`
@@ -48,7 +48,9 @@ const FindPasswordInput = styled.input`
   border-radius: 8px;
   border: 1px solid #E7E7E7;
   margin-bottom: 30px;
-  
+  &::-webkit-input-placeholder {
+    color: #E7E7E7;
+  }
 `
 const FindPasswordLine = styled.div`
   width: 425px;
@@ -71,6 +73,15 @@ const FindPasswordSubmit = styled.input`
   color: white;
 `
 function FindPasswordPage() {
+  const [email, setEmail] = useState('');
+
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+  }
+
+  const onSubmit = async(e) => {
+    e.preventDefault();
+  }
   return (
     <>
     <FindPasswordContainer>
@@ -80,9 +91,9 @@ function FindPasswordPage() {
         <div>그로우업에 가입한 이메일을 통해</div>
         <div>비밀번호를 재설정 해주세요!</div>
       </FindPasswordText>
-      <form>
+      <form onSubmit={onSubmit}>
         <FindPasswordLabel htmlFor='email'>이메일</FindPasswordLabel>
-        <FindPasswordInput id='email' type='email' placeholder='dahul4603@naver.com' autoComplete="email"/>
+        <FindPasswordInput id='email' type='email' placeholder='dahul4603@naver.com' autoComplete="email" value={email} onChange={onChangeEmail}/>
         <FindPasswordLine />
         <FindPasswordSubmit type='submit' value="인증 메일 전송하기" disabled />
       </form>

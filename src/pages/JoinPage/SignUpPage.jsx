@@ -50,7 +50,9 @@ const SignUpInput = styled.input`
   border-radius: 8px;
   border: 1px solid #E7E7E7;
   margin-bottom: 30px;
-  
+  &::-webkit-input-placeholder {
+    color: #E7E7E7;
+  }
 `
 const SignUpLine = styled.div`
   width: 425px;
@@ -84,26 +86,56 @@ const EyeIcon = styled.img`
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordCheck, setShowPasswordCheck] = useState(false);
+
+  const [name, setName] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+
+  const onChangeName = (e) => {
+    setName(e.target.value);
+  }
+
+  const onChangeNickname = (e) => {
+    setNickname(e.target.value);
+  }
+
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+  }
+
+  const onChangePassword = (e) => {
+    setPassword(e.target.value);
+  }
+
+  const onChangePasswordCheck = (e) => {
+    setPasswordCheck(e.target.value);
+  }
+
+  const onSubmit = async(e) => {
+    e.preventDefault();
+  }
   return (
     <>
     <SignUpcontainer>
       <SignUpTitle>회원가입</SignUpTitle>
       <SignUpText>그로우업에서 즐겁게 성장하세요!</SignUpText>
-      <form>
+      <form onSubmit={onSubmit}>
         <SignUpLabel htmlFor='name'>이름</SignUpLabel>
-        <SignUpInput id='name' type='text' placeholder='윤다희' />
+        <SignUpInput id='name' type='text' placeholder='윤다희' value={name} onChange={onChangeName} />
         <SignUpLabel htmlFor='nickname'>닉네임</SignUpLabel>
-        <SignUpInput id='nickname' type='text' placeholder='쿼카' />
+        <SignUpInput id='nickname' type='text' placeholder='쿼카' value={nickname} onChange={onChangeNickname}/>
         <SignUpLabel htmlFor='email'>이메일</SignUpLabel>
-        <SignUpInput id='email' type='email' placeholder='dahul4603@naver.com' autoComplete="email"/>
+        <SignUpInput id='email' type='email' placeholder='dahul4603@naver.com' autoComplete="email" value={email} onChange={onChangeEmail}/>
         <SignUpLabel htmlFor='password'>비밀번호</SignUpLabel>
         <PasswordContainer>
-          <SignUpInput id='password' type={showPassword ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" />
+          <SignUpInput id='password' type={showPassword ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" value={password} onChange={onChangePassword}/>
           <EyeIcon src={showPassword ? eye_green : eye} onClick={() => setShowPassword(!showPassword)} />
         </PasswordContainer>
         <SignUpLabel htmlFor='passwordcheck'>비밀번호 확인</SignUpLabel>
         <PasswordContainer>
-          <SignUpInput id='passwordcheck' type={showPasswordCheck ? 'text' : 'password'} placeholder='*******' autoComplete="new-password"/>
+          <SignUpInput id='passwordcheck' type={showPasswordCheck ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" value={passwordCheck} onChange={onChangePasswordCheck}/>
           <EyeIcon src={showPasswordCheck ? eye_green : eye} onClick={() => setShowPasswordCheck(!showPasswordCheck)} />
         </PasswordContainer>
         <SignUpLine />

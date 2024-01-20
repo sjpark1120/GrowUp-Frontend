@@ -50,7 +50,9 @@ const ChangePasswordInput = styled.input`
   border-radius: 8px;
   border: 1px solid #E7E7E7;
   margin-bottom: 30px;
-  
+  &::-webkit-input-placeholder {
+    color: #E7E7E7;
+  }
 `
 const ChangePasswordLine = styled.div`
   width: 425px;
@@ -84,20 +86,35 @@ const EyeIcon = styled.img`
 function ChangePasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordCheck, setShowPasswordCheck] = useState(false);
+
+  const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+
+  const onChangePassword = (e) => {
+    setPassword(e.target.value);
+  }
+
+  const onChangePasswordCheck = (e) => {
+    setPasswordCheck(e.target.value);
+  }
+
+  const onSubmit = async(e) => {
+    e.preventDefault();
+  }
   return (
     <>
       <ChangePasswordContainer>
         <ChangePasswordTitle>비밀번호 재설정</ChangePasswordTitle>
         <ChangePasswordText>변경할 비밀번호를 정확히 입력해 주세요.</ChangePasswordText>
-        <form>
+        <form onSubmit={onSubmit}>
         <ChangePasswordLabel htmlFor='password'>비밀번호</ChangePasswordLabel>
           <PasswordContainer>
-            <ChangePasswordInput id='password' type={showPassword ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" />
+            <ChangePasswordInput id='password' type={showPassword ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" value={password} onChange={onChangePassword} />
             <EyeIcon src={showPassword ? eye_green : eye} onClick={() => setShowPassword(!showPassword)} />
           </PasswordContainer>
           <ChangePasswordLabel htmlFor='passwordcheck'>비밀번호 확인</ChangePasswordLabel>
           <PasswordContainer>
-            <ChangePasswordInput id='passwordcheck' type={showPasswordCheck ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" />
+            <ChangePasswordInput id='passwordcheck' type={showPasswordCheck ? 'text' : 'password'} placeholder='*******' autoComplete="new-password" value={passwordCheck} onChange={onChangePasswordCheck}/>
             <EyeIcon src={showPasswordCheck ? eye_green : eye} onClick={() => setShowPasswordCheck(!showPasswordCheck)} />
           </PasswordContainer>
           <ChangePasswordLine />
