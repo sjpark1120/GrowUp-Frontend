@@ -1,8 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import banner from '../../icon/Banner.png'
-import PostBoxBlack from '../../components/LiveUpPage/PostBoxBlack';
-import UserRanking from '../../components/LiveUpPage/UserRanking';
+import banner from '../../icon/banner1.png'
 import LiveUpNavigation from '../../components/LiveUpPage/LiveUpNavigation';
 import RankingFilterBtn from '../../components/LiveUpPage/RankingFilterBtn';
 import RankingBox from '../../components/LiveUpPage/RankingBox';
@@ -16,20 +14,10 @@ const MainWrapper = styled.div`
   background-color: #1c1c1c;
 `
 
-const BannerImg =styled.div`
-  background-image: url(${banner});
+const BannerImg =styled.img`
   width: 1920px;
-  height: 511px;
+  height: 500px;
   `;
-
-const PostBoxContainer = styled.div`
-  width: 100%;
-  max-width: 1220px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px 16px;
-  margin-top: 50px;
-`
 
 const RankingContainer = styled.div`
   width: 1220px;
@@ -40,17 +28,7 @@ const MyLiveUpContainer = styled.div`
   width: 1220px;
   margin-top: 150px;
 `
-const RankingBtn = styled.button`
-  border: 0;
-  background-color: transparent;
-  width: 57px;
-  height: 42px;
-  border: 1px solid #ffffff;
-  border-radius: 30px;
-  color: #ffffff;
-  margin-right: 10px;
-  cursor: pointer;
-`
+
 const RankingTitle = styled.h1`
   color:#FFF;
   font-size: 25px;
@@ -72,17 +50,17 @@ const MyLiveUpTitle = styled.h1`
 function LiveUpPage() {
   return (
     <MainWrapper>
-      <BannerImg />
+      <BannerImg src={banner} alt="banner" />
       <RankingContainer>
         <RankingTitle>🥇LIVE UP 누적 랭킹</RankingTitle>
         <RankingFilterBtn />
         <RankingBox />
       </RankingContainer>
       <MyLiveUpContainer>
-      <MyLiveUpTitle>MY LIVE UP</MyLiveUpTitle>
-      <LiveUpNavigation/>
-      <LiveUpPagination/>
-    </MyLiveUpContainer>
+        <MyLiveUpTitle>MY LIVE UP</MyLiveUpTitle>
+        <LiveUpNavigation />
+        <LiveUpPagination />
+      </MyLiveUpContainer>
     </MainWrapper>
   )
 }
