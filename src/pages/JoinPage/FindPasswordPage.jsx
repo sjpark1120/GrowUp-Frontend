@@ -80,10 +80,12 @@ function FindPasswordPage() {
         <div>그로우업에 가입한 이메일을 통해</div>
         <div>비밀번호를 재설정 해주세요!</div>
       </FindPasswordText>
-      <FindPasswordLabel htmlFor='email'>이메일</FindPasswordLabel>
-      <FindPasswordInput id='email' type='email' placeholder='dahul4603@naver.com' autoComplete="email"/>
-      <FindPasswordLine />
-      <FindPasswordSubmit type='submit' value="인증 메일 전송하기" disabled />
+      <form>
+        <FindPasswordLabel htmlFor='email'>이메일</FindPasswordLabel>
+        <FindPasswordInput id='email' type='email' placeholder='dahul4603@naver.com' autoComplete="email"/>
+        <FindPasswordLine />
+        <FindPasswordSubmit type='submit' value="인증 메일 전송하기" disabled />
+      </form>
     </FindPasswordContainer>
     </>
   )
