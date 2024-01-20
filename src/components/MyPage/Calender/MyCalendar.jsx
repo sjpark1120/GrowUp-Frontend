@@ -7,6 +7,7 @@ import CalendarPopup from '../CalendarPopup';
 const CalendarWrapper = styled.div`
   width: 100%;
 `;
+
 const MonthHeader = styled.div`
   padding-bottom: 50px;
   display: flex;
@@ -41,7 +42,7 @@ const WeekdayCell = styled.div`
 `;
 
 const DayCell = styled.div`
-position: relative; 
+  position: relative; 
   display: flex;
   width: 170px;
   height: 200px;
@@ -51,16 +52,15 @@ position: relative;
   gap: 5px;
   border-bottom: 1px solid #F7F7F7;
   background: #FFF;
-
   color: #8D8D8D;
-text-align: center;
-font-size: 14px;
-font-weight: 500;
-line-height: 140%;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 140%;
 
-&:hover {
-  background-color: #f0f0f0;
-}
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `;
 
 const EventContainer = styled.div`
@@ -81,11 +81,12 @@ const NavigationButton = styled.img`
 
 const MyCalendar = ({ events, onEventsChange }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showPopup, setShowPopup] = useState(false); //팝업 여닫기
+  const [showPopup, setShowPopup] = useState(false);
+  const [eventText, setEventText] = useState('');
 
-  const dayCellRef = useRef(null);//달력 위치 전달
+  const dayCellRef = useRef(null);
 
-  const renderMonthGrid = () => { //달력
+  const renderMonthGrid = () => {
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
     const lastDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
@@ -113,16 +114,23 @@ const MyCalendar = ({ events, onEventsChange }) => {
 
     return monthGrid;
   };
+
   const handleDayClick = (date) => {
-    // 현재 열린 팝업 닫기
     setShowPopup(false);
-    // 선택한 날짜에 대한 새로운 팝업 열기
     setSelectedDate(date);
     setShowPopup(true);
+    setEventText(getEventsForDate(date)[0]?.text || '');
   };
 
-  const handleClosePopup = () => {
-    setShowPopup(false); // 팝업 닫기
+  const handleClosePopup = (updatedEventText) => {
+    setShowPopup(false);
+    const updatedEvents = events.map(event => {
+      if (new Date(event.date).toDateString() === selectedDate.toDateString()) {
+        return { ...event, text: updatedEventText };
+      }
+      return event;
+    });
+    onEventsChange(updatedEvents);
   };
 
   const getEventsForDate = (date) => {
@@ -172,7 +180,7 @@ const MyCalendar = ({ events, onEventsChange }) => {
           selectedDate={selectedDate}
           events={getEventsForDate(selectedDate)}
           onClose={handleClosePopup}
-          dayCellRef={dayCellRef} //위치 전달
+          dayCellRef={dayCellRef}
         />
       )}
     </CalendarWrapper>
