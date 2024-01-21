@@ -687,7 +687,6 @@ function LiveUpJoinPage() {
   }, [postList]);
 
   const [selected, setSelected] = useState(null);
-  console.log(selected, "sadf");
   const onSelect = useCallback((index) => {
     setSelected(index);
   }, []);
