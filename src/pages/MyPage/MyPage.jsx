@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import mypageIcon from "../../icon/mypageIcon.png";
+
+import logo from "../../icon/Logo.png";
+import cancel from "../../icon/cancel.png";
+import OverlayBox from "../../components/LiveUpPage/OverlayBox";
+import OverlayCheck from "../../components/LiveUpPage/OverlayCheck";
+import OverlayWithdraw from "../../components/LiveUpPage/OverlayWithdraw";
+
 const Frame = styled.div`
   width: 100%;
   display: flex;
@@ -15,7 +22,7 @@ const Benner = styled.div`
   background-color: #141414;
 `;
 
-const MyInfo = styled.div`
+const MyInfo = styled.form`
   width: 902px;
   height: 735px;
   margin: 191px;
@@ -148,7 +155,7 @@ const MyInfo = styled.div`
   }
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   width: 577px;
   height: 55px;
   border-radius: 8px;
@@ -158,14 +165,69 @@ const Input = styled.input`
   margin-bottom: 20px;
 `;
 
-const formData = {
-  nickname: "쿼카",
-  email: "dahui4603@naver.com",
-};
-
 const MyPage = () => {
+  const [doubleCheck, setDoubleCheck] = useState(false);
+  const [mail, setMail] = useState(false);
+  const [passwordToggle, setPasswordToggle] = useState(false);
+  const [withdraw, setWithdraw] = useState(false);
+
+  const [formData, setFormData] = useState({
+    nickname: "쿼",
+    email: "dahui4603@naver.com",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
   return (
     <Frame>
+      {formData.nickname === "쿼카" ? (
+        <OverlayBox
+          toggle={doubleCheck}
+          setToggle={setDoubleCheck}
+          title={"사용 가능한 닉네임 입니다!"}
+          subTitle={"사용하기"}
+        />
+      ) : (
+        <OverlayCheck
+          toggle={doubleCheck}
+          setToggle={setDoubleCheck}
+          title={"중복된 닉네임 입니다!"}
+          subTitle={"중복확인"}
+          onCheck={() => setDoubleCheck(false)}
+        />
+      )}
+
+      <OverlayCheck
+        toggle={passwordToggle}
+        setToggle={setPasswordToggle}
+        title={"비밀번호가 틀렸습니다!"}
+        subTitle={"인증하기"}
+        onCheck={() => setPasswordToggle(false)}
+      />
+
+      <OverlayBox
+        toggle={mail}
+        setToggle={setMail}
+        title={"메일이 발송 되었습니다!"}
+        subTitle={"닫기"}
+      />
+
+      <OverlayWithdraw
+        toggle={withdraw}
+        setToggle={setWithdraw}
+        title={"탈퇴 안내 사항"}
+        subTitle={"탈퇴하기"}
+        onCheck={() => setWithdraw(false)}
+      />
+
       <Benner />
       <MyInfo>
         <div className="title">내 정보 변경</div>
@@ -187,28 +249,53 @@ const MyPage = () => {
                   한글, 영문(대소문자), 숫자 조합 / 2~10자 이하
                 </div>
               </div>
-              <Input type="text" value={formData.nickname} />
-              <div className="btn btn_nickname">중복확인</div>
+              <Input
+                type="text"
+                value={formData.nickname}
+                name="nickname"
+                onChange={onChange}
+              />
+              <div
+                className="btn btn_nickname"
+                onClick={() => setDoubleCheck(true)}
+              >
+                중복확인
+              </div>
               <div className="exclude_nickname">
                 <div className="info_input_title">이메일 변경</div>
                 <div className="rule">* 이메일 변경 시 재인증 필요</div>
               </div>
-              <Input type="text" value={formData.email} />
-              <div className="btn btn_email">인증하기</div>
+              <Input
+                type="email"
+                value={formData.email}
+                name="email"
+                onChange={onChange}
+              />
+              <div className="btn btn_email" onClick={() => setMail(true)}>
+                인증하기
+              </div>
             </div>
             <div className="nickname_email_input">
               <div className="exclude_nickname">
                 <div className="info_input_title">비밀번호 변경</div>
                 <div className="find_password">비밀번호 찾기</div>
               </div>
-              <div className="btn">인증하기</div>
+              <div className="btn" onClick={() => setPasswordToggle(true)}>
+                인증하기
+              </div>
 
-              <Input type="text" placeholder="기존 비밀번호" />
-              <Input type="text" placeholder="새 비밀번호" />
-              <Input type="text" placeholder="새 비밀번호 확인" />
+              <Input
+                type="password"
+                name="password"
+                onChange={onChange}
+                value={formData.password}
+                placeholder="기존 비밀번호"
+              />
+              <Input type="password" placeholder="새 비밀번호" />
+              <Input type="password" placeholder="새 비밀번호 확인" />
             </div>
             <div className="withdrawAndLogoutBtn">
-              <div>탈퇴하기</div>
+              <div onClick={() => setWithdraw(true)}>탈퇴하기</div>
               <div>로그아웃</div>
             </div>
           </div>
