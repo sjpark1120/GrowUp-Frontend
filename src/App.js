@@ -1,6 +1,6 @@
 
 import LoginPage from './pages/LoginPage';
-import SignUpPage from './pages/SignUpPage';
+import SignUpPage from "./pages/JoinPage/SignUpPage";
 import TodoCalendar from './pages/MyPage/Todo_Calendar';
 import React from "react";
 import { Outlet, Route, Routes } from "react-router-dom";

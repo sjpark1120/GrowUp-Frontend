@@ -11,7 +11,7 @@ import golast_arrow_disable from '../../icon/arrow9.png'
 import gonext_arrow from '../../icon/arrow2.png'
 import gonext_arrow_disable from '../../icon/arrow3.png'
 
-import dummyData from '../.././DummyData'
+import {dummyData} from '../.././DummyData'
 import { Link } from 'react-router-dom';
 
 const PostBoxContainer = styled.div`
