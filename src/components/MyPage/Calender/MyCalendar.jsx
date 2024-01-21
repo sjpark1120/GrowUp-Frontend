@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import btn_left from '../../../icon/Page button_1.png';
 import btn_right from '../../../icon/Page button_2.png';
-import CalendarPopup from '../CalendarPopup';
+import CalendarPopup from './CalendarPopup';
 
 const CalendarWrapper = styled.div`
   width: 100%;
