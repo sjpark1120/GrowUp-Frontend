@@ -24,6 +24,7 @@ import screen_img from "../../icon/image 39.png";
 import screen_img_true from "../../icon/화면 공유-1.png";
 import timer_true from "../../icon/화면 공유.png";
 import video_true from "../../icon/비디오 공유true.png";
+import OverlayBox from "../../components/LiveUpPage/OverlayBox";
 
 const dummy = [
   {
