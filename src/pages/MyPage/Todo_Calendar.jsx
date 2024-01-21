@@ -79,7 +79,7 @@ const PencilButton = styled.img`
 `;
 
 
-function MyPage() {
+function TodoCalendar() {
   const [userData, setUserData] = useState(dummyTodo);
   const [events, setEvents] = useState(dummyEvents);
 
@@ -114,5 +114,5 @@ function MyPage() {
   );
 }
 
-export default MyPage;
+export default TodoCalendar;
 

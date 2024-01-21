@@ -10,7 +10,7 @@ import LiveUpJoinPage from './pages/LiveUpPage/LiveUpJoinPage';
 
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
-import MyPage from './pages/MyPage/MyPage';
+import TodoCalendar from './pages/MyPage/Todo_Calendar';
 
 
 function Layout() {
@@ -34,7 +34,7 @@ function App() {
         <Route path='/liveup/:roomid' element={<LiveUpJoinPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/mypage" element={<MyPage/>} />
+        <Route path="/todo_calendar" element={<TodoCalendar/>} />
       </Route>
     </Routes>
   );
