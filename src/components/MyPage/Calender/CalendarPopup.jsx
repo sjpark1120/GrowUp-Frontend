@@ -16,8 +16,8 @@ const PopupWrapper = styled.div`
 `;
 
 const PopupHeader = styled.div`
-display: flex;
 position: relative;
+display: flex;
 justify-content: center;
 color: #FFF;
 text-align: center;
@@ -29,8 +29,6 @@ width: 100%;
 `;
 
 const CloseButton = styled.img`
-position: absolute;
-right:0;
 background-color: transparent;
 border: none;
 cursor: pointer;
@@ -38,7 +36,9 @@ width: 28px;
 height: 28px;
 display: flex;
 align-items: center;
-margin-right: 4;
+position: absolute;
+right:0;
+margin-right:5px;
 `;
 
 const PopupBody = styled.div`
@@ -121,7 +121,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
     useEffect(() => {
       // 팝업이 열릴 때 초기 데이터를 받아오기
       setPopUpEventText(events.map((event) => event.text).join('\n'));
-      setSelectedColor(events[0]?.backgroundColor || '#FFF'); 
+      setSelectedColor(events[0]?.backgroundColor || '#FFF');
     }, [events]);
 
     useEffect(() => {

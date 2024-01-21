@@ -51,10 +51,10 @@ const DayCell = styled.div`
   gap: 5px;
   background-color: ${(props) =>
     props.isToday ? '#F5FFF9' : props.backgroundColor || '#FFF'};
-  border-bottom: ${(props) => props.isToday ? '1px solid #00D749': '1px solid #F7F7F7'};
-  border-top: ${(props) => (props.isToday ? '1px solid #00D749' : 'none')};
-  border-right: ${(props) => (props.isToday ? '1px solid #00D749' : 'none')};
-  border-left: ${(props) => (props.isToday ? '1px solid #00D749' : 'none')};
+  border-bottom: ${(props) => (props.isToday ? '2px solid #00D749' : '1px solid #F7F7F7')};
+  border-top: ${(props) => (props.isToday ? '2px solid #00D749' : 'none')};
+  border-right: ${(props) => (props.isToday ? '2px solid #00D749' : 'none')};
+  border-left: ${(props) => (props.isToday ? '2px solid #00D749' : 'none')};
   color: #8D8D8D;
   text-align: center;
   font-size: 14px;
@@ -125,30 +125,35 @@ const MyCalendar = ({ events, onEventsChange }) => {
     setEventText(getEventsForDate(date)[0]?.text || '');
   };
 
-const handleClosePopup = (updatedEventText, updatedBackgroundColor) => {
-  setShowPopup(false);
+  const handleClosePopup = (updatedEventText, updatedBackgroundColor) => {
+    console.log('Handling close popup...');
+    setShowPopup(false);
+  
+    const updatedEvents = [...events].map((event) => {
+      if (new Date(event.date).toDateString() === selectedDate.toDateString()) {
+        return { ...event, text: updatedEventText, backgroundColor: updatedBackgroundColor };
+      }
+      return event;
+    });
+  
+    console.log('Updated Events:', updatedEvents);
+  
+    onEventsChange(updatedEvents);
+  };
+  
 
-  const updatedEvents = events.map((event) => {
-    if (new Date(event.date).toDateString() === selectedDate.toDateString()) {
-      return { ...event, text: updatedEventText, backgroundColor: updatedBackgroundColor };
-    }
-    return event;
-  });
-
-  onEventsChange(updatedEvents);
-};
   const getEventsForDate = (date) => {
     if (!date) {
       return [];
     }
-  
+
     return events.filter((event) => {
       const eventDate = new Date(event.date);
-  
+      // date와 eventDate가 모두 유효한 경우에만 비교
       if (!isNaN(date) && !isNaN(eventDate)) {
         return eventDate.toDateString() === date.toDateString();
       }
-  
+
       return false;
     });
   };
@@ -175,57 +180,50 @@ const handleClosePopup = (updatedEventText, updatedBackgroundColor) => {
         {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day, index) => (
           <WeekdayCell key={index}>{day}</WeekdayCell>
         ))}
-       {renderMonthGrid().map((week, weekIndex) => (
-  week.map((date, dateIndex) => (
-    <DayCell
-      ref={date && date.getDate() === selectedDate.getDate() ? dayCellRef : null}
-      key={dateIndex}
-      onClick={() => date && handleDayClick(date)}
-      backgroundColor={getEventsForDate(date)[0]?.backgroundColor}
-      isToday={date && date.toDateString() === new Date().toDateString()}
-    >
-      {date ? (
-  <div style={{ position: 'relative' }}>
-    {date.getDate()}
-    {date.toDateString() === new Date().toDateString() && (
-      <div
-        style={{
-          width: '25px',
-          height: '25px',
-          borderRadius: '50%',
-          backgroundColor: '#00D749',
-          position: 'absolute',
-          top: '0',
-          right: '0',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: '#FFF',
-          fontWeight: 'bold',
-        }}
-      >
-        {date.getDate()}
-      </div>
-    )}
-    <EventContainer>
-      {getEventsForDate(date).map((event, index) => (
-        <div key={index}>{event.text}</div>
-      ))}
-    </EventContainer>
-  </div>
-) : (
-  ''
-)}
-      {date && (
-        <EventContainer>
-          {getEventsForDate(date).map((event, index) => (
-            <div key={index}>{event.text}</div>
-          ))}
-        </EventContainer>
-      )}
-    </DayCell>
-  ))
-))}
+        {renderMonthGrid().map((week, weekIndex) => (
+          week.map((date, dateIndex) => (
+            <DayCell
+              ref={date && date.getDate() === selectedDate.getDate() ? dayCellRef : null}
+              key={dateIndex}
+              onClick={() => date && handleDayClick(date)}
+              backgroundColor={getEventsForDate(date)[0]?.backgroundColor || '#FFF'}
+              isToday={date && date.toDateString() === new Date().toDateString()}
+            >
+              {date ? (
+                <div style={{ position: 'relative' }}>
+                  {date.getDate()}
+                  {date.toDateString() === new Date().toDateString() && (
+                    <div
+                      style={{
+                        width: '25px',
+                        height: '25px',
+                        borderRadius: '50%',
+                        backgroundColor: '#00D749',
+                        position: 'absolute',
+                        top: '0',
+                        right: '0',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: '#FFF',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {date.getDate()}
+                    </div>
+                  )}
+                  <EventContainer>
+                    {getEventsForDate(date).map((event, index) => (
+                      <div key={index}>{event.text}</div>
+                    ))}
+                  </EventContainer>
+                </div>
+              ) : (
+                ''
+              )}
+            </DayCell>
+          ))
+        ))}
       </CalendarGrid>
       {showPopup && (
         <CalendarPopup
