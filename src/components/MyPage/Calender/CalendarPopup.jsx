@@ -17,6 +17,7 @@ const PopupWrapper = styled.div`
 
 const PopupHeader = styled.div`
 display: flex;
+position: relative;
 justify-content: center;
 color: #FFF;
 text-align: center;
@@ -28,6 +29,8 @@ width: 100%;
 `;
 
 const CloseButton = styled.img`
+position: absolute;
+right:0;
 background-color: transparent;
 border: none;
 cursor: pointer;
@@ -35,7 +38,7 @@ width: 28px;
 height: 28px;
 display: flex;
 align-items: center;
-margin-left: auto;
+margin-right: 4;
 `;
 
 const PopupBody = styled.div`
@@ -60,6 +63,7 @@ background-color: #FFF;
 flex-grow: 1;
 overflow-y: auto;
 color: #8D8D8D;
+outline: none;
 font-size: 18px;
 font-weight: 600;
 line-height: 140%;
@@ -117,6 +121,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
     useEffect(() => {
       // 팝업이 열릴 때 초기 데이터를 받아오기
       setPopUpEventText(events.map((event) => event.text).join('\n'));
+      setSelectedColor(events[0]?.backgroundColor || '#FFF'); 
     }, [events]);
 
     useEffect(() => {
@@ -187,6 +192,10 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
             <EditButton style={{ marginRight: '5px' }}>
               <img src={icon_check_circle} alt="취소선적용" onClick={handleSave} />
             </EditButton>
+            <EditButton
+              style={{ backgroundColor: '#FFF', border: '2px solid #8D8D8D' }}
+              onClick={() => handleColorButtonClick('#FFF')}
+            />
             <EditButton
               style={{ backgroundColor: '#FFE5E5' }}
               onClick={() => handleColorButtonClick('#FFE5E5')}

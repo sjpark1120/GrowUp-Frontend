@@ -40,9 +40,8 @@ const WeekdayCell = styled.div`
   font-weight: 500;
   line-height: 140%;
 `;
-
 const DayCell = styled.div`
-  position: relative; 
+  position: relative;
   display: flex;
   width: 170px;
   height: 200px;
@@ -50,8 +49,12 @@ const DayCell = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  border-bottom: 1px solid #F7F7F7;
-  background-color: ${(props) => props.backgroundColor || '#FFF'};
+  background-color: ${(props) =>
+    props.isToday ? '#F5FFF9' : props.backgroundColor || '#FFF'};
+  border-bottom: ${(props) => props.isToday ? '1px solid #00D749': '1px solid #F7F7F7'};
+  border-top: ${(props) => (props.isToday ? '1px solid #00D749' : 'none')};
+  border-right: ${(props) => (props.isToday ? '1px solid #00D749' : 'none')};
+  border-left: ${(props) => (props.isToday ? '1px solid #00D749' : 'none')};
   color: #8D8D8D;
   text-align: center;
   font-size: 14px;
@@ -66,7 +69,7 @@ const DayCell = styled.div`
 const EventContainer = styled.div`
   display: flex;
   width: 100%;
-  height: 150px;
+  height: 170px;
   flex-direction: column;
   text-align: left;
   gap: 5px;
@@ -122,18 +125,18 @@ const MyCalendar = ({ events, onEventsChange }) => {
     setEventText(getEventsForDate(date)[0]?.text || '');
   };
 
-  const handleClosePopup = (updatedEventText, updatedBackgroundColor) => {
-    setShowPopup(false);
-  
-    const updatedEvents = events.map((event) => {
-      if (new Date(event.date).toDateString() === selectedDate.toDateString()) {
-        return { ...event, text: updatedEventText, backgroundColor: updatedBackgroundColor };
-      }
-      return event;
-    });
-  
-    onEventsChange(updatedEvents);
-  };
+const handleClosePopup = (updatedEventText, updatedBackgroundColor) => {
+  setShowPopup(false);
+
+  const updatedEvents = events.map((event) => {
+    if (new Date(event.date).toDateString() === selectedDate.toDateString()) {
+      return { ...event, text: updatedEventText, backgroundColor: updatedBackgroundColor };
+    }
+    return event;
+  });
+
+  onEventsChange(updatedEvents);
+};
   const getEventsForDate = (date) => {
     if (!date) {
       return [];
@@ -142,7 +145,6 @@ const MyCalendar = ({ events, onEventsChange }) => {
     return events.filter((event) => {
       const eventDate = new Date(event.date);
   
-      // date와 eventDate가 모두 유효한 경우에만 비교
       if (!isNaN(date) && !isNaN(eventDate)) {
         return eventDate.toDateString() === date.toDateString();
       }
@@ -173,25 +175,57 @@ const MyCalendar = ({ events, onEventsChange }) => {
         {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day, index) => (
           <WeekdayCell key={index}>{day}</WeekdayCell>
         ))}
-        {renderMonthGrid().map((week, weekIndex) => (
-          week.map((date, dateIndex) => (
-            <DayCell
-              ref={date && date.getDate() === selectedDate.getDate() ? dayCellRef : null}
-              key={dateIndex}
-              onClick={() => date && handleDayClick(date)}
-              backgroundColor={getEventsForDate(date)[0]?.backgroundColor || '#FFF'}
-            >
-              {date ? date.getDate() : ''}
-              {date && (
-                <EventContainer>
-                  {getEventsForDate(date).map((event, index) => (
-                    <div key={index}>{event.text}</div>
-                  ))}
-                </EventContainer>
-              )}
-            </DayCell>
-          ))
-        ))}
+       {renderMonthGrid().map((week, weekIndex) => (
+  week.map((date, dateIndex) => (
+    <DayCell
+      ref={date && date.getDate() === selectedDate.getDate() ? dayCellRef : null}
+      key={dateIndex}
+      onClick={() => date && handleDayClick(date)}
+      backgroundColor={getEventsForDate(date)[0]?.backgroundColor}
+      isToday={date && date.toDateString() === new Date().toDateString()}
+    >
+      {date ? (
+  <div style={{ position: 'relative' }}>
+    {date.getDate()}
+    {date.toDateString() === new Date().toDateString() && (
+      <div
+        style={{
+          width: '25px',
+          height: '25px',
+          borderRadius: '50%',
+          backgroundColor: '#00D749',
+          position: 'absolute',
+          top: '0',
+          right: '0',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: '#FFF',
+          fontWeight: 'bold',
+        }}
+      >
+        {date.getDate()}
+      </div>
+    )}
+    <EventContainer>
+      {getEventsForDate(date).map((event, index) => (
+        <div key={index}>{event.text}</div>
+      ))}
+    </EventContainer>
+  </div>
+) : (
+  ''
+)}
+      {date && (
+        <EventContainer>
+          {getEventsForDate(date).map((event, index) => (
+            <div key={index}>{event.text}</div>
+          ))}
+        </EventContainer>
+      )}
+    </DayCell>
+  ))
+))}
       </CalendarGrid>
       {showPopup && (
         <CalendarPopup
