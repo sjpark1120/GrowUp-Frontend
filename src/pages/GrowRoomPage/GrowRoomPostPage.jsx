@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import PostHeader from '../../components/GrowRoom/GrowRoomPost/PostHeader';
 import PostTitle from '../../components/GrowRoom/GrowRoomPost/PostTitle'; // Import the PostTitle component
-import dummyData from '../../DummyData';
+import {dummyData} from '../../DummyData';
 import categoryDummyData from '../../CategoryDummyData';
 import { useNavigate } from 'react-router-dom';
 import CommentComponent from '../../components/GrowRoom/GrowRoomPost/CommentComponent';

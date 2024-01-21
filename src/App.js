@@ -1,4 +1,7 @@
 
+import LoginPage from './pages/LoginPage';
+import SignUpPage from "./pages/JoinPage/SignUpPage";
+import TodoCalendar from './pages/MyPage/Todo_Calendar';
 import React from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 import Header from "./components/common/Header";
@@ -8,9 +11,6 @@ import GrowRoomWritePage from "./pages/GrowRoomPage/GrowRoomWritePage";
 import GrowRoomPostPage from "./pages/GrowRoomPage/GrowRoomPostPage";
 import LiveUpPage from "./pages/LiveUpPage/LiveUpPage";
 import LiveUpJoinPage from "./pages/LiveUpPage/LiveUpJoinPage";
-
-import LoginPage from "./pages/LoginPage";
-import SignUpPage from "./pages/JoinPage/SignUpPage";
 import FindPasswordPage from "./pages/JoinPage/FindPasswordPage";
 import ChangePasswordPage from "./pages/JoinPage/ChangePasswordPage";
 
@@ -37,6 +37,7 @@ function App() {
         <Route path="/liveup/:roomid" element={<LiveUpJoinPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/todo_calendar" element={<TodoCalendar/>} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
         <Route path="/changepassword" element={<ChangePasswordPage />} /> 
