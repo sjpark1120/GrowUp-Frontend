@@ -2,26 +2,32 @@ export const dummyEvents = [
   {
     date: new Date(2024, 0, 1),
     text: '새해 첫날, 운동 가기',
+    backgroundColor: '#FFE5E5',
   },
   {
     date: new Date(2024, 0, 5),
     text: '친구와 저녁 약속, React 학습하기',
+    backgroundColor: '#EFECFF', 
   },
   {
     date: new Date(2024, 0, 10),
     text: '책 읽기 모임',
+    backgroundColor: '#FFF7CA',
   },
   {
     date: new Date(2024, 0, 15),
     text: '영화 보기',
+    backgroundColor: '#C5E0B4', 
   },
   {
     date: new Date(2024, 1, 1),
     text: '2월 첫째주 휴가 계획 세우기',
+    backgroundColor: '#FDDCDC', 
   },
   {
     date: new Date(2024, 1, 14),
     text: '밸런타인데이 기념 데이트',
+    backgroundColor: '#F3E6FF',
   },
   // Add more dummy events as needed
 ];
