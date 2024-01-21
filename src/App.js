@@ -14,7 +14,7 @@ import SignUpPage from "./pages/JoinPage/SignUpPage";
 import FindPasswordPage from "./pages/JoinPage/FindPasswordPage";
 import ChangePasswordPage from "./pages/JoinPage/ChangePasswordPage";
 
-import MyPage from "./pages/MyPage/MyPage";
+import MyPage from "./pages/Mypage/MyPage";
 
 function Layout() {
   return (
