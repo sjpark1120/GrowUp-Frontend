@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import button_1 from "../../icon/Page button_c1.png";
@@ -20,9 +21,11 @@ import arrow6 from "../../icon/arrow6.png";
 import logo from "../../icon/Logo.png";
 import cancel from "../../icon/cancel.png";
 import screen_img from "../../icon/image 39.png";
-import screen_img_true from "../../icon/화면 공유-1.png";
-import timer_true from "../../icon/화면 공유.png";
-import video_true from "../../icon/비디오 공유true.png";
+import screen_img_true from "../../icon/화면 공유-1.png";
+import timer_true from "../../icon/화면 공유.png";
+import video_true from "../../icon/비디오 공유true.png";
+import OverlayBox from "../../components/LiveUpPage/OverlayBox";
+
 
 const dummy = [
   {
@@ -346,11 +349,13 @@ const ScreenBlock = styled.div`
   line-height: 35px;
 `;
 
-const ScreenHeader = styled.div`
+const ScreenHeader = styled(Link)`
   display: flex;
   align-items: center;
   color: #fff;
   padding-bottom: 47px;
+  cursor: pointer;
+  text-decoration: none;
   .title {
     font-size: 25px;
     font-weight: 800;
@@ -479,7 +484,7 @@ const PageNationBar = styled.div`
   }
 `;
 
-const Overlay = styled.div`
+export const Overlay = styled.div`
   position: fixed;
   z-index: 50;
   top: 0;
@@ -532,6 +537,12 @@ const Overlay = styled.div`
         font-weight: 800;
         line-height: 35px;
       }
+      .rule {
+        font-size: 12px;
+        font-weight: 600;
+        color: #b0b0b0;
+        padding-bottom: 20px;
+      }
       .start_btn {
         width: 92px;
         height: 42px;
@@ -547,6 +558,118 @@ const Overlay = styled.div`
           background-color: #00d749;
           border: 1px solid #00d749;
           color: #fff;
+        }
+      }
+    }
+  }
+
+  .withdrawModal {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    width: 657px;
+    height: 460px;
+    border-radius: 8px;
+    .title {
+      width: 657px;
+      height: 36px;
+      position: absolute;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #b0b0b0;
+      padding: 6px 14px;
+      .logo {
+        width: 78px;
+        height: 12px;
+      }
+      .cancel {
+        cursor: pointer;
+      }
+    }
+    .content {
+      width: 427px;
+      height: 319px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .content_title {
+        font-size: 25px;
+        font-weight: 800;
+        line-height: 35px;
+      }
+      .line {
+        padding-top: 20px;
+        width: 100%;
+        position: relative;
+        text-align: center;
+        &::before {
+          content: "";
+          display: block;
+          width: 40%;
+          height: 1px;
+          background-color: #000; /* 선의 색상 설정 */
+          position: absolute; /* 절대 위치 설정 */
+          left: 0; /* 왼쪽에서 시작 */
+          top: 75%; /* 상단에서부터 요소의 50% 위치에 설정 */
+          transform: translateY(-50%); /* 선을 수직 중앙으로 정렬 */
+        }
+        &::after {
+          content: "";
+          display: block;
+          width: 40%;
+          height: 1px;
+          background-color: #000; /* 선의 색상 설정 */
+          position: absolute; /* 절대 위치 설정 */
+          right: 0; /* 왼쪽에서 시작 */
+          top: 75%; /* 상단에서부터 요소의 50% 위치에 설정 */
+          transform: translateY(-50%); /* 선을 수직 중앙으로 정렬 */
+        }
+      }
+      .notice {
+        padding: 20px 0;
+        font-size: 12px;
+        line-height: 19.2px;
+        color: #4f4f4f;
+        .red {
+          color: #ff4747;
+          padding-bottom: 10px;
+        }
+      }
+      .rule {
+        font-size: 12px;
+        font-weight: 600;
+        color: #b0b0b0;
+        padding-bottom: 20px;
+      }
+      .withdrawBox {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 16px;
+
+        .start_btn {
+          width: 77px;
+          height: 40px;
+          padding: 16px 6px;
+          border: 1px solid #b0b0b0;
+          border-radius: 8px;
+          line-height: 10px;
+          color: #fff;
+          background-color: #b0b0b0;
+          cursor: pointer;
+          &:hover {
+            background-color: #00d749;
+            border: 1px solid #00d749;
+            color: #fff;
+          }
         }
       }
     }
@@ -687,7 +810,6 @@ function LiveUpJoinPage() {
   }, [postList]);
 
   const [selected, setSelected] = useState(null);
-  console.log(selected, "sadf");
   const onSelect = useCallback((index) => {
     setSelected(index);
   }, []);
@@ -713,36 +835,13 @@ function LiveUpJoinPage() {
 
   return (
     <LiveUpJoinPageBlock>
-      {videoToggle && (
-        <Overlay>
-          <div className="videoModal">
-            <div className="title">
-              <div className="logo">
-                <img src={logo} alt="logo" />
-              </div>
-              <div className="cancel">
-                <img
-                  src={cancel}
-                  onClick={() => setVideoToggle(false)}
-                  alt="cancel"
-                />
-              </div>
-            </div>
-            <div className="content">
-              <div className="content_title">비디오 공유를 시작 할까요?</div>
-              <button
-                className="start_btn"
-                onClick={() => {
-                  setVideoShare(true);
-                  setVideoToggle(false);
-                }}
-              >
-                공유 시작
-              </button>
-            </div>
-          </div>
-        </Overlay>
-      )}
+      <OverlayBox
+        toggle={videoToggle}
+        setToggle={setVideoToggle}
+        setShare={setVideoShare}
+        title={"비디오 공유를 시작 할까요?"}
+        subTitle={"공유 시작"}
+      />
       {screenToggle && (
         <Overlay>
           <div className="modal">
@@ -798,8 +897,9 @@ function LiveUpJoinPage() {
           </div>
         </Overlay>
       )}
+
       <ScreenBlock>
-        <ScreenHeader>
+        <ScreenHeader to={"/liveup"}>
           <StyledImage src={button_1} alt="button_1" />
           <div className="title">LIVE UP 종료</div>
         </ScreenHeader>
