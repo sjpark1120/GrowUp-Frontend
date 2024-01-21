@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from 'styled-components';
+import { format } from "date-fns"
+
 
 const DatePickerContainer = styled.div`
   .datepicker {
@@ -121,34 +123,66 @@ const DatePickerContainer = styled.div`
 `;
 
 class UserInfo extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      startDate: null,
-      endDate: null,
+    constructor(props) {
+      super(props);
+      this.state = {
+        startDate: null,
+        endDate: null,
+      };
+    }
+  
+    setChangeDate = (dates) => {
+      const [start, end] = dates;
+      const formattedStart = start ? format(start, "yyyy-MM-dd") : null;
+      const formattedEnd = end ? format(end, "yyyy-MM-dd") : null;
+  
+      this.setState({ startDate: start, endDate: end });
+  
+      // 서버에 데이터 전송
+      this.sendDataToServer(formattedStart, formattedEnd);
     };
+  
+    sendDataToServer = (startDate, endDate) => {
+      console.log('선택된 시작 날짜:', startDate);
+      console.log('선택된 종료 날짜:', endDate);
+  
+      // 아래 주소는 실제 서버 주소로 변경해야 합니다.
+      const serverURL = 'http://example.com/save-date-range';
+  
+      fetch(serverURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          startDate,
+          endDate,
+        }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('데이터를 서버에 전송했습니다:', data);
+        })
+        .catch(error => {
+          console.error('서버에 데이터를 전송하는 중 오류가 발생했습니다:', error);
+        });
+    };
+  
+    render() {
+      return (
+        <DatePickerContainer>
+          <DatePicker
+            selectsRange={true}
+            className="datepicker"
+            dateFormat="yyyy년 MM월 dd일"
+            selected={this.state.startDate}
+            startDate={this.state.startDate}
+            endDate={this.state.endDate}
+            onChange={(dates) => this.setChangeDate(dates)}
+          />
+        </DatePickerContainer>
+      );
+    }
   }
-
-  setChangeDate = (dates) => {
-    const [start, end] = dates;
-    this.setState({ startDate: start, endDate: end });
-  };
-
-  render() {
-    return (
-      <DatePickerContainer>
-        <DatePicker
-          selectsRange={true}
-          className="datepicker"
-          dateFormat="yyyy년 MM월 dd일"
-          selected={this.state.startDate}
-          startDate={this.state.startDate}
-          endDate={this.state.endDate}
-          onChange={(dates) => this.setChangeDate(dates)}
-        />
-      </DatePickerContainer>
-    );
-  }
-}
-
-export default UserInfo;
+  
+  export default UserInfo;

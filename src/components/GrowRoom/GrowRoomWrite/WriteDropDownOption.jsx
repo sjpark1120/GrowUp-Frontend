@@ -1,5 +1,5 @@
 // WriteDropDownOption.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 
 const DropDownContainer = styled.div`
@@ -75,17 +75,27 @@ const OptionContainer = styled.div`
     `}
 `;
 
-const WriteDropDownOption = ({ options, onClick }) => {
-  return (
-    <DropDownContainer>
-      {options.map((option, index) => (
-        <OptionContainer key={index} onClick={() => onClick(option)}>
-          {option}
-        </OptionContainer>
-      ))}
-    </DropDownContainer>
-    
-  );
-};
-
+const WriteDropDownOption = ({ options, onClick, categoryType }) => {
+    const [selectedOption, setSelectedOption] = useState(null);
+  
+    const handleOptionClick = (option) => {
+      setSelectedOption(option);
+      onClick(option, categoryType); // 선택된 옵션과 categoryType을 함께 전달
+    };
+  
+    return (
+      <DropDownContainer selected={selectedOption !== null}>
+        {options.map((option, index) => (
+          <OptionContainer
+            key={index}
+            selected={selectedOption === option}
+            selectedOption={selectedOption}
+            onClick={() => handleOptionClick(option)}
+          >
+            {option}
+          </OptionContainer>
+        ))}
+      </DropDownContainer>
+    );
+  };
 export default WriteDropDownOption;
