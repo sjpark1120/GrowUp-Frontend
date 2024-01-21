@@ -154,7 +154,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
     };
 
     const handleClose = () => {
-      onClose(popupEventText);
+      onClose(popupEventText, selectedColor);
     };
 
       return (

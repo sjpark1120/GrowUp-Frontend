@@ -122,17 +122,18 @@ const MyCalendar = ({ events, onEventsChange }) => {
     setEventText(getEventsForDate(date)[0]?.text || '');
   };
 
-  const handleClosePopup = (updatedEventText) => {
+  const handleClosePopup = (updatedEventText, updatedBackgroundColor) => {
     setShowPopup(false);
-    const updatedEvents = events.map(event => {
+  
+    const updatedEvents = events.map((event) => {
       if (new Date(event.date).toDateString() === selectedDate.toDateString()) {
-        return { ...event, text: updatedEventText };
+        return { ...event, text: updatedEventText, backgroundColor: updatedBackgroundColor };
       }
       return event;
     });
+  
     onEventsChange(updatedEvents);
   };
-
   const getEventsForDate = (date) => {
     if (!date) {
       return [];
