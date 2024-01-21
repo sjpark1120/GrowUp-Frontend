@@ -27,6 +27,7 @@ const ProfileWrapper = styled.div`
   align-items: center;
 `
 const MainText = styled.p`
+align-items: center;
 font-size: 25px;
 font-weight: 800;
 line-height: 140%;
@@ -41,7 +42,7 @@ function MyPage() {
 
   return (
     <MainWrapper>
-      <div style={{ marginBottom:'30px', justifyContent: 'center', display: 'inline-flex' }}>
+      <div style={{ marginBottom:'30px', display: 'inline-flex' }}>
         <MainText style={{ color: '#00D749' }}>그로우업 </MainText>
         <MainText style={{ color: '#090909' }}>님! 오늘도 화이팅 입니다!</MainText>
       </div>

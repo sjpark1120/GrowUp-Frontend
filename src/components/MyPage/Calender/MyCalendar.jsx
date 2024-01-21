@@ -51,7 +51,7 @@ const DayCell = styled.div`
   align-items: center;
   gap: 5px;
   border-bottom: 1px solid #F7F7F7;
-  background: #FFF;
+  background-color: ${(props) => props.backgroundColor || '#FFF'};
   color: #8D8D8D;
   text-align: center;
   font-size: 14px;
@@ -134,7 +134,20 @@ const MyCalendar = ({ events, onEventsChange }) => {
   };
 
   const getEventsForDate = (date) => {
-    return events.filter(event => new Date(event.date).toDateString() === date.toDateString());
+    if (!date) {
+      return [];
+    }
+  
+    return events.filter((event) => {
+      const eventDate = new Date(event.date);
+  
+      // date와 eventDate가 모두 유효한 경우에만 비교
+      if (!isNaN(date) && !isNaN(eventDate)) {
+        return eventDate.toDateString() === date.toDateString();
+      }
+  
+      return false;
+    });
   };
 
   return (
@@ -145,12 +158,15 @@ const MyCalendar = ({ events, onEventsChange }) => {
           prevMonth.setMonth(prevMonth.getMonth() - 1);
           return prevMonth;
         })} src={btn_left} alt="Previous Month" />
+
         {`${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월`}
+
         <NavigationButton onClick={() => setSelectedDate(prevDate => {
           const nextMonth = new Date(prevDate);
           nextMonth.setMonth(nextMonth.getMonth() + 1);
           return nextMonth;
         })} src={btn_right} alt="Next Month" />
+
       </MonthHeader>
       <CalendarGrid>
         {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day, index) => (
@@ -162,6 +178,7 @@ const MyCalendar = ({ events, onEventsChange }) => {
               ref={date && date.getDate() === selectedDate.getDate() ? dayCellRef : null}
               key={dateIndex}
               onClick={() => date && handleDayClick(date)}
+              backgroundColor={getEventsForDate(date)[0]?.backgroundColor || '#FFF'}
             >
               {date ? date.getDate() : ''}
               {date && (

@@ -43,7 +43,12 @@ const TodoList = () => {
     return (
         <TodoListContainer>
             <Title>To Do List</Title>
-            <TodoContainer></TodoContainer>
+            <TodoContainer>
+            <div style={{justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'flex'}}>
+                <div style={{width: 15, height: 15, border: '1px #B0B0B0 solid'}} />
+                <div style={{width: 244, height: 16, color: '#090909', fontSize: 14, fontWeight: '400'}}>예시입니다예시입니다예시입니다예시입니다.</div>
+            </div>
+            </TodoContainer>
             <Input/>
         </TodoListContainer>
     );
