@@ -10,6 +10,7 @@ import img_unlike from '../../icon/img-unlike.svg';
 const Box = styled.div`
   display: flex;
   width: 292px;
+  height: 254px;
   padding-left: 26px;
   padding-right: 26px;
   padding-top: 24px;

@@ -11,6 +11,9 @@ import golast_arrow_disable from '../../icon/arrow9.png'
 import gonext_arrow from '../../icon/arrow2.png'
 import gonext_arrow_disable from '../../icon/arrow3.png'
 
+import dummyData from '../.././DummyData'
+import { Link } from 'react-router-dom';
+
 const PostBoxContainer = styled.div`
   width: 100%;
   max-width: 1220px;
@@ -141,17 +144,24 @@ function LiveUpPagination({ data }) {
   return (
     <div>
       <PostBoxContainer>
-        {Array.from({ length:12 }).map((_, idx) => (
-          <PostBoxBlack key={idx}
-            deadline= "2023.12.05"
-            maintext= "이제 막 공부 시작한 디자이너와 프론트엔드 개발자를 구합니다! 어서 오세요요용"
-            views= {1500}
-            status= "open" //close or open
-            like= "like" //like or unlike
-            popular= {true}  //인기태그 표시 여부
-            study= {true} //스터디 태그 표시 여부
-          />
-        ))}
+        {Array.from({ length: 12 }, (_, idx) => {
+          const data = dummyData[idx % 5];
+          const postLink = `/liveup/${idx}`
+          return (
+            <Link to={postLink} style={{ textDecoration: 'none' }}>
+            <PostBoxBlack
+              key={idx}
+              deadline={data.deadline}
+              maintext={data.maintext}
+              views={data.views}
+              status={data.status}
+              like={data.like}
+              popular={data.popular}
+              study={data.study}
+            />
+            </Link>
+          );
+        })}
       </PostBoxContainer>
 
       <Paginaion>
