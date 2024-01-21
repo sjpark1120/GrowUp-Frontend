@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import button_1 from "../../icon/Page button_c1.png";
@@ -346,11 +347,13 @@ const ScreenBlock = styled.div`
   line-height: 35px;
 `;
 
-const ScreenHeader = styled.div`
+const ScreenHeader = styled(Link)`
   display: flex;
   align-items: center;
   color: #fff;
   padding-bottom: 47px;
+  cursor: pointer;
+  text-decoration: none;
   .title {
     font-size: 25px;
     font-weight: 800;
@@ -799,7 +802,7 @@ function LiveUpJoinPage() {
         </Overlay>
       )}
       <ScreenBlock>
-        <ScreenHeader>
+        <ScreenHeader to={"/liveup"}>
           <StyledImage src={button_1} alt="button_1" />
           <div className="title">LIVE UP 종료</div>
         </ScreenHeader>
