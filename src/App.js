@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 import Header from "./components/common/Header";
@@ -9,7 +10,10 @@ import LiveUpPage from "./pages/LiveUpPage/LiveUpPage";
 import LiveUpJoinPage from "./pages/LiveUpPage/LiveUpJoinPage";
 
 import LoginPage from "./pages/LoginPage";
-import SignUpPage from "./pages/SignUpPage";
+import SignUpPage from "./pages/JoinPage/SignUpPage";
+import FindPasswordPage from "./pages/JoinPage/FindPasswordPage";
+import ChangePasswordPage from "./pages/JoinPage/ChangePasswordPage";
+
 import MyPage from "./pages/MyPage/MyPage";
 
 function Layout() {
@@ -34,6 +38,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/findpassword" element={<FindPasswordPage />} />
+        <Route path="/changepassword" element={<ChangePasswordPage />} /> 
       </Route>
     </Routes>
   );
