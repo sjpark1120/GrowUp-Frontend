@@ -24,7 +24,7 @@ text-align: center;
 font-size: 18px;
 font-weight: 600;
 line-height: 140%;
-margin-bottom: 8px;
+margin: 3px;
 width: 100%;
 `;
 
@@ -94,10 +94,12 @@ align-items: center;
 const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
     const [popupPosition, setPopupPosition] = useState({ top: null, left: null });
     const [isEditing, setIsEditing] = useState(false);
-    const [popupEventText, setPopUpEventText] = useState(''); // 변경된 부분
+    const [popupEventText, setPopUpEventText] = useState('');
+    const [EditingText, setEditingText] = useState(popupEventText);
     const [selectedColor, setSelectedColor] = useState(null);
     const popupRef = useRef(null);
 
+    
     useEffect(() => {
       const calculatePopupPosition = () => {
         if (dayCellRef.current) {
@@ -118,12 +120,13 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
       };
     }, [dayCellRef]);
 
+    //초기 data 받아오기
     useEffect(() => {
-      // 팝업이 열릴 때 초기 데이터를 받아오기
       setPopUpEventText(events.map((event) => event.text).join('\n'));
       setSelectedColor(events[0]?.backgroundColor || '#FFF');
     }, [events]);
 
+    //팝업 외부 클릭 시 팝업 닫힘.
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (
@@ -131,7 +134,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
           !popupRef.current.contains(event.target) &&
           !event.target.classList.contains('insidePopup')
         ) {
-            onClose(popupEventText);
+            onClose(popupEventText); //수정중에는 닫히면 날아감
         }
       };
 
@@ -140,14 +143,15 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
       };
-    }, [isEditing, popupEventText, onClose]);
+    }, [popupEventText, onClose]);
 
     const handleTextClick = () => {
+      setEditingText(popupEventText);
       setIsEditing(true);
     };
 
     const handleInputChange = (e) => {
-        setPopUpEventText(e.target.value);
+        setEditingText(e.target.value);
     };
 
     const handleColorButtonClick = (color) => {
@@ -155,6 +159,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
     };
 
     const handleSave = () => {
+      setPopUpEventText(EditingText)
       setIsEditing(false);
     };
 
@@ -172,7 +177,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
             <>
               <EditableText
                 className="insidePopup"
-                value={popupEventText}
+                value={EditingText}
                 onChange={handleInputChange}
                 style={{ backgroundColor: selectedColor }}
               />
