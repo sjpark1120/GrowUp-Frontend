@@ -35,14 +35,14 @@ font-size: 12px;
 font-weight: 600;
 line-height: 140%;
 `
-function UserRanking({ rank }) {
+function UserRanking({ rankingData }) {
   return (
     <RankWrapper>
-    <RankingNum>{rank}</RankingNum>
+    <RankingNum>{rankingData.rank}</RankingNum>
     <ProfileImg src={Img}/>
     <div>
-      <RankerName>유아담</RankerName>
-      <RankerTime>1252:65:25</RankerTime>
+      <RankerName>{rankingData.name}</RankerName>
+      <RankerTime>{rankingData.time}</RankerTime>
     </div>
     </RankWrapper>
   )

@@ -5,7 +5,8 @@ import LiveUpNavigation from '../../components/LiveUpPage/LiveUpNavigation';
 import RankingFilterBtn from '../../components/LiveUpPage/RankingFilterBtn';
 import RankingBox from '../../components/LiveUpPage/RankingBox';
 import LiveUpPagination from '../../components/LiveUpPage/LiveUpPagnation';
-
+import {dummyData} from '../.././DummyData'
+import { dummyLiveUpPost } from '../../LiveUpDummyDate';
 const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -59,7 +60,7 @@ function LiveUpPage() {
       <MyLiveUpContainer>
         <MyLiveUpTitle>MY LIVE UP</MyLiveUpTitle>
         <LiveUpNavigation />
-        <LiveUpPagination />
+        <LiveUpPagination data={dummyLiveUpPost}/>
       </MyLiveUpContainer>
     </MainWrapper>
   )
