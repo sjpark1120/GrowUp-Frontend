@@ -53,24 +53,24 @@ const PopupBody = styled.div`
   font-weight: 600;
   line-height: 140%;
   text-align: left;
+  min-height: 1.5em;
 `;
 
 
 const EditableText = styled.textarea`
-width: 100%;
-padding: 8px 15px;
-background-color: #FFF;
-flex-grow: 1;
-overflow-y: auto;
-color: #8D8D8D;
-outline: none;
-font-size: 18px;
-font-weight: 600;
-line-height: 140%;
-resize: none;
-border-radius: 0px; 
-font-family: inherit;
-height: auto
+  width: 100%;
+  padding: 8px 15px;
+  background-color: #FFF;
+  overflow-y: hidden;
+  color: #8D8D8D;
+  outline: none;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 140%;
+  resize: none;
+  border-radius: 0px; 
+  font-family: inherit;
+  height: auto;
 `;
 
 const BtnContainer = styled.div`
@@ -159,7 +159,11 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
     };
 
     const handleSave = () => {
-      setPopUpEventText(EditingText)
+      isEditing ? (
+      setPopUpEventText(EditingText))
+      :(
+        setPopUpEventText(popupEventText)
+      );
       setIsEditing(false);
     };
 

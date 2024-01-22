@@ -10,7 +10,7 @@ export const dummyTodo = {
 export const dummyEvents = [
   {
     date: new Date(2024, 0, 1),
-    text: '새해 첫날, 이것도하고, 저것도하고, 이것도 하고, 저것도하고,',
+    text: '새해 첫날\n이것도하고\n저것도하고\n이것도 하고\n저것도하고,',
     backgroundColor: '#FFE5E5',
   },
   {

@@ -7,7 +7,7 @@ import profile_img from '../../icon/profile_img.png';
 import pencil_btn from '../../icon/pencil_btn.png';
 
 const MainWrapper = styled.div`
-  width: 1220px;
+  width: 1190px;
   margin: 110px auto;
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
+import plus_btn from '../../icon/plus_btn.png'
 const TodoListContainer = styled.div`
   margin-left: auto;
   display: flex;
@@ -68,6 +68,9 @@ const Input = styled.input`
   gap: 5px;
   align-self: stretch;
   flex-grow: 1;
+  :: placeholder {
+    color: #B0B0B0
+  };
 `;
 
 const TodoList = ({ todoList }) => {
@@ -104,9 +107,9 @@ const TodoList = ({ todoList }) => {
         ))}
       </TodoContainer>
       <InputContainer>
-        <button onClick={handleAddTodo}>+</button>
+        <img src={plus_btn} onClick={handleAddTodo} alt="add todo"/>
         <Input
-          placeholder="TO DO LIST"
+          placeholder="TO DO LIST 추가"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
         />
