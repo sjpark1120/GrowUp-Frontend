@@ -39,7 +39,6 @@ height : 300px;
 font-size: 20px;
 font-wight : 600
   margin-bottom: 85px;
-  border: 1px solid #B0B0B0;
 `;
 const StudyInfo = styled.div`
   flex: 1;
