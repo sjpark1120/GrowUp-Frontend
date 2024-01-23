@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import icon_check from '../../../icon/check.png';
 import icon_check_circle from '../../../icon/check-circle.png'
+import {processText} from '../../../common/utils/CalendarUtils'
+
 
 const PopupWrapper = styled.div`
   position: absolute;
@@ -9,7 +11,7 @@ const PopupWrapper = styled.div`
   background-color: #00D749;
   color: #FFF;
   padding: 1px;
-  box-shadow: 0 0px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -192,9 +194,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
               onClick={handleTextClick}
               style={{ backgroundColor: selectedColor }}
             >
-              {popupEventText.split('\n').map((line, index) => (
-                <div key={index}>{line}</div>
-              ))}
+              {processText(popupEventText)}
             </PopupBody>
           )}
           <BtnContainer>

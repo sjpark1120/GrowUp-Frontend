@@ -1,3 +1,14 @@
+export const processUserInput = (input) => {
+  return input.split('\n').map((line, index) => {
+    if (line.startsWith('<del>') && line.endsWith('</del>')) {
+      const content = line.substring(5, line.length - 6);
+      return <del key={index}>{content}</del>;
+    } else {
+      return <div key={index}>{line}</div>;
+    }
+  });
+};
+
 export const dummyTodo = {
     userName: '그로우업',
     time: '123:30:18',
@@ -10,7 +21,7 @@ export const dummyTodo = {
 export const dummyEvents = [
   {
     date: new Date(2024, 0, 1),
-    text: '새해 첫날\n이것도하고\n저것도하고\n이것도 하고\n저것도하고,',
+    text: '새해 첫날\n<del>이것도하고</del>\n저것도하고\n<del>이것도 하고</del>\n저것도하고,',
     backgroundColor: '#FFE5E5',
   },
   {

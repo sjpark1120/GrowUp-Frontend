@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import btn_left from '../../../icon/Page button_1.png';
 import btn_right from '../../../icon/Page button_2.png';
 import CalendarPopup from './CalendarPopup';
+import {processText} from '../../../common/utils/CalendarUtils'
 
 const CalendarWrapper = styled.div`
   width: 100%;
@@ -201,38 +202,36 @@ const MyCalendar = ({ events, onEventsChange }) => {
               backgroundColor={getEventsForDate(date)[0]?.backgroundColor || '#FFF'}
               isToday={date && date.toDateString() === new Date().toDateString()}
             >
-                {date && (
-                  <>
-                    {date.toDateString() === new Date().toDateString() && (
-                      <div
-                        style={{
-                          width: '25px',
-                          height: '25px',
-                          borderRadius: '50%',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          backgroundColor: '#00D749',
-                          position: 'absolute',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          color: '#FFF',
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        {date.getDate()}
-                      </div>
-                    )}
-                    <div>{date.getDate()}</div>
-                    <EventContainer>
-                      {getEventsForDate(date).map((event, index) => (
-                        <div key={index}>{event.text.split('\n').map((line, index) => (
-                          <div key={index}>{line}</div>
-                        ))}</div>
-                      ))}
-                    </EventContainer>
-                  </>
-                )}
+              {date && (
+                <>
+                  {date.toDateString() === new Date().toDateString() && (
+                    <div
+                      style={{
+                        width: '25px',
+                        height: '25px',
+                        borderRadius: '50%',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        backgroundColor: '#00D749',
+                        position: 'absolute',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: '#FFF',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {date.getDate()}
+                    </div>
+                  )}
+                  <div>{date.getDate()}</div>
+                  <EventContainer>
+                    {getEventsForDate(date).map((event, index) => (
+                      <div key={index}>{processText(event.text)}</div>
+                    ))}
+                  </EventContainer>
+                </>
+              )}
 
 
             </DayCell>

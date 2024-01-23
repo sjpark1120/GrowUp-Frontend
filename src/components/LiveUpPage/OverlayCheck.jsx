@@ -3,7 +3,7 @@ import React from "react";
 import logo from "../../icon/Logo.png";
 import cancel from "../../icon/cancel.png";
 import { Overlay } from "../../pages/LiveUpPage/LiveUpJoinPage";
-import { Input } from "../../pages/MyPage/MyPage";
+import { Input } from "../../pages/MyPage/EditProfile";
 
 const OverlayCheck = ({ toggle, setToggle, title, subTitle, onCheck }) => {
   if (!toggle) return null;
