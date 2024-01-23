@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import UserRanking from './UserRanking'
 import greenarrowRight from '../../icon/greenarrow_right.png'
 import greenarrowLeft from '../../icon/greenarrow_left.png'
+import { dummyRanking } from '../../LiveUpDummyDate'
 
 const RankingSwiper = styled.div`
   display: flex;
@@ -66,8 +67,8 @@ function RankingBox() {
   return (
     <div style={{ position: 'relative'}}>
       <RankingSwiper ref={swiperRef}>
-        {Array.from({ length: 10 }).map((_, idx) => (
-          <UserRanking key={idx} rank={idx + 1} />
+        {dummyRanking.map((rankingData, idx) => (
+          <UserRanking key={idx} rankingData={rankingData} />
         ))}
         {isScrollRight ? (
           <OverflowBoxRight>

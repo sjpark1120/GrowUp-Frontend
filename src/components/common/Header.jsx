@@ -47,7 +47,7 @@ const RightList = styled.div`
       color: ${(props) => (props.login ? '#ffffff' : '#00D749')};
       font-weight:600
     }
-
+  }
 `;
 
 const NavItem = styled.div`
