@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Label = styled.p`
   color: black;
-  fontSize: 20px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 28px;
   text-align: center;

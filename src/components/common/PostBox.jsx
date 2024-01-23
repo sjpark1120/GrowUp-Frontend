@@ -27,7 +27,7 @@ const MainText = styled.p`
   overflow: hidden;
   color: #1C1C1C;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 500;
   line-height: 22.40px;
 `;
 
