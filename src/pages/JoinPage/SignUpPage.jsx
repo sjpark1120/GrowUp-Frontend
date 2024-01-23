@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import eye from '../../icon/eye.png'
 import eye_green from '../../icon/eye_green.png'
+import OverlayBox from '../../components/LiveUpPage/OverlayBox'
+import OverlayCheck from '../../components/LiveUpPage/OverlayCheck'
 
 const SignUpcontainer = styled.div`
-  margin-top: 180px;
+  margin-top: 302px;
   width: 500px;
   height: 800px;
   margin-left: auto;
@@ -94,6 +96,23 @@ const EyeIcon = styled.img`
   right: 55px;
   cursor: pointer;
 `
+const DoubleCheckBtn = styled.div`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 49px;
+  top: 11px;
+  width: 69px;
+  height: 34px;
+  border-radius: 8px;
+  padding: 0 10px;
+  background-color: #f7f7f7;
+  font-size: 14px;
+  color: #3e3e3e;
+  cursor: ${({ disabled }) => (disabled ? 'none' : 'pointer')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+`
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordCheck, setShowPasswordCheck] = useState(false);
@@ -117,6 +136,7 @@ function SignUpPage() {
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [passwordCheckTouched, setPasswordCheckTouched] = useState(false);
 
+  const [doubleCheck, setDoubleCheck] = useState(false);
 
   const onChangeName = (e) => {
     setName(e.target.value);
@@ -180,66 +200,88 @@ function SignUpPage() {
   }
   return (
     <>
-    <SignUpcontainer>
-      <SignUpTitle>회원가입</SignUpTitle>
-      <SignUpText>그로우업에서 즐겁게 성장하세요!</SignUpText>
-      <form onSubmit={onSubmit}>
-        <SignUpLabel htmlFor='name'>이름</SignUpLabel>
-        <SignUpInput id='name' type='text' placeholder='윤다희' value={name} onChange={onChangeName} />
-        <SignUpLabel htmlFor='nickname'>
-          닉네임
-        {nicknameTouched && nicknameError && <ErrorText>ⓘ 2글자 이상 10글자 미만으로 작성해 주세요.</ErrorText>}
-        </SignUpLabel>
-        <SignUpInput id='nickname' 
-        type='text' 
-        placeholder='쿼카' 
-        value={nickname} 
-        onChange={onChangeNickname}
-        style={nicknameTouched && nicknameError ? {borderColor: '#FF4747'} : {borderColor: '#E7E7E7'}} />
-        <SignUpLabel htmlFor='email'>
-          이메일
-          {emailTouched && emailError && <ErrorText>ⓘ 이메일이 올바르지 않습니다.</ErrorText>}
+      <SignUpcontainer>
+        {nickname === "쿼카" ? (
+          <OverlayBox
+            toggle={doubleCheck}
+            setToggle={setDoubleCheck}
+            title={"사용 가능한 닉네임 입니다!"}
+            subTitle={"사용하기"}
+          />
+        ) : (
+          <OverlayCheck
+            toggle={doubleCheck}
+            setToggle={setDoubleCheck}
+            title={"중복된 닉네임 입니다!"}
+            subTitle={"중복확인"}
+            onCheck={() => setDoubleCheck(false)}
+          />
+        )}
+        <SignUpTitle>회원가입</SignUpTitle>
+        <SignUpText>그로우업에서 즐겁게 성장하세요!</SignUpText>
+        <form onSubmit={onSubmit}>
+          <SignUpLabel htmlFor='name'>이름</SignUpLabel>
+          <SignUpInput id='name' type='text' placeholder='윤다희' value={name} onChange={onChangeName} />
+          <SignUpLabel htmlFor='nickname'>
+            닉네임
+            {nicknameTouched && nicknameError && <ErrorText>ⓘ 2글자 이상 10글자 미만으로 작성해 주세요.</ErrorText>}
           </SignUpLabel>
-        <SignUpInput id='email'
-         type='email' 
-         placeholder='dahul4603@naver.com' 
-         autoComplete="email" 
-         value={email} 
-         onChange={onChangeEmail}
-         style={emailTouched && emailError ? {borderColor: '#FF4747'} : {borderColor: '#E7E7E7'}} />
-        <SignUpLabel htmlFor='password'>
-          비밀번호
-          {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자 모두 포함되어야 합니다.</ErrorText>}
+          <PasswordContainer>
+            <SignUpInput id='nickname'
+              type='text'
+              placeholder='쿼카'
+              value={nickname}
+              onChange={onChangeNickname}
+              style={nicknameTouched && nicknameError ? { borderColor: '#FF4747' } : { borderColor: '#E7E7E7' }} />
+            <DoubleCheckBtn
+              onClick={() => setDoubleCheck(true)}
+              disabled={nicknameError}>
+              중복확인</DoubleCheckBtn>
+          </PasswordContainer>
+          <SignUpLabel htmlFor='email'>
+            이메일
+            {emailTouched && emailError && <ErrorText>ⓘ 이메일이 올바르지 않습니다.</ErrorText>}
           </SignUpLabel>
-        <PasswordContainer>
-          <SignUpInput id='password' 
-          type={showPassword ? 'text' : 'password'} 
-          placeholder='*******' 
-          autoComplete="new-password" 
-          value={password} 
-          onChange={onChangePassword}
-          style={passwordTouched && passwordError ? {borderColor: '#FF4747'} : {borderColor: '#E7E7E7'}}/>
-          <EyeIcon src={showPassword ? eye_green : eye} onClick={() => setShowPassword(!showPassword)} />
-        </PasswordContainer>
-        <SignUpLabel htmlFor='passwordcheck'>
-          비밀번호 확인
-          {passwordCheckTouched && passwordCheckError && <ErrorText>ⓘ 비밀번호가 동일하지 않습니다.</ErrorText>}
+          <SignUpInput id='email'
+            type='email'
+            placeholder='dahul4603@naver.com'
+            autoComplete="email"
+            value={email}
+            onChange={onChangeEmail}
+            style={emailTouched && emailError ? { borderColor: '#FF4747' } : { borderColor: '#E7E7E7' }} />
+          <SignUpLabel htmlFor='password'>
+            비밀번호
+            {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자 모두 포함되어야 합니다.</ErrorText>}
           </SignUpLabel>
-        <PasswordContainer>
-          <SignUpInput id='passwordcheck' 
-          type={showPasswordCheck ? 'text' : 'password'} 
-          placeholder='*******' 
-          autoComplete="new-password" 
-          value={passwordCheck} 
-          onChange={onChangePasswordCheck} 
-          style={passwordCheckTouched && passwordCheckError ? {borderColor: '#FF4747'} : {borderColor: '#E7E7E7'}}/>
-          <EyeIcon src={showPasswordCheck ? eye_green : eye} onClick={() => setShowPasswordCheck(!showPasswordCheck)} />
-        </PasswordContainer>
-        <SignUpLine />
-        <SignUpSubmit type='submit' value="가입하기"  
-        disabled={ nameError || nicknameError || emailError || passwordError || passwordCheckError} />
-      </form>
-    </SignUpcontainer>
+          <PasswordContainer>
+            <SignUpInput id='password'
+              type={showPassword ? 'text' : 'password'}
+              placeholder='*******'
+              autoComplete="new-password"
+              value={password}
+              onChange={onChangePassword}
+              style={passwordTouched && passwordError ? { borderColor: '#FF4747' } : { borderColor: '#E7E7E7' }} />
+            <EyeIcon src={showPassword ? eye_green : eye} onClick={() => setShowPassword(!showPassword)} />
+          </PasswordContainer>
+          <SignUpLabel htmlFor='passwordcheck'>
+            비밀번호 확인
+            {passwordCheckTouched && passwordCheckError && <ErrorText>ⓘ 비밀번호가 동일하지 않습니다.</ErrorText>}
+          </SignUpLabel>
+          <PasswordContainer>
+            <SignUpInput id='passwordcheck'
+              type={showPasswordCheck ? 'text' : 'password'}
+              placeholder='*******'
+              autoComplete="new-password"
+              value={passwordCheck}
+              onChange={onChangePasswordCheck}
+              style={passwordCheckTouched && passwordCheckError ? { borderColor: '#FF4747' } : { borderColor: '#E7E7E7' }} />
+            <EyeIcon src={showPasswordCheck ? eye_green : eye} onClick={() => setShowPasswordCheck(!showPasswordCheck)} />
+          </PasswordContainer>
+          <SignUpLine />
+          <SignUpSubmit type='submit' value="가입하기"
+            disabled={nameError || nicknameError || emailError || passwordError || passwordCheckError} />
+        </form>
+      </SignUpcontainer>
     </>
   )
 }
