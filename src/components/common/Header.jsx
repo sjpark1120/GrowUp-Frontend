@@ -6,6 +6,7 @@ import liveuplogo from './liveupLogo.jpeg';
 
 const HeaderContainer = styled.div`
   position: fixed;
+  top: 0;
   width: 100%;
   height: 122px;
   max-width: 1920px;
