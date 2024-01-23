@@ -13,6 +13,7 @@ background-image: url(${banner});
 background-size: cover;
 width: 100%;
 height: 500px;
+margin-top: 122px;
   `;
 
 const MainWrapper = styled.div`

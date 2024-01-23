@@ -18,12 +18,14 @@ const LoginBackGround = styled.div`
   background: #FFFFFF;
   opacity: 0.8;
   backdrop-filter: blur(5px);
+  
 `
 const LoginWindow = styled.div`
   position: absolute;
   width: 540px;
   height: 580px;
   box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.10);
+  
 `
 const LoginTopBar = styled.div`
   width: 540px;
