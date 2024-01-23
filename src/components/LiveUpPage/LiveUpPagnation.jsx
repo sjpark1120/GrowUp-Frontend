@@ -182,7 +182,6 @@ function LiveUpPagination({ data }) {
     <div>
       <PostBoxContainer>
         {currentData.map((data, index) => (
-            <Link to={`/liveup/${index}`} style={{ textDecoration: 'none' }}>
             <PostBoxBlack
               key={index}
               deadline={data.deadline}
@@ -193,7 +192,6 @@ function LiveUpPagination({ data }) {
               popular={data.popular}
               study={data.study}
             />
-            </Link>
         ))}
       </PostBoxContainer>
 
