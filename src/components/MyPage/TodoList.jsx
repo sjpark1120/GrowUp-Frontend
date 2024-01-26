@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import plus_btn from '../../icon/plus_btn.png'
 
 const TodoListContainer = styled.div`
   margin-left: auto;
@@ -10,7 +11,7 @@ const TodoListContainer = styled.div`
   gap: 25px;
   border-radius: 8px;
   background: #F7F7F7;
-  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.10);
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.07);
 `;
 
 const Title = styled.h2`
@@ -68,6 +69,9 @@ const Input = styled.input`
   gap: 5px;
   align-self: stretch;
   flex-grow: 1;
+  &::placeholder { 
+    color: #B0B0B0;
+  }
 `;
 
 const TodoList = ({ todoList }) => {
@@ -94,7 +98,7 @@ const TodoList = ({ todoList }) => {
 
   return (
     <TodoListContainer>
-      <Title>✔️ To Do List</Title>
+      <Title>✔️ TO DO LIST</Title>
       <TodoContainer>
         {todos.map((todo, index) => (
           <div key={index} style={{ justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'flex' }}>
@@ -104,9 +108,9 @@ const TodoList = ({ todoList }) => {
         ))}
       </TodoContainer>
       <InputContainer>
-        <button onClick={handleAddTodo}>+</button>
+        <img src={plus_btn} onClick={handleAddTodo} alt="add todo"/>
         <Input
-          placeholder="TO DO LIST"
+          placeholder="TO DO LIST 추가"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
         />

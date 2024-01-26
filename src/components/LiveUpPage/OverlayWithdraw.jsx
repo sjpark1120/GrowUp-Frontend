@@ -2,7 +2,7 @@ import React from "react";
 import { Overlay } from "../../pages/LiveUpPage/LiveUpJoinPage";
 import logo from "../../icon/Logo.png";
 import cancel from "../../icon/cancel.png";
-import { Input } from "../../pages/MyPage/MyPage";
+import { Input } from "../../pages/MyPage/EditProfile";
 
 const OverlayWithdraw = ({ toggle, setToggle, title, subTitle, onCheck }) => {
   if (!toggle) return null;

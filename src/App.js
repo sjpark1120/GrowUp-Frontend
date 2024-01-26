@@ -1,7 +1,6 @@
 
 import LoginPage from './pages/LoginPage';
 import SignUpPage from "./pages/JoinPage/SignUpPage";
-import TodoCalendar from './pages/MyPage/Todo_Calendar';
 import React from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 import Header from "./components/common/Header";
@@ -15,6 +14,7 @@ import FindPasswordPage from "./pages/JoinPage/FindPasswordPage";
 import ChangePasswordPage from "./pages/JoinPage/ChangePasswordPage";
 
 import MyPage from "./pages/MyPage/MyPage";
+import EditProfile from './pages/MyPage/EditProfile';
 
 function Layout() {
   return (
@@ -38,7 +38,7 @@ function App() {
         <Route path="/liveup/:roomid" element={<LiveUpJoinPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/todo_calendar" element={<TodoCalendar/>} />
+        <Route path="/mypage/edit" element={<EditProfile/>} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
         <Route path="/changepassword" element={<ChangePasswordPage />} /> 

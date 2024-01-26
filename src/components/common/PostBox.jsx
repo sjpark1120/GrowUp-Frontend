@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom'; 
 
 import tag_close from '../../icon/모집완료.png';
-import tag_open from '../../icon/모집중.png';
 import tag_popular from '../../icon/인기.png';
 import tag_study from '../../icon/스터디.png';
 import img_like from '../../icon/img-like.svg';
@@ -45,7 +45,7 @@ font-size: 12px;
 font-weight: 400
 `
 
-const PostBox = ({ popular, study, status, deadline, maintext, views, like }) => {
+const PostBox = ({postId, popular, study, status, deadline, maintext, views, like }) => {
   const [isActive, setIsActive] = useState(like === 'like');
 
   const handleLikeClick = () => {
@@ -58,8 +58,14 @@ const PostBox = ({ popular, study, status, deadline, maintext, views, like }) =>
 
   const formattedViews = views >= 1000 ? '999+' : views;
 
+  const navigate = useNavigate(); 
+  const handleClick = () => {
+    // Navigate to the specified route with postId parameter
+    navigate(`/growroom/${postId}`);
+  };
+
   return (
-    <Box style={{ opacity: status === 'close' ? 0.5 : 1 }}>
+    <Box style={{ opacity: status === 'close' ? 0.5 : 1 }} onClick={handleClick}>
       <div style={{ paddingBottom: '28px' }}>
         <div style={{ justifyContent: 'flex-start', gap: '10px', display: 'flex', paddingBottom: '20px' }}>
           {popular && <img src={tag_popular} alt="popular" />}
