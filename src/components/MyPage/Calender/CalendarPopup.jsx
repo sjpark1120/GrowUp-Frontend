@@ -2,19 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import icon_check from '../../../icon/check.png';
 import icon_check_circle from '../../../icon/check-circle.png'
-import {processText} from '../../../common/utils/CalendarUtils'
-
 
 const PopupWrapper = styled.div`
   position: absolute;
   width: 260px;
   background-color: #00D749;
   color: #FFF;
-  padding: 1px;
   box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid #00D749;
 `;
 
 const PopupHeader = styled.div`
@@ -58,21 +56,21 @@ const PopupBody = styled.div`
 `;
 
 
-const EditableText = styled.textarea`
+const EditableText = styled.div`
   width: 100%;
   padding: 8px 15px;
   background-color: #FFF;
   overflow-y: hidden;
   color: #8D8D8D;
-  outline: none;
   font-size: 18px;
   font-weight: 600;
   line-height: 140%;
   resize: none;
-  border-radius: 0px; 
   font-family: inherit;
   height: auto;
+  white-space: pre-line;
 `;
+
 
 const BtnContainer = styled.div`
 width: 100%;
@@ -152,8 +150,9 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
     };
 
     const handleInputChange = (e) => {
-        setEditingText(e.target.value);
+      setEditingText(e.target.innerHTML);
     };
+    
 
     const handleColorButtonClick = (color) => {
       setSelectedColor(color);
@@ -164,9 +163,10 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
         // 취소선을 적용하려는 텍스트에 <del> 태그 추가
         const selectedText = window.getSelection().toString();
         const updatedText = selectedText ? EditingText.replace(selectedText, `<del>${selectedText}</del>`) : EditingText;
+        console.log('Updated Text with del tags:', updatedText); 
         setPopUpEventText(updatedText);
       } else {
-        setPopUpEventText(EditingText);
+        setPopUpEventText(popupEventText);
       }
       setIsEditing(false);
     };
@@ -184,19 +184,21 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
         </PopupHeader>
         {isEditing ? (
           <>
-            <EditableText
-              className="insidePopup"
-              value={EditingText}
-              onChange={handleInputChange}
-              style={{ backgroundColor: selectedColor }}
-            />
+
+<EditableText
+  className="insidePopup"
+  onBlur={handleInputChange}
+  style={{ backgroundColor: selectedColor }}
+  contentEditable={true}
+  dangerouslySetInnerHTML={{ __html: EditingText}}
+/>
           </>
         ) : (
           <PopupBody
             className="insidePopup"
             onClick={handleTextClick}
             style={{ backgroundColor: selectedColor }} 
-            dangerouslySetInnerHTML={{ __html: popupEventText }}
+            dangerouslySetInnerHTML={{ __html: popupEventText.replace(/\n/g, '<br>') }}
           />
         )}
         <BtnContainer>

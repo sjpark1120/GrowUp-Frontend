@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import btn_left from '../../../icon/Page button_1.png';
 import btn_right from '../../../icon/Page button_2.png';
 import CalendarPopup from './CalendarPopup';
-import {processText} from '../../../common/utils/CalendarUtils'
 
 const CalendarWrapper = styled.div`
   width: 100%;
@@ -226,10 +225,13 @@ const MyCalendar = ({ events, onEventsChange }) => {
                   )}
                   <div>{date.getDate()}</div>
                   <EventContainer>
-                    {getEventsForDate(date).map((event, index) => (
-                      <div key={index}>{processText(event.text)}</div>
-                    ))}
-                  </EventContainer>
+  {getEventsForDate(date).map((event, index) => (
+    <div
+      key={index}
+      dangerouslySetInnerHTML={{ __html: event.text.replace(/\n/g, '<br>') }}
+    />
+  ))}
+</EventContainer>
                 </>
               )}
 
