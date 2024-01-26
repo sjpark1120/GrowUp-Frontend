@@ -29,6 +29,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        
         <Route index element={<MainPage />} />
         <Route path="/growroom" element={<GrowRoomPage />} />
         <Route path="/growroom/write" element={<GrowRoomWritePage />} />
