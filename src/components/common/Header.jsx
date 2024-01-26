@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from './growupLogo.jpeg';
 import liveuplogo from './liveupLogo.jpeg';
+import LoginBox from './LoginBox';
 
 const HeaderContainer = styled.div`
   position: fixed;
@@ -14,83 +15,86 @@ const HeaderContainer = styled.div`
   align-items: center;
   padding-top: 20px;
   padding-bottom: 20px;
-  background-color: ${(props) => (props.liveup ? '#000000' : 'white')};
-  z-index:9999;
+  background-color: ${(props) => (props.liveup ? '#141414' : 'white')};
+  z-index:49;
+  justify-content: center;
+  box-shadow: 0px 0px 19px 2px rgba(0, 0, 0, 0.10);
 `;
 
 const HeaderLeftWrap = styled.div`
   display: flex;
   align-items: center;
   margin-top: 30px;
-  margin-left: 200px; 
-
 `;
-const NavList = styled.div`
-  display: flex;
-  margin-left: 250px;
-  border: 2px solid ${(props) => (props.liveup ? '#ffffff' : 'black')}; 
-  border-radius: 30px;
-  padding-left: 30px;
-  padding-right: 30px;
-  margin-right:20px;
 
+const NavList = styled.div`
+  height: 42px;
+  gap:45px;
+  display: flex;
+  margin-left: 530px;
+  border: 1px solid ${(props) => (props.liveup ? '#ffffff' : 'black')}; 
+  border-radius: 30px;
+  padding-left: 50px;
+  padding-right: 50px;
+  margin-right:20px;
+  align-items: center;
 `;
 
 const RightList = styled.div`
+  height: 42px;
   display: flex;
   margin-right: 5px;
   margin-top: 30px;
   border-radius: 30px;
-  padding-right: 20px;
-  padding-left: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-right: 16px;
+  padding-left: 16px;
+  align-items: center;
 
-  &:not(:first-child) {
-    background-color: ${(props) => (props.login ? '#00D749' : '#ffffff')};
-    border: 2px solid ${(props) => (props.login ? '#00D749' : '#00D749')};
-    
-    a {
-      text-decoration: none;
-      color: ${(props) => (props.active ? '#ffffff' : '#8D8D8D')};
-      font-weight:600
-    }
-  }
+  background-color: ${(props) => (props.login ? '#00D749' : 'transparent')};
+  border: 1px solid #00D749;
+  color: ${(props) => (props.signup ? '#00D749' : props.liveup ? 'rgb(0, 0, 0)' : '#ffffff')};
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%;
+  cursor: pointer;
 `;
 
 const NavItem = styled.div`
-  padding: 8px;
-  margin-right: 14px;
   list-style: none;
 
   a {
     text-decoration: none;
-    font-weight: 600;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
     color: ${(props) => (props.active && !props.liveup ? 'black' : props.active && props.liveup ? '#ffffff' : '#8D8D8D')};
   }
 `;
 
-
-
-const AuthLink = styled(Link)`
-  text-decoration: none;
-  color: ${(props) => (props.signup ? '#00D749' : 'rgb(0, 0, 0)')};
- 
-`;
-
 const AuthItem = styled.div`
   list-style: none;
-  font-weight: 600;
   font-size: 14px;
-  text-decoration: none;
-  margin-left: 5px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%;
+
 `;
 
 const Header = () => {
   const [activeLink, setActiveLink] = useState('');
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 
+  const handleLoginClick = () => {
+    setIsLoginModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsLoginModalVisible(false);
+  };
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -137,20 +141,19 @@ const Header = () => {
           ))}
         </NavList>
       </HeaderLeftWrap>
-      <RightList login>
+      <RightList login signup={false} liveup={isLiveUpPage} onClick={handleLoginClick}>
         <AuthItem>
-          <AuthLink to="/login" signup={false}>
             로그인
-          </AuthLink>
         </AuthItem>
       </RightList>
-      <RightList>
+      <Link to="/signup" style={{ textDecoration: 'none' }}>
+      <RightList signup>
         <AuthItem>
-          <AuthLink to="/signup" signup>
             회원가입
-          </AuthLink>
         </AuthItem>
       </RightList>
+      </Link>
+      {isLoginModalVisible && <LoginBox onClose={handleCloseModal} />}
     </HeaderContainer>
   );
 };

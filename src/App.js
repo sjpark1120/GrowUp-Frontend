@@ -1,5 +1,3 @@
-
-import LoginPage from './pages/LoginPage';
 import SignUpPage from "./pages/JoinPage/SignUpPage";
 import React from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
@@ -36,7 +34,6 @@ function App() {
         <Route path="/growroom/:postId" element={<GrowRoomPostPage />} />
         <Route path="/liveup" element={<LiveUpPage />} />
         <Route path="/liveup/:roomid" element={<LiveUpJoinPage />} />
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/mypage/edit" element={<EditProfile/>} />
         <Route path="/mypage" element={<MyPage />} />
