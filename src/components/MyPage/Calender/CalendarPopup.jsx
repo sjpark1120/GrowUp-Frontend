@@ -8,11 +8,11 @@ const PopupWrapper = styled.div`
   width: 260px;
   background-color: #00D749;
   color: #FFF;
-  padding: 1px;
-  box-shadow: 0 0px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid #00D749;
 `;
 
 const PopupHeader = styled.div`
@@ -24,7 +24,7 @@ text-align: center;
 font-size: 18px;
 font-weight: 600;
 line-height: 140%;
-margin-bottom: 8px;
+margin: 3px;
 width: 100%;
 `;
 
@@ -45,7 +45,6 @@ const PopupBody = styled.div`
   width: 100%;
   padding: 8px 15px;
   background-color: #FFF;
-  flex-grow: 1;
   overflow-y: auto;
   cursor: pointer;
   color: #8D8D8D;
@@ -53,25 +52,25 @@ const PopupBody = styled.div`
   font-weight: 600;
   line-height: 140%;
   text-align: left;
+  min-height: 1.5em;
 `;
 
 
-const EditableText = styled.textarea`
-width: 100%;
-padding: 8px 15px;
-background-color: #FFF;
-flex-grow: 1;
-overflow-y: auto;
-color: #8D8D8D;
-outline: none;
-font-size: 18px;
-font-weight: 600;
-line-height: 140%;
-resize: none;
-border-radius: 0px; 
-font-family: inherit;
-height: auto
+const EditableText = styled.div`
+  width: 100%;
+  padding: 8px 15px;
+  background-color: #FFF;
+  overflow-y: hidden;
+  color: #8D8D8D;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 140%;
+  resize: none;
+  font-family: inherit;
+  height: auto;
+  white-space: pre-line;
 `;
+
 
 const BtnContainer = styled.div`
 width: 100%;
@@ -94,10 +93,12 @@ align-items: center;
 const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
     const [popupPosition, setPopupPosition] = useState({ top: null, left: null });
     const [isEditing, setIsEditing] = useState(false);
-    const [popupEventText, setPopUpEventText] = useState(''); // 변경된 부분
+    const [popupEventText, setPopUpEventText] = useState('');
+    const [EditingText, setEditingText] = useState(popupEventText);
     const [selectedColor, setSelectedColor] = useState(null);
     const popupRef = useRef(null);
 
+    
     useEffect(() => {
       const calculatePopupPosition = () => {
         if (dayCellRef.current) {
@@ -118,12 +119,13 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
       };
     }, [dayCellRef]);
 
+    //초기 data 받아오기
     useEffect(() => {
-      // 팝업이 열릴 때 초기 데이터를 받아오기
       setPopUpEventText(events.map((event) => event.text).join('\n'));
       setSelectedColor(events[0]?.backgroundColor || '#FFF');
     }, [events]);
 
+    //팝업 외부 클릭 시 팝업 닫힘.
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (
@@ -131,7 +133,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
           !popupRef.current.contains(event.target) &&
           !event.target.classList.contains('insidePopup')
         ) {
-            onClose(popupEventText);
+            onClose(popupEventText,selectedColor ); //수정중에는 닫히면 날아감
         }
       };
 
@@ -140,58 +142,69 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
       };
-    }, [isEditing, popupEventText, onClose]);
+    }, [popupEventText, onClose]);
 
     const handleTextClick = () => {
+      setEditingText(popupEventText);
       setIsEditing(true);
     };
 
     const handleInputChange = (e) => {
-        setPopUpEventText(e.target.value);
+      setEditingText(e.target.innerHTML);
     };
+    
 
     const handleColorButtonClick = (color) => {
       setSelectedColor(color);
     };
 
     const handleSave = () => {
+      if (isEditing) {
+        // 취소선을 적용하려는 텍스트에 <del> 태그 추가
+        const selectedText = window.getSelection().toString();
+        const updatedText = selectedText ? EditingText.replace(selectedText, `<del>${selectedText}</del>`) : EditingText;
+        console.log('Updated Text with del tags:', updatedText); 
+        setPopUpEventText(updatedText);
+      } else {
+        setPopUpEventText(popupEventText);
+      }
       setIsEditing(false);
     };
-
+    
+    
     const handleClose = () => {
       onClose(popupEventText, selectedColor);
     };
 
-      return (
-        <PopupWrapper style={popupPosition} ref={popupRef}>
-          <PopupHeader>
-            {selectedDate.toLocaleDateString()}
-            <CloseButton onClick={handleClose} src={icon_check} alt="Done" />
-          </PopupHeader>
-          {isEditing ? (
-            <>
-              <EditableText
-                className="insidePopup"
-                value={popupEventText}
-                onChange={handleInputChange}
-                style={{ backgroundColor: selectedColor }}
-              />
-            </>
-          ) : (
-            <PopupBody
-              className="insidePopup"
-              onClick={handleTextClick}
-              style={{ backgroundColor: selectedColor }}
-            >
-              {popupEventText.split('\n').map((line, index) => (
-                <div key={index}>{line}</div>
-              ))}
-            </PopupBody>
-          )}
-          <BtnContainer>
-            <EditButton style={{ marginRight: '5px' }}>
-              <img src={icon_check_circle} alt="취소선적용" onClick={handleSave} />
-            </EditButton>
+    return (
+      <PopupWrapper style={popupPosition} ref={popupRef}>
+        <PopupHeader>
+          {selectedDate.toLocaleDateString()}
+          <CloseButton onClick={handleClose} src={icon_check} alt="Done" />
+        </PopupHeader>
+        {isEditing ? (
+          <>
+
+<EditableText
+  className="insidePopup"
+  onBlur={handleInputChange}
+  style={{ backgroundColor: selectedColor }}
+  contentEditable={true}
+  dangerouslySetInnerHTML={{ __html: EditingText}}
+/>
+          </>
+        ) : (
+          <PopupBody
+            className="insidePopup"
+            onClick={handleTextClick}
+            style={{ backgroundColor: selectedColor }} 
+            dangerouslySetInnerHTML={{ __html: popupEventText.replace(/\n/g, '<br>') }}
+          />
+        )}
+        <BtnContainer>
+          <EditButton style={{ marginRight: '5px' }}>
+            <img src={icon_check_circle} alt="취소선적용" onClick={handleSave} />
+          </EditButton>
             <EditButton
               style={{ backgroundColor: '#FFF', border: '2px solid #8D8D8D' }}
               onClick={() => handleColorButtonClick('#FFF')}
@@ -199,7 +212,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
             <EditButton
               style={{ backgroundColor: '#FFE5E5' }}
               onClick={() => handleColorButtonClick('#FFE5E5')}
-            />
+            /> 
             <EditButton
               style={{ backgroundColor: '#EFECFF' }}
               onClick={() => handleColorButtonClick('#EFECFF')}
