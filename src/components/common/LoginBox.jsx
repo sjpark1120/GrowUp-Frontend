@@ -15,8 +15,7 @@ const LoginBackGround = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #FFFFFF;
-  opacity: 0.8;
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
   
 `
@@ -25,7 +24,7 @@ const LoginWindow = styled.div`
   width: 540px;
   height: 580px;
   box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.10);
-  
+  background-color: white;
 `
 const LoginTopBar = styled.div`
   width: 540px;
@@ -135,7 +134,7 @@ const ErrorText = styled.span`
   font-weight: 500;
   line-height: 140%;
 `
-function LoginBox() {
+function LoginBox({ onClose }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState('');
@@ -146,12 +145,6 @@ function LoginBox() {
 
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
-
-  const [isLoginWindowVisible, setLoginWindowVisible] = useState(true);
-
-  const handleXiconClick = () => {
-    setLoginWindowVisible(false);
-  };
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -182,13 +175,12 @@ function LoginBox() {
   }
   return (
     <>
-    {isLoginWindowVisible && (
     <LoginBackGround>
       <LoginWindow>
         <LoginTopBar>
           <Logo src={logo} />
           <Xicon src={x} 
-          onClick={handleXiconClick}/>
+          onClick={onClose}/>
         </LoginTopBar>
         <LoginContainer>
           <LoginTitle>로그인</LoginTitle>
@@ -223,18 +215,17 @@ function LoginBox() {
             disabled={emailError || passwordError} />
           </form>
           <Loginbottom>
-            <Link to='/findpassword' style={{ textDecoration: 'none' }}>
+            <Link to='/findpassword' style={{ textDecoration: 'none' }} onClick={onClose}>
               <span>비밀번호 찾기 </span>
             </Link>
             <span>| </span>
-            <Link to='/signup' style={{ textDecoration: 'none' }}>
+            <Link to='/signup' style={{ textDecoration: 'none' }} onClick={onClose}>
               <span>회원가입</span>
             </Link>
           </Loginbottom>
         </LoginContainer>
       </LoginWindow>
       </LoginBackGround>
-    )}
     </>
   )
 }
