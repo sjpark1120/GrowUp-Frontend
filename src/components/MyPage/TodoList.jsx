@@ -98,7 +98,7 @@ const TodoList = ({ todoList }) => {
 
   return (
     <TodoListContainer>
-      <Title>✔️ To Do List</Title>
+      <Title>✔️ TO DO LIST</Title>
       <TodoContainer>
         {todos.map((todo, index) => (
           <div key={index} style={{ justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'flex' }}>

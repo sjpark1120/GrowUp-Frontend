@@ -47,7 +47,6 @@ const PopupBody = styled.div`
   width: 100%;
   padding: 8px 15px;
   background-color: #FFF;
-  flex-grow: 1;
   overflow-y: auto;
   cursor: pointer;
   color: #8D8D8D;
@@ -136,7 +135,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
           !popupRef.current.contains(event.target) &&
           !event.target.classList.contains('insidePopup')
         ) {
-            onClose(popupEventText); //수정중에는 닫히면 날아감
+            onClose(popupEventText,selectedColor ); //수정중에는 닫히면 날아감
         }
       };
 
@@ -161,46 +160,49 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
     };
 
     const handleSave = () => {
-      isEditing ? (
-      setPopUpEventText(EditingText))
-      :(
-        setPopUpEventText(popupEventText)
-      );
+      if (isEditing) {
+        // 취소선을 적용하려는 텍스트에 <del> 태그 추가
+        const selectedText = window.getSelection().toString();
+        const updatedText = selectedText ? EditingText.replace(selectedText, `<del>${selectedText}</del>`) : EditingText;
+        setPopUpEventText(updatedText);
+      } else {
+        setPopUpEventText(EditingText);
+      }
       setIsEditing(false);
     };
-
+    
+    
     const handleClose = () => {
       onClose(popupEventText, selectedColor);
     };
 
-      return (
-        <PopupWrapper style={popupPosition} ref={popupRef}>
-          <PopupHeader>
-            {selectedDate.toLocaleDateString()}
-            <CloseButton onClick={handleClose} src={icon_check} alt="Done" />
-          </PopupHeader>
-          {isEditing ? (
-            <>
-              <EditableText
-                className="insidePopup"
-                value={EditingText}
-                onChange={handleInputChange}
-                style={{ backgroundColor: selectedColor }}
-              />
-            </>
-          ) : (
-            <PopupBody
+    return (
+      <PopupWrapper style={popupPosition} ref={popupRef}>
+        <PopupHeader>
+          {selectedDate.toLocaleDateString()}
+          <CloseButton onClick={handleClose} src={icon_check} alt="Done" />
+        </PopupHeader>
+        {isEditing ? (
+          <>
+            <EditableText
               className="insidePopup"
-              onClick={handleTextClick}
+              value={EditingText}
+              onChange={handleInputChange}
               style={{ backgroundColor: selectedColor }}
-            >
-              {processText(popupEventText)}
-            </PopupBody>
-          )}
-          <BtnContainer>
-            <EditButton style={{ marginRight: '5px' }}>
-              <img src={icon_check_circle} alt="취소선적용" onClick={handleSave} />
-            </EditButton>
+            />
+          </>
+        ) : (
+          <PopupBody
+            className="insidePopup"
+            onClick={handleTextClick}
+            style={{ backgroundColor: selectedColor }} 
+            dangerouslySetInnerHTML={{ __html: popupEventText }}
+          />
+        )}
+        <BtnContainer>
+          <EditButton style={{ marginRight: '5px' }}>
+            <img src={icon_check_circle} alt="취소선적용" onClick={handleSave} />
+          </EditButton>
             <EditButton
               style={{ backgroundColor: '#FFF', border: '2px solid #8D8D8D' }}
               onClick={() => handleColorButtonClick('#FFF')}
@@ -208,7 +210,7 @@ const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
             <EditButton
               style={{ backgroundColor: '#FFE5E5' }}
               onClick={() => handleColorButtonClick('#FFE5E5')}
-            />
+            /> 
             <EditButton
               style={{ backgroundColor: '#EFECFF' }}
               onClick={() => handleColorButtonClick('#EFECFF')}
