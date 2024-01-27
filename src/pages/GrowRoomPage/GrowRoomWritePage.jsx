@@ -119,6 +119,7 @@ function GrowRoomWritePage() {
   };
   const handleCancelButtonClick = () => {
     console.log('Cancel button clicked!');
+    navigate('/growroom');
   };
 
   return (
