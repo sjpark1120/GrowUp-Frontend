@@ -24,7 +24,7 @@ const HeaderContainer = styled.div`
 const HeaderLeftWrap = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 30px;
+
 `;
 
 const NavList = styled.div`
@@ -44,7 +44,6 @@ const RightList = styled.div`
   height: 42px;
   display: flex;
   margin-right: 5px;
-  margin-top: 30px;
   border-radius: 30px;
   padding-right: 16px;
   padding-left: 16px;
