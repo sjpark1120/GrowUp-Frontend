@@ -25,6 +25,7 @@ const LoginWindow = styled.div`
   height: 580px;
   box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.10);
   background-color: white;
+  border-radius: 8px;
 `
 const LoginTopBar = styled.div`
   width: 540px;
@@ -35,6 +36,7 @@ const LoginTopBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 8px 8px 0 0;
 `
 const LoginContainer = styled.div`
   margin-top: 40px;
@@ -119,6 +121,9 @@ const Loginbottom = styled.div`
   font-weight: 500;
   line-height: 140%;
   color: #8D8D8D;
+  a{
+    color: #8D8D8D;
+  }
 `
 const Logo = styled.img`
   
