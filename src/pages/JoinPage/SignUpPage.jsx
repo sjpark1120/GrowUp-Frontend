@@ -4,6 +4,8 @@ import eye from '../../icon/eye.png'
 import eye_green from '../../icon/eye_green.png'
 import OverlayBox from '../../components/LiveUpPage/OverlayBox'
 import OverlayCheck from '../../components/LiveUpPage/OverlayCheck'
+import AuthApi from '../../apis/Auth'
+import { useNavigate } from 'react-router-dom'
 
 const SignUpcontainer = styled.div`
   margin-top: 302px;
@@ -113,6 +115,29 @@ const DoubleCheckBtn = styled.div`
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
+
+const CompleteContainer = styled.div`
+  margin-top: 302px;
+  width: 500px;
+  height: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-bottom: 200px;
+`
+const GotoMainBtn = styled.div`
+  border-radius: 5.333px;
+  background:#00D749;
+  width: 423px;
+  padding: 14px;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 140%;
+  color: white;
+  border: 0;
+  cursor: pointer;
+`
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordCheck, setShowPasswordCheck] = useState(false);
@@ -137,6 +162,36 @@ function SignUpPage() {
   const [passwordCheckTouched, setPasswordCheckTouched] = useState(false);
 
   const [doubleCheck, setDoubleCheck] = useState(false);
+
+  const navigate = useNavigate();
+  const [isEmailSent, setIsEmailSent] = useState(false);
+
+  const handleSignUp = async (userData) => {
+    try{
+      const response = await AuthApi.signUp(userData);
+      console.log('signUp success: ', response);
+      handleAuth({ email: userData.email });
+    } catch(error){
+      console.log('signUp failed: ', error);
+      if(error.response && error.response.data && error.response.data.message){
+        alert(error.response.data.message);
+      }
+    }
+  };
+  const handleAuth = async (emailData) => {
+    try{
+      const response = await AuthApi.emailAuth(emailData);
+      console.log('emailAuth success: ', response);
+      setIsEmailSent(true);
+    } catch(error){
+      console.log('emailAuth failed: ', error);
+      alert(error.response.data.message);
+    }
+  };
+
+  const handleMainPageNavigation = () => {
+    navigate('/');
+  };
 
   const onChangeName = (e) => {
     setName(e.target.value);
@@ -176,7 +231,7 @@ function SignUpPage() {
     setPassword(e.target.value);
     setPasswordTouched(true);
     // 비밀번호 유효성 검사
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
     if (!passwordRegex.test(e.target.value)) {
       setPasswordError(true);
     } else {
@@ -197,9 +252,32 @@ function SignUpPage() {
 
   const onSubmit = async(e) => {
     e.preventDefault();
+    const userData = {
+      name,
+      nickName: nickname,
+      email,
+      password,
+      passwordCheck
+    };
+    handleSignUp(userData);
   }
   return (
     <>
+    {isEmailSent ? ( //회원가입 완료창 (임시)
+        <CompleteContainer>
+          <div>
+            <div>임시 화면입니다.</div>
+            <div>입력하신 이메일 주소로 인증 메일을 보내드렸어요.</div>
+            <div>인증 메일을 확인해주세요✉️</div>
+          </div>
+          <div>
+            <div>반가워요. GROW UP🌱에 오신 것을 환영해요!</div>
+            <div>아직 한 단계가 더 남았어요!</div>
+            <div>가입하신 이메일을 인증해주시면, GROW UP🌱의 서비스를 이용하실 수 있습니다. 가입해주셔서 다시 한 번 감사드립니다🙇</div>
+          </div>
+          <GotoMainBtn onClick={handleMainPageNavigation}>메인 화면으로 이동</GotoMainBtn>
+        </CompleteContainer>
+      ): (
       <SignUpcontainer>
         {nickname === "쿼카" ? (
           <OverlayBox
@@ -251,7 +329,7 @@ function SignUpPage() {
             style={emailTouched && emailError ? { borderColor: '#FF4747' } : { borderColor: '#E7E7E7' }} />
           <SignUpLabel htmlFor='password'>
             비밀번호
-            {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자 모두 포함되어야 합니다.</ErrorText>}
+            {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자, 특수문자(@$!%*?&) 모두 포함되어야 합니다.</ErrorText>}
           </SignUpLabel>
           <PasswordContainer>
             <SignUpInput id='password'
@@ -282,6 +360,7 @@ function SignUpPage() {
             disabled={nameError || nicknameError || emailError || passwordError || passwordCheckError} />
         </form>
       </SignUpcontainer>
+      )}
     </>
   )
 }

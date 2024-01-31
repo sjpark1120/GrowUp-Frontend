@@ -4,6 +4,10 @@ import styled from 'styled-components';
 import logo from './growupLogo.jpeg';
 import liveuplogo from './liveupLogo.jpeg';
 import LoginBox from './LoginBox';
+import { useDispatch, useSelector } from 'react-redux';
+import AuthApi from '../../apis/Auth';
+import { logout } from '../../redux/user';
+import { openLoginModal } from '../../redux/loginModal';
 
 const HeaderContainer = styled.div`
   position: fixed;
@@ -85,15 +89,25 @@ const Header = () => {
   const [activeLink, setActiveLink] = useState('');
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
-  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+
+  const user = useSelector((state) => state.user.value)
+  const loginModal = useSelector((state) => state.loginModal.value)
+  const dispatch = useDispatch();
 
   const handleLoginClick = () => {
-    setIsLoginModalVisible(true);
+    dispatch(openLoginModal())
+    console.log("open")
   };
 
-  const handleCloseModal = () => {
-    setIsLoginModalVisible(false);
-  };
+  const handleLogout = async() =>{
+    try{
+      const response = await AuthApi.logout();
+      console.log('logout success: ', response);
+      dispatch(logout());
+    }catch(error){
+      console.log('logout failed: ', error);
+    }
+  }
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -129,30 +143,39 @@ const Header = () => {
         <NavList liveup={isLiveUpPage}>
           {navItems.map((item) => (
             <NavItem key={item.id} active={activeLink === item.link || (item.link === '/' && activeLink === '')} liveup={isLiveUpPage}>
-            <Link
-              className={`header-nav-item ${activeLink === item.link ? 'active' : ''}`}
-              to={item.link}
-              onClick={() => handleLinkClick(item.link)}
-            >
-              {item.label}
-            </Link>
-          </NavItem>
+              <Link
+                className={`header-nav-item ${activeLink === item.link ? 'active' : ''}`}
+                to={item.link}
+                onClick={() => handleLinkClick(item.link)}
+              >
+                {item.label}
+              </Link>
+            </NavItem>
           ))}
         </NavList>
       </HeaderLeftWrap>
-      <RightList login signup={false} liveup={isLiveUpPage} onClick={handleLoginClick}>
+      {user.isLogin ? 
+      (<RightList login={true} onClick={handleLogout}>
         <AuthItem>
-            로그인
-        </AuthItem>
-      </RightList>
-      <Link to="/signup" style={{ textDecoration: 'none' }}>
-      <RightList signup>
-        <AuthItem>
-            회원가입
-        </AuthItem>
-      </RightList>
-      </Link>
-      {isLoginModalVisible && <LoginBox onClose={handleCloseModal} />}
+        로그아웃
+      </AuthItem>
+      </RightList>) :
+        (<>
+          <RightList login={true} signup={false} liveup={isLiveUpPage} onClick={handleLoginClick}>
+            <AuthItem>
+              로그인
+            </AuthItem>
+          </RightList>
+          <Link to="/signup" style={{ textDecoration: 'none' }}>
+            <RightList signup={true}>
+              <AuthItem>
+                회원가입
+              </AuthItem>
+            </RightList>
+          </Link>
+        </>)}
+      {loginModal.showLoginModal ? <LoginBox /> : <></>
+      }
     </HeaderContainer>
   );
 };
