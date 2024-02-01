@@ -1,4 +1,3 @@
-import { logout } from '../redux/user';
 import AxiosInstance from './CustomAxios';
 
 const AuthApi = {
@@ -27,6 +26,8 @@ const AuthApi = {
       return response.data;
     } catch (error) {
       console.error('Error in logout:', error);
+      delete AxiosInstance.defaults.headers.common["Authorization"];
+      console.log("토큰삭제")
       throw error;
     }
   },
@@ -69,6 +70,9 @@ const AuthApi = {
       return response.data;
     } catch (error) {
       //console.error('Error in silentRefresh:', error);
+      delete AxiosInstance.defaults.headers.common["Authorization"];
+      console.log("토큰삭제", AxiosInstance.defaults.headers.common)
+      
       throw error;
     }
   }

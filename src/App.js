@@ -45,7 +45,7 @@ function App() {
       //console.error('silentRefresh failed:', error);
       if (error.response?.status === 401) {
         // refresh token 만료 - 로그인 페이지 이동
-        console.log('토큰만료 로그인페이지로')
+        console.log('토큰만료')
       }
     }
   };
