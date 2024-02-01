@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import PostHeader from '../../components/GrowRoom/GrowRoomPost/PostHeader';
 import PostTitle from '../../components/GrowRoom/GrowRoomPost/PostTitle'; // Import the PostTitle component
-import dummyData from '../../DummyData';
+import {dummyData} from '../../DummyData';
 import categoryDummyData from '../../CategoryDummyData';
 import { useNavigate } from 'react-router-dom';
 import CommentComponent from '../../components/GrowRoom/GrowRoomPost/CommentComponent';
@@ -39,7 +39,6 @@ height : 300px;
 font-size: 20px;
 font-wight : 600
   margin-bottom: 85px;
-  border: 1px solid #B0B0B0;
 `;
 const StudyInfo = styled.div`
   flex: 1;

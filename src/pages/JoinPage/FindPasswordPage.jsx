@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import AuthApi from '../../apis/Auth'
+import OverlayBox from '../../components/LiveUpPage/OverlayBox'
 
 const FindPasswordContainer = styled.div`
   margin-top: 180px;
@@ -87,6 +89,20 @@ function FindPasswordPage() {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(true);
   const [emailTouched, setEmailTouched] = useState(false);
+  const [mail, setMail] = useState(false); //메일발송확인 창
+
+  const handleAuth = async (emailData) => {
+    try{
+      const response = await AuthApi.findPasswordAuth(emailData);
+      console.log('findPasswordAuth success: ', response);
+      setMail(true)
+    } catch(error){
+      console.log('findPasswordAuth failed: ', error);
+      if(error.response && error.response.data && error.response.data.message){
+        alert(error.response.data.message);
+      }
+    }
+  };
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -102,9 +118,19 @@ function FindPasswordPage() {
 
   const onSubmit = async(e) => {
     e.preventDefault();
+    const emailData ={
+      email
+    }
+    handleAuth(emailData);
   }
   return (
     <>
+    <OverlayBox
+        toggle={mail}
+        setToggle={setMail}
+        title={"메일이 발송 되었습니다!"}
+        subTitle={"닫기"}
+      />
     <FindPasswordContainer>
       <FindPasswordTitle>비밀번호 찾기</FindPasswordTitle>
       <FindPasswordText>

@@ -40,6 +40,7 @@ const ArrowIcon = styled.img`
 const Dropdown = ({ title, optionsMap, options }) => {
   const [mainDropdownOpen, setMainDropdownOpen] = useState(false);
   const [selectedMain, setSelectedMain] = useState('');
+  const [headerTitle, setHeaderTitle] = useState(title);
 
   const toggleMainDropdown = () => {
     setMainDropdownOpen(!mainDropdownOpen);
@@ -51,6 +52,7 @@ const Dropdown = ({ title, optionsMap, options }) => {
       setTimeout(() => {
         setMainDropdownOpen(false);
         setSelectedMain('');
+        setHeaderTitle(option);
       }, 500);
     }
     else{
@@ -68,7 +70,7 @@ const Dropdown = ({ title, optionsMap, options }) => {
   return (
     <Container>
       <DropDownHeader isOpen={mainDropdownOpen} onClick={toggleMainDropdown}>
-        {title}
+        {headerTitle}
         <ArrowIcon isOpen={mainDropdownOpen} src={mainDropdownOpen ? down_white : down} alt="drop down arrow" />
       </DropDownHeader>
       <DropDownContainer isOpen={mainDropdownOpen}>
