@@ -1,7 +1,7 @@
 import AxiosInstance from './CustomAxios';
 
 const AuthApi = {
-  login: async (loginData) => {
+  login: async (loginData) => { // 로그인
     try {
       const response = await AxiosInstance.post('/growup/users/login', loginData); //endpoint 맞추기
       console.log("response : ", response)
@@ -20,7 +20,7 @@ const AuthApi = {
     }
   },
 
-  logout: async () => {
+  logout: async () => { //로그아웃
     try {
       const response = await AxiosInstance.post('/growup/users/logout');
       return response.data;
@@ -32,7 +32,7 @@ const AuthApi = {
     }
   },
 
-  signUp: async (userData) => {
+  signUp: async (userData) => { //회원가입
     try {
       const response = await AxiosInstance.post('/growup/users/signup', userData);
       return response.data;
@@ -42,7 +42,7 @@ const AuthApi = {
     }
   },
 
-  emailAuth: async(emailData) => { //가입 이메일인증
+  emailAuth: async(emailData) => { //가입 이메일인증 (요청)
     try {
       const response = await AxiosInstance.post('/growup/users/auth', emailData);
       return response.data;
@@ -52,12 +52,52 @@ const AuthApi = {
     }
   },
 
-  findPasswordAuth: async(emailData) => { //비밀번호 찾기 이메일인증
+  emailVerify: async(certificationNumber, email) => { //이메일인증 링크 확인
+    try {
+      const response = await AxiosInstance.get('/growup/users/email/verify', {
+        params: {
+          certificationNumber,
+          email,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error in emailVerify:', error);
+      throw error;
+    }
+  },
+
+  findPasswordAuth: async(emailData) => { //비밀번호 찾기 이메일인증(요청)
     try {
       const response = await AxiosInstance.post('/growup/users/password-auth', emailData);
       return response.data;
     } catch (error) {
       console.error('Error in findPasswordAuth:', error);
+      throw error;
+    }
+  },
+
+  findPasswordVerify: async(certificationNumber, email) => { //비밀번호 찾기 이메일인증 링크확인
+    try {
+      const response = await AxiosInstance.get('/growup/users/email/password-verify',{
+      params: {
+        certificationNumber,
+        email,
+      },
+    });
+      return response.data;
+    } catch (error) {
+      console.error('Error in findPasswordVerify:', error);
+      throw error;
+    }
+  },
+
+  passwordRestore: async(passwordData) => { //비밀번호 재설정
+    try {
+      const response = await AxiosInstance.patch('/growup/users/password-restore', passwordData);
+      return response.data;
+    } catch (error) {
+      console.error('Error in passwordRestore:', error);
       throw error;
     }
   },
@@ -71,8 +111,7 @@ const AuthApi = {
     } catch (error) {
       //console.error('Error in silentRefresh:', error);
       delete AxiosInstance.defaults.headers.common["Authorization"];
-      console.log("토큰삭제", AxiosInstance.defaults.headers.common)
-      
+      //console.log("토큰삭제", AxiosInstance.defaults.headers.common)
       throw error;
     }
   }

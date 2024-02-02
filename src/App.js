@@ -18,6 +18,7 @@ import AxiosInstance from "./apis/CustomAxios";
 import { useDispatch } from "react-redux";
 import { login } from "./redux/user";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import EmailVerifyPage from "./pages/JoinPage/EmailVerifyPage";
 
 function Layout() {
   return (
@@ -61,6 +62,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
         <Route path="/changepassword" element={<ChangePasswordPage />} /> 
+        <Route path="/emailverify" element={<EmailVerifyPage />} /> 
         <Route element={<ProtectedRoute />}>
           <Route path="/growroom/write" element={<GrowRoomWritePage />} />
           <Route path="/mypage/edit" element={<EditProfile/>} />

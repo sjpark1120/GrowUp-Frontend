@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import AuthApi from '../../apis/Auth'
-import OverlayBox from '../../components/LiveUpPage/OverlayBox'
+import VerifyCheck from '../../components/JoinPage/VerifyCheck'
 
 const FindPasswordContainer = styled.div`
   margin-top: 180px;
@@ -91,6 +91,11 @@ function FindPasswordPage() {
   const [emailTouched, setEmailTouched] = useState(false);
   const [mail, setMail] = useState(false); //메일발송확인 창
 
+  const title = "비밀번호 재설정 메일을 보냈습니다."
+  const text = `GROW UP에 가입하신 이메일 주소로
+  비밀번호 재설정 링크가 포함된 메일이 발송되었습니다.`
+  const btnText = "메인 화면으로 돌아가기"
+
   const handleAuth = async (emailData) => {
     try{
       const response = await AuthApi.findPasswordAuth(emailData);
@@ -125,12 +130,7 @@ function FindPasswordPage() {
   }
   return (
     <>
-    <OverlayBox
-        toggle={mail}
-        setToggle={setMail}
-        title={"메일이 발송 되었습니다!"}
-        subTitle={"닫기"}
-      />
+    {mail ? <VerifyCheck title={title} text={text} btnText={btnText}/> : 
     <FindPasswordContainer>
       <FindPasswordTitle>비밀번호 찾기</FindPasswordTitle>
       <FindPasswordText>
@@ -155,6 +155,7 @@ function FindPasswordPage() {
         disabled={emailError} />
       </form>
     </FindPasswordContainer>
+}
     </>
   )
 }

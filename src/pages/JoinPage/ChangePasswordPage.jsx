@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import eye from '../../icon/eye.png'
 import eye_green from '../../icon/eye_green.png'
+import AuthApi from '../../apis/Auth'
+import VerifyCheck from '../../components/JoinPage/VerifyCheck'
+import { useSearchParams } from 'react-router-dom'
 
 const ChangePasswordContainer = styled.div`
-  margin-top: 180px;
+  margin-top: 302px;
   width: 500px;
   height: 387px;
   margin-left: auto;
@@ -107,11 +110,56 @@ function ChangePasswordPage() {
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [passwordCheckTouched, setPasswordCheckTouched] = useState(false);
 
+  const [verifyCheck, setVerifyCheck] = useState(false); 
+  const [restoreComplete, setRestoreComplete] = useState(false);
+  const [query, setQuery] = useSearchParams();
+
+  const btnText = "메인 페이지으로 돌아가기"
+  const title_fail = "메일 인증이 실패했어요😢"
+  const text_fail = `인증 시간이 만료되었어요. 
+  다시 한번 인증요청을 해주세요.`
+  const title = "비밀번호 변경 완료!"
+  const text = `비밀번호 재설정이 완료되었습니다.
+  새로운 비밀번호로 로그인해주세요.`
+
+  const handlePasswordVerify = async () => {
+    try{
+      const certificationNumber = query.get('certificationNumber');
+      const email= query.get('email');
+      console.log(certificationNumber, email)
+      const response = await AuthApi.findPasswordVerify(certificationNumber, email);
+      console.log('findPasswordVerify success: ', response);
+      setVerifyCheck(true);
+    } catch(error){
+      console.log('findPasswordVerify failed: ', error);
+      if(error.response && error.response.data && error.response.data.message){
+        //alert(error.response.data.message);
+      }
+    }
+  };
+
+  const handlePasswordRestore = async (passwordData) => {
+    try{
+      const response = await AuthApi.passwordRestore(passwordData);
+      console.log('passwordRestore success: ', response);
+      setRestoreComplete(true);
+    } catch(error){
+      console.log('passwordRestore failed: ', error);
+      if(error.response && error.response.data && error.response.data.message){
+        alert(error.response.data.message);
+      }
+    }
+  };
+
+  useEffect(()=>{
+    handlePasswordVerify();
+  }, [])
+
   const onChangePassword = (e) => {
     setPassword(e.target.value);
     setPasswordTouched(true);
     // 비밀번호 유효성 검사
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
     if (!passwordRegex.test(e.target.value)) {
       setPasswordError(true);
     } else {
@@ -132,16 +180,23 @@ function ChangePasswordPage() {
 
   const onSubmit = async(e) => {
     e.preventDefault();
+    const passwordData = {
+      password,
+      passwordCheck
+  }
+    handlePasswordRestore(passwordData);
   }
   return (
     <>
+    {restoreComplete ? <VerifyCheck title={title} text={text} btnText={btnText}/> 
+     : (verifyCheck ? 
       <ChangePasswordContainer>
         <ChangePasswordTitle>비밀번호 재설정</ChangePasswordTitle>
         <ChangePasswordText>변경할 비밀번호를 정확히 입력해 주세요.</ChangePasswordText>
         <form onSubmit={onSubmit}>
         <ChangePasswordLabel htmlFor='password'>
           비밀번호
-          {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자 모두 포함되어야 합니다.</ErrorText>}
+          {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자, 특수문자(@$!%*?&)가 모두 포함되어야 합니다.</ErrorText>}
           </ChangePasswordLabel>
           <PasswordContainer>
             <ChangePasswordInput id='password' 
@@ -173,6 +228,7 @@ function ChangePasswordPage() {
           disabled={passwordError || passwordCheckError} />
         </form>
       </ChangePasswordContainer>
+      : <VerifyCheck title={title_fail} text={text_fail} btnText={btnText}/>)}
     </>
   )
 }
