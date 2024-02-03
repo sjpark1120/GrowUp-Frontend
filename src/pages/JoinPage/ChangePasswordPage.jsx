@@ -5,6 +5,7 @@ import eye_green from '../../icon/eye_green.png'
 import AuthApi from '../../apis/Auth'
 import VerifyCheck from '../../components/JoinPage/VerifyCheck'
 import { useSearchParams } from 'react-router-dom'
+import AxiosInstance from '../../apis/CustomAxios'
 
 const ChangePasswordContainer = styled.div`
   margin-top: 302px;
@@ -122,6 +123,7 @@ function ChangePasswordPage() {
   const text = `비밀번호 재설정이 완료되었습니다.
   새로운 비밀번호로 로그인해주세요.`
 
+  let Authorization ='';
   const handlePasswordVerify = async () => {
     try{
       const certificationNumber = query.get('certificationNumber');
@@ -130,6 +132,10 @@ function ChangePasswordPage() {
       const response = await AuthApi.findPasswordVerify(certificationNumber, email);
       console.log('findPasswordVerify success: ', response);
       setVerifyCheck(true);
+      if (response && response.isSuccess) {
+        Authorization = `${response.result.accessToken}`;
+        //console.log('인증성공 토큰저장', Authorization)
+      }
     } catch(error){
       console.log('findPasswordVerify failed: ', error);
       if(error.response && error.response.data && error.response.data.message){
@@ -140,6 +146,11 @@ function ChangePasswordPage() {
 
   const handlePasswordRestore = async (passwordData) => {
     try{
+      if(Authorization !== ''){
+        AxiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = Authorization;
+      }
       const response = await AuthApi.passwordRestore(passwordData);
       console.log('passwordRestore success: ', response);
       setRestoreComplete(true);

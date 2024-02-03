@@ -105,12 +105,14 @@ const AuthApi = {
   silentRefresh: async() => {  // 토큰재발급
     try {
       const token = localStorage.getItem('refreshToken')
-      AxiosInstance.defaults.headers.common["Authorization"] = `${token}`;
+      if(token){
+        AxiosInstance.defaults.headers.common["Authorization"] = `${token}`;
+      }
       const response = await AxiosInstance.post('/growup/users/token-reissue');
       return response.data;
     } catch (error) {
       //console.error('Error in silentRefresh:', error);
-      delete AxiosInstance.defaults.headers.common["Authorization"];
+      //delete AxiosInstance.defaults.headers.common["Authorization"];
       //console.log("토큰삭제", AxiosInstance.defaults.headers.common)
       throw error;
     }
