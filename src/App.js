@@ -18,6 +18,7 @@ import AxiosInstance from "./apis/CustomAxios";
 import { useDispatch } from "react-redux";
 import { login } from "./redux/user";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import EmailVerifyPage from "./pages/JoinPage/EmailVerifyPage";
 
 function Layout() {
   return (
@@ -39,13 +40,13 @@ function App() {
       const response = await AuthApi.silentRefresh();
       console.log('silentRefresh success:', response);
       AxiosInstance.defaults.headers.common["Authorization"] = `${response.result.newAccessToken}`;
-      console.log("로그인 연장")
+      console.log("로그인 연장", AxiosInstance.defaults.headers.common)
       dispatch(login({ isLogin: true }));
     } catch (error) {
       //console.error('silentRefresh failed:', error);
       if (error.response?.status === 401) {
         // refresh token 만료 - 로그인 페이지 이동
-        console.log('토큰만료')
+        console.log('로그인 만료')
       }
     }
   };
@@ -61,6 +62,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
         <Route path="/changepassword" element={<ChangePasswordPage />} /> 
+        <Route path="/emailverify" element={<EmailVerifyPage />} /> 
         <Route element={<ProtectedRoute />}>
           <Route path="/growroom/write" element={<GrowRoomWritePage />} />
           <Route path="/mypage/edit" element={<EditProfile/>} />

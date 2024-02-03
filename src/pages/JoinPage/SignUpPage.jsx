@@ -2,10 +2,8 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import eye from '../../icon/eye.png'
 import eye_green from '../../icon/eye_green.png'
-import OverlayBox from '../../components/LiveUpPage/OverlayBox'
-import OverlayCheck from '../../components/LiveUpPage/OverlayCheck'
 import AuthApi from '../../apis/Auth'
-import { useNavigate } from 'react-router-dom'
+import VerifyCheck from '../../components/JoinPage/VerifyCheck'
 
 const SignUpcontainer = styled.div`
   margin-top: 302px;
@@ -98,46 +96,7 @@ const EyeIcon = styled.img`
   right: 55px;
   cursor: pointer;
 `
-const DoubleCheckBtn = styled.div`
-  display: flex;
-  align-items: center;
-  position: absolute;
-  right: 49px;
-  top: 11px;
-  width: 69px;
-  height: 34px;
-  border-radius: 8px;
-  padding: 0 10px;
-  background-color: #f7f7f7;
-  font-size: 14px;
-  color: #3e3e3e;
-  cursor: ${({ disabled }) => (disabled ? 'none' : 'pointer')};
-  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
-  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
-`
 
-const CompleteContainer = styled.div`
-  margin-top: 302px;
-  width: 500px;
-  height: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  margin-bottom: 200px;
-`
-const GotoMainBtn = styled.div`
-  border-radius: 5.333px;
-  background:#00D749;
-  width: 423px;
-  padding: 14px;
-  font-size: 25px;
-  font-style: normal;
-  font-weight: 800;
-  line-height: 140%;
-  color: white;
-  border: 0;
-  cursor: pointer;
-`
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordCheck, setShowPasswordCheck] = useState(false);
@@ -161,9 +120,6 @@ function SignUpPage() {
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [passwordCheckTouched, setPasswordCheckTouched] = useState(false);
 
-  const [doubleCheck, setDoubleCheck] = useState(false);
-
-  const navigate = useNavigate();
   const [isEmailSent, setIsEmailSent] = useState(false);
 
   const handleSignUp = async (userData) => {
@@ -187,10 +143,6 @@ function SignUpPage() {
       console.log('emailAuth failed: ', error);
       alert(error.response.data.message);
     }
-  };
-
-  const handleMainPageNavigation = () => {
-    navigate('/');
   };
 
   const onChangeName = (e) => {
@@ -261,44 +213,25 @@ function SignUpPage() {
     };
     handleSignUp(userData);
   }
+
+  const title = "인증 메일을 보내드렸습니다!"
+  const text = `가입하신 이메일을 인증해주시면,
+  그로우업의 서비스를 이용하실 수 있습니다.
+  가입해주셔서 감사드립니다!`
+  const btnText = "메인 화면으로 돌아가기"
   return (
     <>
-    {isEmailSent ? ( //회원가입 완료창 (임시)
-        <CompleteContainer>
-          <div>
-            <div>임시 화면입니다.</div>
-            <div>입력하신 이메일 주소로 인증 메일을 보내드렸어요.</div>
-            <div>인증 메일을 확인해주세요✉️</div>
-          </div>
-          <div>
-            <div>반가워요. GROW UP🌱에 오신 것을 환영해요!</div>
-            <div>아직 한 단계가 더 남았어요!</div>
-            <div>가입하신 이메일을 인증해주시면, GROW UP🌱의 서비스를 이용하실 수 있습니다. 가입해주셔서 다시 한 번 감사드립니다🙇</div>
-          </div>
-          <GotoMainBtn onClick={handleMainPageNavigation}>메인 화면으로 이동</GotoMainBtn>
-        </CompleteContainer>
+    {isEmailSent ? ( //회원가입 완료창
+        <VerifyCheck title={title} text={text} btnText={btnText}/>
       ): (
       <SignUpcontainer>
-        {nickname === "쿼카" ? (
-          <OverlayBox
-            toggle={doubleCheck}
-            setToggle={setDoubleCheck}
-            title={"사용 가능한 닉네임 입니다!"}
-            subTitle={"사용하기"}
-          />
-        ) : (
-          <OverlayCheck
-            toggle={doubleCheck}
-            setToggle={setDoubleCheck}
-            title={"중복된 닉네임 입니다!"}
-            subTitle={"중복확인"}
-            onCheck={() => setDoubleCheck(false)}
-          />
-        )}
         <SignUpTitle>회원가입</SignUpTitle>
         <SignUpText>그로우업에서 즐겁게 성장하세요!</SignUpText>
         <form onSubmit={onSubmit}>
-          <SignUpLabel htmlFor='name'>이름</SignUpLabel>
+          <SignUpLabel htmlFor='name'>
+            이름
+            {nameTouched && nameError && <ErrorText>ⓘ 이름은 공백일 수 없습니다.</ErrorText>}
+          </SignUpLabel>
           <SignUpInput id='name' type='text' placeholder='윤다희' value={name} onChange={onChangeName} />
           <SignUpLabel htmlFor='nickname'>
             닉네임
@@ -311,10 +244,6 @@ function SignUpPage() {
               value={nickname}
               onChange={onChangeNickname}
               style={nicknameTouched && nicknameError ? { borderColor: '#FF4747' } : { borderColor: '#E7E7E7' }} />
-            <DoubleCheckBtn
-              onClick={() => setDoubleCheck(true)}
-              disabled={nicknameError}>
-              중복확인</DoubleCheckBtn>
           </PasswordContainer>
           <SignUpLabel htmlFor='email'>
             이메일
@@ -329,7 +258,7 @@ function SignUpPage() {
             style={emailTouched && emailError ? { borderColor: '#FF4747' } : { borderColor: '#E7E7E7' }} />
           <SignUpLabel htmlFor='password'>
             비밀번호
-            {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자, 특수문자(@$!%*?&) 모두 포함되어야 합니다.</ErrorText>}
+            {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자, 특수문자(@$!%*?&)가 모두 포함되어야 합니다.</ErrorText>}
           </SignUpLabel>
           <PasswordContainer>
             <SignUpInput id='password'
