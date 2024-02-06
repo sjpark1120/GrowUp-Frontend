@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import plus_btn from '../../icon/plus_btn.png'
+import plus_btn from '../../icon/plus_btn.png';
+import TodoListApi from '../../apis/TodoListApi';
 
 const TodoListContainer = styled.div`
   margin-left: auto;
@@ -57,7 +58,6 @@ const TodoText = styled.div`
   line-height: 140%;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-top: auto;
 `;
 
 const Input = styled.input`
@@ -74,41 +74,58 @@ const Input = styled.input`
   }
 `;
 
+const AddButton = styled.img`
+  cursor: pointer;
+`;
+
 const TodoList = ({ todoList }) => {
-  const [todos, setTodos] = useState(todoList);
+  const [todos, setTodos] = useState(todoList || []);
   const [newTodo, setNewTodo] = useState('');
 
   useEffect(() => {
     setTodos(todoList || []);
   }, [todoList]);
 
-
-  const handleAddTodo = () => {
+  const handleAddTodo = async () => {
     if (newTodo.trim() !== '') {
-      setTodos((prevTodos) => [...prevTodos, [newTodo, false]]);
-      setNewTodo('');
+      try {
+        const response = await TodoListApi.postTodo({ comment: newTodo });
+        console.log('새로운 todo가 등록되었습니다:', response);
+        // 사용자에게 보여주기
+        const newTodoObj = { comment: newTodo, status: 'NONACTIVE' };
+        setTodos((prevTodos) => [...prevTodos, newTodoObj]);
+        setNewTodo(''); // 입력 필드 초기화
+      } catch (error) {
+        console.error('새로운 todo 등록 중 오류 발생:', error);
+      }
     }
   };
 
   const handleToggleComplete = (index) => {
-    const updatedTodos = [...todos];
-    updatedTodos[index][1] = !updatedTodos[index][1];
-    setTodos(updatedTodos);
+    setTodos(prevTodos => {
+      return prevTodos.map((todo, i) => {
+        if (i === index) {
+          return { ...todo, status: todo.status === 'ACTIVE' ? 'NONACTIVE' : 'ACTIVE' };
+        }
+        return todo;
+      });
+    });
   };
+  
 
   return (
     <TodoListContainer>
       <Title>✔️ TO DO LIST</Title>
       <TodoContainer>
-        {todos.map((todo, index) => (
+        {todos && todos.length > 0 && todos.map((todo, index) => (
           <div key={index} style={{ justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'flex' }}>
-            <CheckBox onClick={() => handleToggleComplete(index)} style={{ backgroundColor: todo[1] ? '#00D749' : 'transparent' }} />
-            <TodoText>{todo[0]}</TodoText>
+            <CheckBox onClick={() => handleToggleComplete(index)} style={{ backgroundColor: todo.status === 'ACTIVE' ? '#00D749' : 'transparent' }} />
+            <TodoText>{todo.comment}</TodoText>
           </div>
         ))}
       </TodoContainer>
       <InputContainer>
-        <img src={plus_btn} onClick={handleAddTodo} alt="add todo"/>
+        <AddButton src={plus_btn} onClick={handleAddTodo} alt="add todo"/>
         <Input
           placeholder="TO DO LIST 추가"
           value={newTodo}

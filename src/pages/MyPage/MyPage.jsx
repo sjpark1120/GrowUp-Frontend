@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MyCalendar from '../../components/MyPage/Calender/MyCalendar';
 import TodoList from '../../components/MyPage/TodoList';
@@ -6,6 +6,7 @@ import { dummyTodo, dummyEvents} from '../../DummyData';
 import profile_img from '../../icon/profile_img.png';
 import pencil_btn from '../../icon/pencil_btn.png';
 import { useNavigate } from 'react-router-dom';
+import TodoListApi from '../../apis/TodoListApi';
 
 const MainWrapper = styled.div`
   width: 1190px;
@@ -82,8 +83,23 @@ const PencilButton = styled.img`
 
 function MyPage() {
   const [userData, setUserData] = useState(dummyTodo);
+  const [TodoData, setTodoData] = useState(null);
   const [events, setEvents] = useState(dummyEvents);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await TodoListApi.getTodo();
+        setTodoData(response);
+        console.log('todo:', response);
+      } catch (error) {
+        console.error('todo 데이터 불러오기 실패:', error);
+      }
+    };    
+  
+    fetchData();
+  }, []);
+  
   const handleEventsChange = (newEvents) => {
     setEvents(newEvents);
   };
@@ -113,7 +129,7 @@ function MyPage() {
             {userData.time}
           </TimeValueText>
         </ProfileInfoWrapper>
-        <TodoList todoList={userData.todo} />
+        <TodoList todoList={TodoData} />
       </TodoAndProfileWrapper>
       <MyCalendar events={events} onEventsChange={handleEventsChange} />
     </MainWrapper>
