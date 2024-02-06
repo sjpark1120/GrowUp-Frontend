@@ -91,9 +91,8 @@ const TodoList = ({ todoList }) => {
       try {
         const response = await TodoListApi.postTodo({ comment: newTodo });
         console.log('새로운 todo가 등록되었습니다:', response);
-        // 사용자에게 보여주기
-        const newTodoObj = { comment: newTodo, status: 'NONACTIVE' };
-        setTodos((prevTodos) => [...prevTodos, newTodoObj]);
+        const newTodoObj = await TodoListApi.getTodo();
+        setTodos(newTodoObj);
         setNewTodo(''); // 입력 필드 초기화
       } catch (error) {
         console.error('새로운 todo 등록 중 오류 발생:', error);
