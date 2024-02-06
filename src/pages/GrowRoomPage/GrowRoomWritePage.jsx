@@ -6,7 +6,9 @@ import Dropdown from '../../components/GrowRoom/GrowRoomWrite/WriteDropDown';
 import DateRangePicker from '../../components/GrowRoom/GrowRoomWrite/DateRangePicker';
 import WriteComponent from '../../components/GrowRoom/GrowRoomWrite/WriteComponent'; // 
 
-
+const All = styled.div`
+margin-top:170px;
+`;
 const Writecomponentcontainer = styled.div`
 height: 530px;
 `;
@@ -123,7 +125,7 @@ function GrowRoomWritePage() {
   };
 
   return (
-    <all>
+    <All>
       <WriteForm>
         <SectionTitle>기본 정보를 입력해주세요</SectionTitle>
         <Group1>
@@ -209,7 +211,7 @@ function GrowRoomWritePage() {
                   
       </WriteForm>
       
-    </all>
+    </All>
   );
 }
 
