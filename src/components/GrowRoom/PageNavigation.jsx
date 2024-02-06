@@ -177,20 +177,19 @@ const PageNavigation = ({ data }) => {
     setCurrentPage(newPage);
   };
 
-
   return (
     <div>
       <PostContainer>
         {currentData.map((data, index) => (
           <PostBox
             key={index}
-            deadline={data.deadline}
-            maintext={data.maintext}
-            views={data.views}
+            title={data.title}
+            popular={true}
+            recruitment_field={data.recruitment_field}
             status={data.status}
-            like={data.like}
-            popular={data.popular}
-            study={data.study}
+            view={data.view}
+            deadline={'2023.12.05'}
+            like={'like'}
           />
         ))}
       </PostContainer>
