@@ -1,5 +1,3 @@
-import React from 'react'
-import { useDispatch } from 'react-redux';
 import AuthApi from './Auth';
 import AxiosInstance from './CustomAxios';
 

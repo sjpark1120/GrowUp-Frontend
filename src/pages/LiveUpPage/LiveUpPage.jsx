@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import banner from '../../icon/banner1.png'
 import LiveUpNavigation from '../../components/LiveUpPage/LiveUpNavigation';
@@ -6,6 +6,7 @@ import RankingFilterBtn from '../../components/LiveUpPage/RankingFilterBtn';
 import RankingBox from '../../components/LiveUpPage/RankingBox';
 import LiveUpPagination from '../../components/LiveUpPage/LiveUpPagnation';
 import { dummyLiveUpPost } from '../../LiveUpDummyDate';
+import LiveUpApi from '../../apis/LiveUpApi';
 const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -50,6 +51,21 @@ const MyLiveUpTitle = styled.h1`
 
 
 function LiveUpPage() {
+  const [posts, setPosts] = useState([]);
+
+  const handleGetPost = async () => {
+    try{
+      const response = await LiveUpApi.getPosts();
+      //console.log(response);
+      setPosts(response.result)
+    }catch (error){
+      console.error("post 불러오기 실패", error);
+    }
+  }
+
+  useEffect(()=>{
+    handleGetPost();
+  },[])
   return (
     <MainWrapper>
       <BannerImg src={banner} alt="banner" />
@@ -61,7 +77,7 @@ function LiveUpPage() {
       <MyLiveUpContainer>
         <MyLiveUpTitle>MY LIVE UP</MyLiveUpTitle>
         <LiveUpNavigation />
-        <LiveUpPagination data={dummyLiveUpPost}/>
+        <LiveUpPagination data={posts}/>
       </MyLiveUpContainer>
     </MainWrapper>
   )
