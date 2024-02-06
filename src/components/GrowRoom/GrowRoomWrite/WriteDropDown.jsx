@@ -1,10 +1,9 @@
-// WriteDropDown.jsx
-
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import down from '../../../icon/arrow_dropdown.png';
 import down_white from '../../../icon/arrow_down_white.png';
 import WriteDropDownOption from './WriteDropDownOption';
+import axios from 'axios'; // axios 라이브러리 추가
 
 const Container = styled.div`
   position: relative;
@@ -21,7 +20,7 @@ const DropDownContainer = styled.div`
 const DropDownHeader = styled.div`
   display: flex;
   width: 400px;
-  height:  50px;
+  height: 50px;
   padding: 6px 16px;
   justify-content: space-between;
   align-items: center;
@@ -40,11 +39,10 @@ const ArrowIcon = styled.img`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
 `;
 
-const WriteDropDown = ({ title, optionsMap ,categoryType }) => {
+const WriteDropDown = ({ title, optionsMap, categoryType }) => {
   const [mainDropdownOpen, setMainDropdownOpen] = useState(false);
   const [selectedMain, setSelectedMain] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-
 
   const toggleMainDropdown = () => {
     setMainDropdownOpen(!mainDropdownOpen);
@@ -52,37 +50,51 @@ const WriteDropDown = ({ title, optionsMap ,categoryType }) => {
     setSelectedCategory('');
   };
 
-  const mainSelected = (option) => {
+  const mainSelected = async (option, index) => {
     setSelectedMain(option);
     setSelectedCategory(categoryType);
-    console.log('Main Selected Option:', option, 'Category Type:', categoryType);
-    
+    console.log('Main Selected Option:', option, 'Index:', index + 1, 'Category Type:', categoryType);
+  
+    // Main Selected Option이 1이면 recruitmentId 값을 index + 1로 설정
+    const updatedRecruitmentId = option === 1 ? index + 1 : 1;
+    const updatedNumberId = option === 2 ? index + 1 : 1;
+    const updatedPeriodId = option === 2 ? index + 1 : 1;
 
-    saveToServer(option, categoryType);
-
+  
+    const accessToken = 'eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzA3MjM5ODM4LCJleHAiOjE3MDcyNDAxMzh9.5XpEeId4Euts5uNmv0HYtQS1L4--nznJiK734Fy15KI';
+  
+    const body = {
+      recruitmentId: updatedRecruitmentId,
+      numberId: updatedNumberId,
+      periodId: updatedPeriodId,
+      categoryDetailIds: [4, 5, 6],
+      title: '제목 tedsfdst',
+      content: '내용 tessdfsf',
+    };
+  
+    try {
+      const response = await axios.post(
+        'https://dev.jojoumc.shop/growup/growroom',
+        body, {
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        }
+      );
+  
+      console.log('서버 응답:', response.data);
+    } catch (error) {
+      console.error('서버에 선택된 값을 보내는 중 오류가 발생했습니다:', error);
+    }
+  
+    // 선택된 값 보낸 후 메뉴 닫기
     setTimeout(() => {
       setMainDropdownOpen(false);
     }, 500);
   };
+  
+  
 
-  const saveToServer = (selectedOption, selectedCategory) => {
-    // 선택된 항목과 카테고리를 서버에 저장하기 위한 비동기 요청 보내기
-    fetch('/api/saveOption', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ selectedOption, selectedCategory }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // 서버로부터의 응답 처리 (필요한 경우)
-        console.log('서버 응답:', data);
-      })
-      .catch((error) => {
-        console.error('옵션을 서버에 저장하는 중 오류가 발생했습니다:', error);
-      });
-  };
   return (
     <Container>
       <DropDownHeader isOpen={mainDropdownOpen} onClick={toggleMainDropdown}>
