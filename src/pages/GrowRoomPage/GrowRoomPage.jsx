@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import GrowRoomNavigation from '../../components/GrowRoom/GrowRoomNavigation';
 import { useNavigate } from 'react-router-dom';
-
+import GrowRoomApi from '../../apis/GrowRoomApi'
 
 import {dummyData} from '../.././DummyData'
 import banner from '../../icon/banner2.png'
@@ -72,10 +72,28 @@ const dropdown_period=['1주일', '1개월', '1년'];
 const GrowRoomPage = () => {
   const [isActive, setIsActive] = useState(false);
 
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await GrowRoomApi.getPosts();
+    
+  console.log('data: ' + data);
+        setPosts(data);
+      } catch (error) {
+        console.error('post 데이터 불러오기 실패:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleButtonClick = () => {
     //모집중만 보기 버튼 클릭
     setIsActive(!isActive);
   };
+
   const navigate = useNavigate(); // useNavigate를 사용
 
   const handleWriteButtonClick = () => {
@@ -114,7 +132,7 @@ const GrowRoomPage = () => {
           <WriteBtn onClick={handleWriteButtonClick}>글쓰기</WriteBtn>
         </div>
       </div>
-      <PageNavigation data={dummyData}/>
+      <PageNavigation data={posts}/>
     </MainWrapper>
     </div>
   );

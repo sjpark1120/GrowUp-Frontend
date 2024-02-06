@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import tag_close from '../../icon/모집완료.png';
 import tag_popular from '../../icon/인기.png';
 import tag_study from '../../icon/스터디.png';
+import tag_project from '../../icon/프로젝트.png';
+import tag_challenge from '../../icon/챌린지.png';
 import img_like from '../../icon/img-like.svg';
 import img_unlike from '../../icon/img-unlike.svg';
 
@@ -20,7 +22,7 @@ const Box = styled.div`
   background: #FFF;
 `;
 
-const MainText = styled.p`
+const Title = styled.p`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -45,7 +47,7 @@ font-size: 12px;
 font-weight: 400
 `
 
-const PostBox = ({postId, popular, study, status, deadline, maintext, views, like }) => {
+const PostBox = ({postId, popular, recruitment_field, status, deadline, title, view, like }) => {
   const [isActive, setIsActive] = useState(like === 'like');
 
   const handleLikeClick = () => {
@@ -56,7 +58,20 @@ const PostBox = ({postId, popular, study, status, deadline, maintext, views, lik
     return isActive ? img_like : img_unlike;
   };
 
-  const formattedViews = views >= 1000 ? '999+' : views;
+  const getRecruitmentTag = (recruitment_field) => {
+    switch (recruitment_field) {
+      case '스터디':
+        return <img src={tag_study} alt="study" />;
+      case '프로젝트':
+        return <img src={tag_project} alt="project" />;
+      case '챌린지':
+        return <img src={tag_challenge} alt="challenge" />;
+      default:
+        return null;
+    }
+  };
+
+  const formattedViews = view >= 1000 ? '999+' : view;
 
   const navigate = useNavigate(); 
   const handleClick = () => {
@@ -65,17 +80,19 @@ const PostBox = ({postId, popular, study, status, deadline, maintext, views, lik
   };
 
   return (
-    <Box style={{ opacity: status === 'close' ? 0.5 : 1 }} onClick={handleClick}>
+    <Box style={{ opacity: status === '삭제' ? 0.5 : 1 }} onClick={handleClick}>
       <div style={{ paddingBottom: '28px' }}>
         <div style={{ justifyContent: 'flex-start', gap: '10px', display: 'flex', paddingBottom: '20px' }}>
           {popular && <img src={tag_popular} alt="popular" />}
-          {study && <img src={tag_study} alt="study" />}
-          {status === 'close' && <img src={tag_close} alt="Recruit Status" style={{ marginLeft: 'auto' }} />}
+          
+          {getRecruitmentTag(recruitment_field)}
+
+          {status === '삭제' && <img src={tag_close} alt="Recruit Status" style={{ marginLeft: 'auto' }} />}
         </div>
 
         <DeadLine>{`마감일 | ${deadline}`}</DeadLine>
 
-        <MainText>{`${maintext}`}</MainText>
+        <Title>{`${title}`}</Title>
       </div>
       <div style={{ borderTop: '1px #F7F7F7 solid', marginTop: 'auto', padding: '12px 0px 14px 0px', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex', alignSelf: 'stretch' }}>
         <Views>{`조회수 ${formattedViews}회`}</Views>
