@@ -101,15 +101,24 @@ const TodoList = ({ todoList }) => {
     }
   };
 
-  const handleToggleComplete = (index) => {
-    setTodos(prevTodos => {
-      return prevTodos.map((todo, i) => {
-        if (i === index) {
-          return { ...todo, status: todo.status === 'ACTIVE' ? 'NONACTIVE' : 'ACTIVE' };
-        }
-        return todo;
+  const handleToggleComplete = async (index) => {
+    try {
+       //id를 /${todoList} querystring으로 전달
+      const todoListId = todos[index].todoListId;
+      const response = await TodoListApi.checkTodo(todoListId);
+      console.log('todo 상태 변경 완료:', response);
+      // 상태 변경 후 UI 업데이트
+      setTodos(prevTodos => {
+        return prevTodos.map((todo, i) => {
+          if (i === index) {
+            return { ...todo, status: todo.status === 'ACTIVE' ? 'NONACTIVE' : 'ACTIVE' };
+          }
+          return todo;
+        });
       });
-    });
+    } catch (error) {
+      console.error('todo 상태 변경 중 오류 발생:', error);
+    }
   };
   
 

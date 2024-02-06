@@ -24,7 +24,17 @@ const TodoListApi = {
       throw error;
     }
   },
-
+  checkTodo: async (todoListId) => {
+    try {
+      const response = await AxiosInstance.patch(`/growup/todo/modify-status?todoListId=${todoListId}`);
+      console.log(response.data);
+      return response.data.result;
+    } catch (error) {
+      console.error('Error in checkTodo:', error);
+      throw error;
+    }
+  }
+  
 };
 
 export default TodoListApi;
