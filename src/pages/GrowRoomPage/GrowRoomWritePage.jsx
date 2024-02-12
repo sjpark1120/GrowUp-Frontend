@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import SectionTitle from '../../components/GrowRoom/GrowRoomWrite/SectionTitle';
 import Dropdown from '../../components/GrowRoom/GrowRoomWrite/WriteDropDown';
 import DateRangePicker from '../../components/GrowRoom/GrowRoomWrite/DateRangePicker';
-import WriteComponent from '../../components/GrowRoom/GrowRoomWrite/WriteComponent'; // 
+import WriteComponent from '../../components/GrowRoom/GrowRoomWrite/WriteComponent'; 
+import { setApiForm } from '../../components/GrowRoom/GrowRoomWrite/apiData';
 
 const All = styled.div`
 margin-top:170px;
@@ -117,6 +118,7 @@ function GrowRoomWritePage() {
   const handleSubmitButtonClick = () => {
     console.log('Submit button clicked!');
     const postId = 1; //임의로 정함(서버에서 들고어가나 해야함)
+    setApiForm(title, content);
     navigate(`/growroom/${postId}`, { state: { title, content ,etcCategory,postId} }); // 백틱(`)을 사용하여 수정
   };
   const handleCancelButtonClick = () => {
