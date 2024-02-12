@@ -72,6 +72,17 @@ const CalendarApi = {
         }
       },
       
+      deleteEvent: async (calendarId) => {
+        try {
+          const response = await AxiosInstance.delete(`/growup/calender/delete?calenderId=${calendarId}`);
+          console.log(response.data);
+          return response.data;
+        } catch (error) {
+          console.error('Error in deleteEvent:', error);
+          throw error;
+        }
+      },
+      
   };
   
   export default CalendarApi;
