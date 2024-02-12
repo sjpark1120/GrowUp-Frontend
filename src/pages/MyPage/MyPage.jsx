@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MyCalendar from '../../components/MyPage/Calender/MyCalendar';
 import TodoList from '../../components/MyPage/TodoList';
-import { dummyTodo, dummyEvents} from '../../DummyData';
+import { dummyTodo, dummyEvents } from '../../DummyData';
 import profile_img from '../../icon/profile_img.png';
 import pencil_btn from '../../icon/pencil_btn.png';
 import { useNavigate } from 'react-router-dom';
@@ -81,70 +81,61 @@ const PencilButton = styled.img`
   height: auto;
 `;
 
-
 function MyPage() {
   const [userData, setUserData] = useState(dummyTodo);
   const [TodoData, setTodoData] = useState(null);
   const [calendarData, setCalendarData] = useState();
 
+  const fetchData = async () => {
+    try {
+      const todoResponse = await TodoListApi.getTodo();
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const dateString = `${year}-${month}`;
+      const calendarResponse = await CalendarApi.getCalendar(dateString);
+      setTodoData(todoResponse);
+      setCalendarData(calendarResponse.calenderMonthInquiryLists);
+      console.log('todo:', TodoData);
+    } catch (error) {
+      console.error('데이터 불러오기 실패:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const todoResponse = await TodoListApi.getTodo();
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const dateString = `${year}-${month}`;
-        const calendarResponse = await CalendarApi.getCalendar(dateString);
-        setTodoData(todoResponse);
-        const calendarData = calendarResponse.calenderMonthInquiryLists;
-        setCalendarData(calendarData);
-        console.log('todo:', TodoData);
-      } catch (error) {
-        console.error('데이터 불러오기 실패:', error);
-      }
-    };    
     fetchData();
   }, []); // 무한루프X
-  
-  
-  
-  const handleEventsChange = (newEvents) => {
-    setCalendarData(newEvents);
-  };
 
   const navigate = useNavigate();
   const handleProfileClick = () => {
-    // "/growroom/edit" 경로로 이동
     navigate('/mypage/edit');
   };
 
   return (
     <div>
-      <div style={{width: 'auto', height: '40px', background: '#141414'}} />
-    <MainWrapper>
-      <HeaderTextWrapper>
-        <MainText style={{ color: '#00D749' }}>{userData.userName} </MainText>
-        <MainText style={{ color: '#090909' }}>님! 오늘도 화이팅 입니다!</MainText>
-      </HeaderTextWrapper>
-      <TodoAndProfileWrapper>
-        <ProfileInfoWrapper>
-          <ProfileContainer onClick={handleProfileClick}>
-            <ProfileImage src={profile_img} alt="Profile" />
-            <PencilButton src={pencil_btn} alt="Edit Profile" />
-          </ProfileContainer>
-          <TimeInfoText>누적 성장 시간</TimeInfoText>
-          <TimeValueText>
-            {userData.time}
-          </TimeValueText>
-        </ProfileInfoWrapper>
-        <TodoList todoList={TodoData} />
-      </TodoAndProfileWrapper>
-      <MyCalendar calendarLists={calendarData} onEventsChange={handleEventsChange} />
-    </MainWrapper>
+      <div style={{ width: 'auto', height: '40px', background: '#141414' }} />
+      <MainWrapper>
+        <HeaderTextWrapper>
+          <MainText style={{ color: '#00D749' }}>{userData.userName} </MainText>
+          <MainText style={{ color: '#090909' }}>님! 오늘도 화이팅 입니다!</MainText>
+        </HeaderTextWrapper>
+        <TodoAndProfileWrapper>
+          <ProfileInfoWrapper>
+            <ProfileContainer onClick={handleProfileClick}>
+              <ProfileImage src={profile_img} alt="Profile" />
+              <PencilButton src={pencil_btn} alt="Edit Profile" />
+            </ProfileContainer>
+            <TimeInfoText>누적 성장 시간</TimeInfoText>
+            <TimeValueText>
+              {userData.time}
+            </TimeValueText>
+          </ProfileInfoWrapper>
+          <TodoList todoList={TodoData} />
+        </TodoAndProfileWrapper>
+        <MyCalendar calendarLists={calendarData} onEventsChange={fetchData} />
+      </MainWrapper>
     </div>
   );
 }
 
 export default MyPage;
-

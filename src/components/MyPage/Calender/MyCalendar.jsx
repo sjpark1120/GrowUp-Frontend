@@ -141,6 +141,7 @@ const MyCalendar = ({ calendarLists, onEventsChange }) => {
   //PopUp 닫을때
   const handleClosePopup = () => {
     setShowPopup(false);
+    onEventsChange();
   };
 
   const getEventsForDate = (date) => {
