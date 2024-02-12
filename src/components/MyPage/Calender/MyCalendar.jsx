@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import btn_left from '../../../icon/Page button_1.png';
 import btn_right from '../../../icon/Page button_2.png';
@@ -80,17 +80,21 @@ const NavigationButton = styled.img`
   cursor: pointer;
 `;
 
-const MyCalendar = ({ events, onEventsChange }) => {
-
+const MyCalendar = ({ calendarLists, onEventsChange }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showPopup, setShowPopup] = useState(false);
-  const [eventText, setEventText] = useState('');
+  const [comments, setComments] = useState(calendarLists);
 
   const dayCellRef = useRef(null);
+
+  useEffect(() => {
+    setComments(calendarLists);
+  }, [calendarLists]);
 
 
   //달력 생성
   const renderMonthGrid = () => {
+    console.log('calendar:', comments);
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
     const lastDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
@@ -115,7 +119,6 @@ const MyCalendar = ({ events, onEventsChange }) => {
 
       monthGrid.push(week);
     }
-
     return monthGrid;
   };
 
@@ -125,48 +128,22 @@ const MyCalendar = ({ events, onEventsChange }) => {
     setShowPopup(false);
     setSelectedDate(date);
     setShowPopup(true);
-    setEventText(getEventsForDate(date)[0]?.text || '');
   };
 
-  //PopUp 닫을때 데이터 전달받음
-  const handleClosePopup = (updatedEventText, updatedBackgroundColor) => {
+  //PopUp 닫을때
+  const handleClosePopup = () => {
     setShowPopup(false);
-
-    const updatedEvents = [...events].map((event) => {
-      if (new Date(event.date).toDateString() === selectedDate.toDateString()) {
-        return { ...event, text: updatedEventText, backgroundColor: updatedBackgroundColor };
-      }
-      return event;
-    });
-
-    // 해당 날짜에 대한 이벤트가 비어있다면 새 이벤트를 추가
-    if (getEventsForDate(selectedDate).length === 0) {
-      updatedEvents.push({
-        date: selectedDate,
-        text: updatedEventText,
-        backgroundColor: updatedBackgroundColor,
-      });
-    }
-
-    console.log('Updated Events:', updatedEvents);
-
-    onEventsChange(updatedEvents);
   };
 
 
   const getEventsForDate = (date) => {
-    if (!date) {
+    if (!date || !comments) {
       return [];
     }
 
-    return events.filter((event) => {
-      const eventDate = new Date(event.date);
-      // date와 eventDate가 모두 유효한 경우에만 비교
-      if (!isNaN(date) && !isNaN(eventDate)) {
-        return eventDate.toDateString() === date.toDateString();
-      }
-
-      return false;
+    return (comments || []).filter((event) => {
+      const eventDate = new Date(event.day);
+      return eventDate.toDateString() === date.toDateString();
     });
   };
 
@@ -225,13 +202,18 @@ const MyCalendar = ({ events, onEventsChange }) => {
                   )}
                   <div>{date.getDate()}</div>
                   <EventContainer>
-  {getEventsForDate(date).map((event, index) => (
-    <div
-      key={index}
-      dangerouslySetInnerHTML={{ __html: event.text.replace(/\n/g, '<br>') }}
-    />
-  ))}
-</EventContainer>
+                    <EventContainer>
+{getEventsForDate(date).map((event, index) => (
+  <div key={index}>
+    {event.calenderInquiryLists.map((item, idx) => (
+      <div key={idx}>
+        {item.comment} {/* 일정 설명 */}
+      </div>
+    ))}
+  </div>
+))}
+                    </EventContainer>
+                  </EventContainer>
                 </>
               )}
 

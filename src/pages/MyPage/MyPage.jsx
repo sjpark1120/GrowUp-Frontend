@@ -7,6 +7,7 @@ import profile_img from '../../icon/profile_img.png';
 import pencil_btn from '../../icon/pencil_btn.png';
 import { useNavigate } from 'react-router-dom';
 import TodoListApi from '../../apis/TodoListApi';
+import CalendarApi from '../../apis/CalendarApi';
 
 const MainWrapper = styled.div`
   width: 1190px;
@@ -84,24 +85,32 @@ const PencilButton = styled.img`
 function MyPage() {
   const [userData, setUserData] = useState(dummyTodo);
   const [TodoData, setTodoData] = useState(null);
-  const [events, setEvents] = useState(dummyEvents);
+  const [calendarData, setCalendarData] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await TodoListApi.getTodo();
-        setTodoData(response);
-        console.log('todo:', response);
+        const todoResponse = await TodoListApi.getTodo();
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const dateString = `${year}-${month}`;
+        const calendarResponse = await CalendarApi.getCalendar(dateString);
+        setTodoData(todoResponse);
+        const calendarData = calendarResponse.calenderMonthInquiryLists;
+        setCalendarData(calendarData);
+        console.log('todo:', TodoData);
       } catch (error) {
-        console.error('todo 데이터 불러오기 실패:', error);
+        console.error('데이터 불러오기 실패:', error);
       }
     };    
-  
     fetchData();
-  }, []);
+  }, []); // 무한루프X
+  
+  
   
   const handleEventsChange = (newEvents) => {
-    setEvents(newEvents);
+    setCalendarData(newEvents);
   };
 
   const navigate = useNavigate();
@@ -131,7 +140,7 @@ function MyPage() {
         </ProfileInfoWrapper>
         <TodoList todoList={TodoData} />
       </TodoAndProfileWrapper>
-      <MyCalendar events={events} onEventsChange={handleEventsChange} />
+      <MyCalendar calendarLists={calendarData} onEventsChange={handleEventsChange} />
     </MainWrapper>
     </div>
   );
