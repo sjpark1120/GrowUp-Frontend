@@ -12,6 +12,17 @@ const LiveUpApi = {
       throw error;
     }
   },
+
+  getPosts2: async () => {
+    try {
+      const response = await AxiosInstance.get('/growup/growroom/growRoominquiry',{});
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.error('Error in getPosts:', error);
+      throw error;
+    }
+  },
 };
 
 export default LiveUpApi;

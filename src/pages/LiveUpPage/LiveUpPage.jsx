@@ -62,9 +62,19 @@ function LiveUpPage() {
       console.error("post 불러오기 실패", error);
     }
   }
+  const handleGetPost2 = async () => {
+    try{
+      const response = await LiveUpApi.getPosts2();
+      console.log("테스트", response);
+      //setPosts(response.result)
+    }catch (error){
+      console.error("post 불러오기 실패", error);
+    }
+  }
 
   useEffect(()=>{
     handleGetPost();
+    handleGetPost2();
   },[])
   return (
     <MainWrapper>
