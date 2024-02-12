@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import down from '../../../icon/arrow_dropdown.png';
 import down_white from '../../../icon/arrow_down_white.png';
 import WriteDropDownOption from './WriteDropDownOption';
-import axios from 'axios'; // axios 라이브러리 추가
+import {  setApiData } from './apiData';
+
 
 const Container = styled.div`
   position: relative;
@@ -44,6 +45,8 @@ const WriteDropDown = ({ title, optionsMap, categoryType }) => {
   const [selectedMain, setSelectedMain] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
+
+
   const toggleMainDropdown = () => {
     setMainDropdownOpen(!mainDropdownOpen);
     setSelectedMain('');
@@ -54,45 +57,13 @@ const WriteDropDown = ({ title, optionsMap, categoryType }) => {
     setSelectedMain(option);
     setSelectedCategory(categoryType);
     console.log('Main Selected Option:', option, 'Index:', index + 1, 'Category Type:', categoryType);
-  
-    // Main Selected Option이 1이면 recruitmentId 값을 index + 1로 설정
-    const updatedRecruitmentId = option === 1 ? index + 1 : 1;
-    const updatedNumberId = option === 2 ? index + 1 : 1;
-    const updatedPeriodId = option === 2 ? index + 1 : 1;
+    setApiData(option, index);
+   
 
-  
-    const accessToken = 'eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzA3MjM5ODM4LCJleHAiOjE3MDcyNDAxMzh9.5XpEeId4Euts5uNmv0HYtQS1L4--nznJiK734Fy15KI';
-  
-    const body = {
-      recruitmentId: updatedRecruitmentId,
-      numberId: updatedNumberId,
-      periodId: updatedPeriodId,
-      categoryDetailIds: [4, 5, 6],
-      title: '제목 tedsfdst',
-      content: '내용 tessdfsf',
-    };
-  
-    try {
-      const response = await axios.post(
-        'https://dev.jojoumc.shop/growup/growroom',
-        body, {
-          headers: {
-            Authorization: `${accessToken}`,
-          },
-        }
-      );
-  
-      console.log('서버 응답:', response.data);
-    } catch (error) {
-      console.error('서버에 선택된 값을 보내는 중 오류가 발생했습니다:', error);
-    }
-  
-    // 선택된 값 보낸 후 메뉴 닫기
-    setTimeout(() => {
-      setMainDropdownOpen(false);
-    }, 500);
   };
-  
+  const handleClose = () => {
+    setMainDropdownOpen(false);
+  };
   
 
   return (
@@ -103,7 +74,7 @@ const WriteDropDown = ({ title, optionsMap, categoryType }) => {
       </DropDownHeader>
       <DropDownContainer isOpen={mainDropdownOpen}>
         {mainDropdownOpen && optionsMap && (
-          <WriteDropDownOption options={optionsMap} onClick={mainSelected} categoryType={categoryType} />
+          <WriteDropDownOption options={optionsMap} onClick={mainSelected} categoryType={categoryType}onClose={handleClose} />
         )}
       </DropDownContainer>
     </Container>
