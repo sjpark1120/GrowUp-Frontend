@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import icon_check from '../../../icon/check.png';
-import icon_check_circle from '../../../icon/check-circle.png'
+import icon_check_circle from '../../../icon/check-circle.png';
+import CalendarApi from '../../../apis/CalendarApi';
 
 const PopupWrapper = styled.div`
   position: absolute;
@@ -16,35 +17,35 @@ const PopupWrapper = styled.div`
 `;
 
 const PopupHeader = styled.div`
-position: relative;
-display: flex;
-justify-content: center;
-color: #FFF;
-text-align: center;
-font-size: 18px;
-font-weight: 600;
-line-height: 140%;
-margin: 3px;
-width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  color: #FFF;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 140%;
+  margin: 3px;
+  width: 100%;
 `;
 
 const CloseButton = styled.img`
-background-color: transparent;
-border: none;
-cursor: pointer;
-width: 28px;
-height: 28px;
-display: flex;
-align-items: center;
-position: absolute;
-right:0;
-margin-right:5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right:0;
+  margin-right:5px;
 `;
 
 const PopupBody = styled.div`
   width: 100%;
   padding: 8px 15px;
-  background-color: #FFF;
+  background-color: ${({ backgroundColor }) => backgroundColor || '#FFF'};
   overflow-y: auto;
   cursor: pointer;
   color: #8D8D8D;
@@ -56,11 +57,11 @@ const PopupBody = styled.div`
 `;
 
 
-const EditableText = styled.div`
+const EditableText = styled.input`
   width: 100%;
-  padding: 8px 15px;
+  padding: 3px 10px;
+  margin-bottom: 8px;
   background-color: #FFF;
-  overflow-y: hidden;
   color: #8D8D8D;
   font-size: 18px;
   font-weight: 600;
@@ -69,161 +70,266 @@ const EditableText = styled.div`
   font-family: inherit;
   height: auto;
   white-space: pre-line;
+  border: 1px solid #CCC;
+  border-radius: 0;
+  
+  &:focus {
+    border-color: #269FE4;
+    outline: none;
+  }
 `;
 
+const EventItem = styled.div`
+  text-decoration: ${({ isCanceled }) => isCanceled ? 'line-through' : 'none'};
+  cursor: pointer;
+`;
 
 const BtnContainer = styled.div`
-width: 100%;
-display: flex;
-padding: 10px;
-align-items: flex-start;
-padding-top : 8px;
-gap: 8px;
-flex-direction: row;
-background: #FFF;
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  align-items: flex-start;
+  padding-top : 8px;
+  gap: 8px;
+  flex-direction: row;
+  background: #FFF;
 `
 
 const EditButton = styled.div`
-width: 25px;
-height: 25px;
-display: flex;
-align-items: center;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
 `
 
-const CalendarPopup = ({ selectedDate, events, onClose, dayCellRef }) => {
-    const [popupPosition, setPopupPosition] = useState({ top: null, left: null });
-    const [isEditing, setIsEditing] = useState(false);
-    const [popupEventText, setPopUpEventText] = useState('');
-    const [EditingText, setEditingText] = useState(popupEventText);
-    const [selectedColor, setSelectedColor] = useState(null);
-    const popupRef = useRef(null);
+const CalendarPopup = ({ selectedDate, onClose, dayCellRef }) => {
+  const [popupPosition, setPopupPosition] = useState({ top: null, left: null });
+  const [inputText, setInputText] = useState('');
+  const [popupEventText, setPopUpEventText] = useState('');
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedEventIndex, setSelectedEventIndex] = useState(null);
+  const [eventIds, setEventIds] = useState([]);
+  const [isEventDone, setIsEventDone] = useState(false);
+  const [isEditingExistingEvent, setIsEditingExistingEvent] = useState(false);
+  const popupRef = useRef(null);
+  const dateString = selectedDate.toLocaleDateString('en-CA');
 
-    
-    useEffect(() => {
-      const calculatePopupPosition = () => {
-        if (dayCellRef.current) {
-          const rect = dayCellRef.current.getBoundingClientRect();
-          setPopupPosition({
-            top: rect.top + window.scrollY,
-            left: rect.left + window.scrollX,
-          });
-        }
-      };
+  const colorMap = {
+    'WHITE': '#FFF',
+    'RED': '#FFE5E5',
+    'PURPLE': '#EFECFF',
+    'YELLOW': '#FFF7CA',
+  };
 
-      calculatePopupPosition();
-
-      window.addEventListener('scroll', calculatePopupPosition);
-
-      return () => {
-        window.removeEventListener('scroll', calculatePopupPosition);
-      };
-    }, [dayCellRef]);
-
-    //초기 data 받아오기
-    useEffect(() => {
-      setPopUpEventText(events.map((event) => event.text).join('\n'));
-      setSelectedColor(events[0]?.backgroundColor || '#FFF');
-    }, [events]);
-
-    //팝업 외부 클릭 시 팝업 닫힘.
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (
-          popupRef.current &&
-          !popupRef.current.contains(event.target) &&
-          !event.target.classList.contains('insidePopup')
-        ) {
-            onClose(popupEventText,selectedColor ); //수정중에는 닫히면 날아감
-        }
-      };
-
-      document.addEventListener('mousedown', handleClickOutside);
-
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, [popupEventText, onClose]);
-
-    const handleTextClick = () => {
-      setEditingText(popupEventText);
-      setIsEditing(true);
-    };
-
-    const handleInputChange = (e) => {
-      setEditingText(e.target.innerHTML);
-    };
-    
-
-    const handleColorButtonClick = (color) => {
-      setSelectedColor(color);
-    };
-
-    const handleSave = () => {
-      if (isEditing) {
-        // 취소선을 적용하려는 텍스트에 <del> 태그 추가
-        const selectedText = window.getSelection().toString();
-        const updatedText = selectedText ? EditingText.replace(selectedText, `<del>${selectedText}</del>`) : EditingText;
-        console.log('Updated Text with del tags:', updatedText); 
-        setPopUpEventText(updatedText);
-      } else {
-        setPopUpEventText(popupEventText);
+  useEffect(() => {
+    const calculatePopupPosition = () => {
+      if (dayCellRef.current) {
+        const rect = dayCellRef.current.getBoundingClientRect();
+        setPopupPosition({
+          top: rect.top + window.scrollY,
+          left: rect.left + window.scrollX,
+        });
       }
-      setIsEditing(false);
-    };
-    
-    
-    const handleClose = () => {
-      onClose(popupEventText, selectedColor);
     };
 
-    return (
-      <PopupWrapper style={popupPosition} ref={popupRef}>
-        <PopupHeader>
-          {selectedDate.toLocaleDateString()}
-          <CloseButton onClick={handleClose} src={icon_check} alt="Done" />
-        </PopupHeader>
-        {isEditing ? (
-          <>
+    calculatePopupPosition();
 
-<EditableText
-  className="insidePopup"
-  onBlur={handleInputChange}
-  style={{ backgroundColor: selectedColor }}
-  contentEditable={true}
-  dangerouslySetInnerHTML={{ __html: EditingText}}
-/>
-          </>
-        ) : (
-          <PopupBody
-            className="insidePopup"
-            onClick={handleTextClick}
-            style={{ backgroundColor: selectedColor }} 
-            dangerouslySetInnerHTML={{ __html: popupEventText.replace(/\n/g, '<br>') }}
+    window.addEventListener('scroll', calculatePopupPosition);
+
+    return () => {
+      window.removeEventListener('scroll', calculatePopupPosition);
+    };
+  }, [dayCellRef]);
+  
+  useEffect(() => {
+    const getPopupData = async () => {
+      try {
+        const response = await CalendarApi.getPopup(dateString);
+        updateClientState(response);
+      } catch (error) {
+        console.error('Error in getPopup:', error);
+      }
+    };
+  
+    getPopupData();
+  }, [dateString]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        !event.target.classList.contains('insidePopup')
+      ) {
+        onClose(popupEventText, selectedColor);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [popupEventText, onClose, selectedColor]);
+
+  const handleEventClick = (index) => {
+    if (selectedEventIndex === eventIds[index]) {
+      setSelectedEventIndex(null);
+      setInputText('');
+      setIsEditingExistingEvent(false);
+    } else {
+      setSelectedEventIndex(eventIds[index]);
+      setInputText(popupEventText.split('\n')[index]);
+      setIsEditingExistingEvent(true);
+    }
+  };
+  const handleColorButtonClick = async (colorName) => {
+    try {
+      const selectedColorCode = colorMap[colorName];
+      const requestData = { day: dateString, color: colorName };
+      console.log('전송되는 데이터:', requestData);
+      await CalendarApi.modifyColor(requestData);
+      console.log('서버에 배경색 변경 요청을 보냈습니다.');
+      setSelectedColor(selectedColorCode);
+
+      const updatedEventData = await CalendarApi.getPopup(dateString);
+      updateClientState(updatedEventData);
+    } catch (error) {
+      console.error('배경색 변경 실패:', error);
+    }
+  };
+  
+  const handleTextChange = (event) => {
+    setInputText(event.target.value);
+  };
+
+  const handleTextKeyPress = async (event) => {
+    if (event.key === 'Enter') {
+      try {
+        if (inputText.trim() === '') {
+          // 입력 내용이 비어 있는 경우에는 deleteEvent 호출
+          await deleteEventData();
+        } else {
+          // 입력 내용이 있는 경우에는 saveEventData 호출
+          await saveEventData();
+        }
+      } catch (error) {
+        console.error('이벤트 저장 실패:', error);
+      }
+    }
+  };
+  
+  const deleteEventData = async () => {
+    try {
+      await CalendarApi.deleteEvent(selectedEventIndex);
+      console.log('이벤트가 삭제되었습니다.');
+  
+      const updatedEventData = await CalendarApi.getPopup(dateString);
+      updateClientState(updatedEventData);
+    } catch (error) {
+      console.error('이벤트 삭제 실패:', error);
+    }
+  };
+  
+  const saveEventData = async () => {
+    if (isEditingExistingEvent) {
+      const eventData = {
+        calenderId: selectedEventIndex,
+        comment: inputText,
+      };
+      await CalendarApi.modifyEvent(eventData);
+      console.log('이벤트가 수정되었습니다.');
+    } else {
+      const eventData = {
+        day: dateString,
+        comment: inputText,
+      };
+      await CalendarApi.postEvent(eventData);
+      console.log('새로운 이벤트가 추가되었습니다.');
+    }
+
+    const updatedEventData = await CalendarApi.getPopup(dateString);
+    updateClientState(updatedEventData);
+
+    setInputText('');
+    setIsEditingExistingEvent(false);
+  };
+
+  const handleSave = async () => {
+    try {
+      if (isEditingExistingEvent) {
+        await CalendarApi.modifyStatus(selectedEventIndex);
+        console.log('취소선이 적용되었습니다.');
+
+        const updatedEventData = await CalendarApi.getPopup(dateString);
+        updateClientState(updatedEventData);
+      }
+      setIsEditingExistingEvent(false);
+    } catch (error) {
+      console.error('취소선 적용 실패:', error);
+    }
+  };
+
+  const updateClientState = (updatedEventData) => {
+    if (updatedEventData.isSuccess) {
+      const { calenderInquiryLists, color } = updatedEventData.result;
+      const eventText = calenderInquiryLists.map(list => list.comment).join('\n');
+      setPopUpEventText(eventText);
+      setSelectedColor(color);
+      setEventIds(calenderInquiryLists.map(list => list.calenderId));
+      const areEventsDone = calenderInquiryLists.map(event => event.status === 'NONACTIVE');
+      setIsEventDone(areEventsDone);
+    } else {
+      console.error('Error in getPopup:', updatedEventData.message);
+    }
+  };
+
+  const handleClose = () => {
+    onClose(popupEventText, selectedColor);
+  };
+
+  return (
+    <PopupWrapper style={popupPosition} ref={popupRef}>
+      <PopupHeader>
+        {selectedDate.toLocaleDateString()}
+        <CloseButton onClick={handleClose} src={icon_check} alt="Done" />
+      </PopupHeader>
+      <PopupBody backgroundColor={colorMap[selectedColor]}>
+        <EditableText
+          className="insidePopup"
+          value={inputText}
+          onChange={handleTextChange}
+          onKeyPress={handleTextKeyPress}
+        />
+        {popupEventText.split('\n').map((eventText, index) => (
+          <EventItem
+  key={index}
+  isCanceled={isEventDone[index]}
+  onClick={() => handleEventClick(index)}
+  style={{
+    fontWeight: selectedEventIndex === eventIds[index] ? 'bold' : 'normal',
+    color: selectedEventIndex === eventIds[index] ? '#4F4F4F' : '#8D8D8D'
+  }}
+>
+  {eventText}
+</EventItem>
+
+        ))}
+      </PopupBody>
+      <BtnContainer>
+        <EditButton style={{ marginRight: '5px' }}>
+          <img src={icon_check_circle} alt="취소선적용" onClick={handleSave} />
+        </EditButton>
+        {Object.keys(colorMap).map((colorName) => (
+          <EditButton 
+            key={colorName}
+            style={{ backgroundColor: colorMap[colorName],  border: '1px solid #CCC' }}
+            onClick={() => handleColorButtonClick(colorName)}
           />
-        )}
-        <BtnContainer>
-          <EditButton style={{ marginRight: '5px' }}>
-            <img src={icon_check_circle} alt="취소선적용" onClick={handleSave} />
-          </EditButton>
-            <EditButton
-              style={{ backgroundColor: '#FFF', border: '2px solid #8D8D8D' }}
-              onClick={() => handleColorButtonClick('#FFF')}
-            />
-            <EditButton
-              style={{ backgroundColor: '#FFE5E5' }}
-              onClick={() => handleColorButtonClick('#FFE5E5')}
-            /> 
-            <EditButton
-              style={{ backgroundColor: '#EFECFF' }}
-              onClick={() => handleColorButtonClick('#EFECFF')}
-            />
-            <EditButton
-              style={{ backgroundColor: '#FFF7CA' }}
-              onClick={() => handleColorButtonClick('#FFF7CA')}
-            />
-          </BtnContainer>
-        </PopupWrapper>
-      );
-    };
-    
-    export default CalendarPopup;
+        ))}
+      </BtnContainer>
+    </PopupWrapper>
+  );
+};
+
+export default CalendarPopup;
