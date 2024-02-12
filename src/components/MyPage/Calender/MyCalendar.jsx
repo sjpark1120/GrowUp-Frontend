@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import btn_left from '../../../icon/Page button_1.png';
 import btn_right from '../../../icon/Page button_2.png';
@@ -54,16 +54,19 @@ const DayCell = styled.div`
   border-top: ${(props) => (props.isToday ? '1px solid #00D749' : 'none')};
   border-right: ${(props) => (props.isToday ? '1px solid #00D749' : 'none')};
   border-left: ${(props) => (props.isToday ? '1px solid #00D749' : 'none')};
-  color: #8D8D8D;
+  color: ${(props) => (props.isCanceled ? '#8D8D8D' : '#8D8D8D')};
   text-align: center;
   font-size: 14px;
   font-weight: 500;
   line-height: 140%;
+  text-decoration: ${(props) => (props.isCanceled ? 'line-through !important' : 'none')};
+
 
   &:hover {
     background-color: #f0f0f0;
   }
 `;
+
 
 const EventContainer = styled.div`
   display: flex;
@@ -80,17 +83,27 @@ const NavigationButton = styled.img`
   cursor: pointer;
 `;
 
-const MyCalendar = ({ events, onEventsChange }) => {
+const colorMap = {
+  'WHITE': '#FFF',
+  'RED': '#FFE5E5',
+  'PURPLE': '#EFECFF',
+  'YELLOW': '#FFF7CA',
+};
 
+const MyCalendar = ({ calendarLists, onEventsChange }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showPopup, setShowPopup] = useState(false);
-  const [eventText, setEventText] = useState('');
+  const [comments, setComments] = useState(calendarLists);
 
   const dayCellRef = useRef(null);
 
+  useEffect(() => {
+    setComments(calendarLists);
+  }, [calendarLists]);
 
   //달력 생성
   const renderMonthGrid = () => {
+    console.log('calendar:', comments);
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
     const lastDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
@@ -115,59 +128,33 @@ const MyCalendar = ({ events, onEventsChange }) => {
 
       monthGrid.push(week);
     }
-
     return monthGrid;
   };
-
 
   //DayCell 클릭
   const handleDayClick = (date) => {
     setShowPopup(false);
     setSelectedDate(date);
     setShowPopup(true);
-    setEventText(getEventsForDate(date)[0]?.text || '');
   };
 
-  //PopUp 닫을때 데이터 전달받음
-  const handleClosePopup = (updatedEventText, updatedBackgroundColor) => {
+  //PopUp 닫을때
+  const handleClosePopup = () => {
     setShowPopup(false);
-
-    const updatedEvents = [...events].map((event) => {
-      if (new Date(event.date).toDateString() === selectedDate.toDateString()) {
-        return { ...event, text: updatedEventText, backgroundColor: updatedBackgroundColor };
-      }
-      return event;
-    });
-
-    // 해당 날짜에 대한 이벤트가 비어있다면 새 이벤트를 추가
-    if (getEventsForDate(selectedDate).length === 0) {
-      updatedEvents.push({
-        date: selectedDate,
-        text: updatedEventText,
-        backgroundColor: updatedBackgroundColor,
-      });
-    }
-
-    console.log('Updated Events:', updatedEvents);
-
-    onEventsChange(updatedEvents);
+    onEventsChange();
   };
-
 
   const getEventsForDate = (date) => {
-    if (!date) {
+    if (!date || !comments) {
       return [];
     }
 
-    return events.filter((event) => {
-      const eventDate = new Date(event.date);
-      // date와 eventDate가 모두 유효한 경우에만 비교
-      if (!isNaN(date) && !isNaN(eventDate)) {
-        return eventDate.toDateString() === date.toDateString();
-      }
-
-      return false;
+    const eventsForDate = (comments || []).filter((event) => {
+      const eventDate = new Date(event.day);
+      return eventDate.toDateString() === date.toDateString();
     });
+
+    return eventsForDate;
   };
 
   return (
@@ -198,8 +185,9 @@ const MyCalendar = ({ events, onEventsChange }) => {
               ref={date && date.getDate() === selectedDate.getDate() ? dayCellRef : null}
               key={dateIndex}
               onClick={() => date && handleDayClick(date)}
-              backgroundColor={getEventsForDate(date)[0]?.backgroundColor || '#FFF'}
+              backgroundColor={colorMap[getEventsForDate(date)[0]?.color] || '#FFF'}
               isToday={date && date.toDateString() === new Date().toDateString()}
+              isCanceled={getEventsForDate(date)[0]?.status === 'NONACTIVE'}
             >
               {date && (
                 <>
@@ -225,17 +213,19 @@ const MyCalendar = ({ events, onEventsChange }) => {
                   )}
                   <div>{date.getDate()}</div>
                   <EventContainer>
-  {getEventsForDate(date).map((event, index) => (
-    <div
-      key={index}
-      dangerouslySetInnerHTML={{ __html: event.text.replace(/\n/g, '<br>') }}
-    />
-  ))}
-</EventContainer>
+                    {getEventsForDate(date).map((event, index) => (
+                      <div key={index}>
+                        {event.calenderInquiryLists.map((item, idx) => (
+                          <div key={idx} style={{ textDecoration: item.status === 'NONACTIVE' ? 'line-through' : 'none' }}>
+                            {item.comment}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </EventContainer>
+
                 </>
               )}
-
-
             </DayCell>
           )))
         )}
