@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import mypageIcon from "../../icon/mypageIcon.png";
 
@@ -7,6 +7,16 @@ import cancel from "../../icon/cancel.png";
 import OverlayBox from "../../components/LiveUpPage/OverlayBox";
 import OverlayCheck from "../../components/LiveUpPage/OverlayCheck";
 import OverlayWithdraw from "../../components/LiveUpPage/OverlayWithdraw";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  changeField,
+  changeNickname,
+  existNickname,
+  getMyInfo,
+  passwordCheck,
+} from "../../redux/mypageEdit";
+
+import TodoListApi from "../../apis/TodoListApi";
 
 const Frame = styled.div`
   width: 100%;
@@ -166,32 +176,62 @@ export const Input = styled.input`
 `;
 
 const EditProfile = () => {
+  const dispatch = useDispatch();
+  const { myInfo, isNickname } = useSelector(({ mypageEdit }) => ({
+    myInfo: mypageEdit.myInfo,
+    isNickname: mypageEdit.isNickname,
+  }));
+
+  // const selectMyInfo = createSelector(
+  //   (state) => state.mypageEdit.myInfo,
+  //   (myInfo) => ({ myInfo })
+  // );
+
+  // // 컴포넌트 내에서 사용
+  // const { myInfo } = useSelector(selectMyInfo);
+
   const [doubleCheck, setDoubleCheck] = useState(false);
   const [mail, setMail] = useState(false);
   const [passwordToggle, setPasswordToggle] = useState(false);
   const [withdraw, setWithdraw] = useState(false);
 
-  const [formData, setFormData] = useState({
-    nickname: "쿼",
-    email: "dahui4603@naver.com",
-    password: "",
-    confirmPassword: "",
-  });
-
   const onChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    const { value, name } = e.target;
+    dispatch(changeField({ key: name, value: value }));
   };
+
+  const onExistNickname = () => {
+    console.log("onExistNickname 실행", myInfo.nickname, {
+      nickName: myInfo.nickname,
+    });
+    dispatch(existNickname(myInfo.nickname));
+  };
+
+  const onChangeNickname = (nickName) => {
+    console.log(nickName, "changenic");
+    dispatch(changeNickname(nickName));
+  };
+
+  const onPasswordCheck = () => {
+    dispatch(passwordCheck({ currentPwd: myInfo.password }));
+  };
+
+  useEffect(() => {
+    dispatch(getMyInfo());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isNickname) setDoubleCheck(isNickname);
+  }, [isNickname]);
 
   return (
     <Frame>
-      {formData.nickname === "쿼카" ? (
+      {isNickname ? (
         <OverlayBox
           toggle={doubleCheck}
           setToggle={setDoubleCheck}
+          onChangeNickname={onChangeNickname}
+          nickName={myInfo.nickname}
           title={"사용 가능한 닉네임 입니다!"}
           subTitle={"사용하기"}
         />
@@ -234,7 +274,14 @@ const EditProfile = () => {
         <div className="infoBlock">
           <div className="myImageBlock">
             <div className="myImage">
-              <img src={mypageIcon} alt="mypageIcon" />
+              <input type="file" id="fileInput" style={{ display: "none" }} />
+              <label htmlFor="fileInput">
+                <img
+                  src={mypageIcon}
+                  alt="mypageIcon"
+                  style={{ cursor: "pointer" }}
+                />
+              </label>
             </div>
             <div className="time">
               <div className="time_title">누적 성장 시간</div>
@@ -251,14 +298,11 @@ const EditProfile = () => {
               </div>
               <Input
                 type="text"
-                value={formData.nickname}
+                value={myInfo.nickname}
                 name="nickname"
                 onChange={onChange}
               />
-              <div
-                className="btn btn_nickname"
-                onClick={() => setDoubleCheck(true)}
-              >
+              <div className="btn btn_nickname" onClick={onExistNickname}>
                 중복확인
               </div>
               <div className="exclude_nickname">
@@ -267,11 +311,11 @@ const EditProfile = () => {
               </div>
               <Input
                 type="email"
-                value={formData.email}
+                value={myInfo.email}
                 name="email"
                 onChange={onChange}
               />
-              <div className="btn btn_email" onClick={() => setMail(true)}>
+              <div className="btn btn_email" onClick={onExistNickname}>
                 인증하기
               </div>
             </div>
@@ -280,7 +324,7 @@ const EditProfile = () => {
                 <div className="info_input_title">비밀번호 변경</div>
                 <div className="find_password">비밀번호 찾기</div>
               </div>
-              <div className="btn" onClick={() => setPasswordToggle(true)}>
+              <div className="btn" onClick={onPasswordCheck}>
                 인증하기
               </div>
 
@@ -288,11 +332,23 @@ const EditProfile = () => {
                 type="password"
                 name="password"
                 onChange={onChange}
-                value={formData.password}
+                value={myInfo.password}
                 placeholder="기존 비밀번호"
               />
-              <Input type="password" placeholder="새 비밀번호" />
-              <Input type="password" placeholder="새 비밀번호 확인" />
+              <Input
+                type="password"
+                name="newPassword"
+                onChange={onChange}
+                value={myInfo.newPassword}
+                placeholder="새 비밀번호"
+              />
+              <Input
+                type="password"
+                name="newPasswordConfirm"
+                onChange={onChange}
+                value={myInfo.newPasswordConfirm}
+                placeholder="새 비밀번호 확인"
+              />
             </div>
             <div className="withdrawAndLogoutBtn">
               <div onClick={() => setWithdraw(true)}>탈퇴하기</div>
