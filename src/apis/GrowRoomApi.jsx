@@ -1,15 +1,14 @@
-import AxiosInstance from './CustomAxios';
+import AxiosInstance from "./CustomAxios";
 
 const GrowRoomApi = {
   getPosts: async () => {
     try {
-      const response = await AxiosInstance.get('/growup/growroom', {
-      });
+      const response = await AxiosInstance.get("/growup/growroom", {});
 
       console.log(response.data);
       return response.data.result;
     } catch (error) {
-      console.error('Error in getPosts:', error);
+      console.error("Error in getPosts:", error);
       throw error;
     }
   },

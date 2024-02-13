@@ -3,7 +3,15 @@ import { Overlay } from "../../pages/LiveUpPage/LiveUpJoinPage";
 import logo from "../../icon/Logo.png";
 import cancel from "../../icon/cancel.png";
 
-const OverlayBox = ({ toggle, setToggle, setShare, title, subTitle }) => {
+const OverlayBox = ({
+  toggle,
+  setToggle,
+  setShare,
+  title,
+  subTitle,
+  onChangeNickname,
+  nickName,
+}) => {
   if (!toggle) return null;
 
   const isSetVideoShare = () => {
@@ -31,7 +39,15 @@ const OverlayBox = ({ toggle, setToggle, setShare, title, subTitle }) => {
           >
             {title}
           </div>
-          <button className="start_btn" onClick={isSetVideoShare}>
+          <button
+            className="start_btn"
+            onClick={(e) => {
+              e.preventDefault();
+              console.log(nickName, "nickName");
+              onChangeNickname(nickName);
+              isSetVideoShare();
+            }}
+          >
             {subTitle}
           </button>
         </div>
