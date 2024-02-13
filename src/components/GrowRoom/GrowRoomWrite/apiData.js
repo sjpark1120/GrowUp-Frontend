@@ -1,5 +1,5 @@
-// apiData.js
 import axios from 'axios';
+import GrowRoomWriteApi from '../../../apis/GrowRoomWriteApi'
 
 let selectedOption = null;
 let selectedIndex = null;
@@ -35,7 +35,7 @@ const setApiData = (option, index) => {
   }
 };
 
-const setApiDate = (startDate, endDate) =>{
+const setApiDate = (startDate, endDate) => {
   selectStartDate = startDate;
   selectEndDate = endDate;
 
@@ -50,25 +50,15 @@ const setApiForm = async (title, content) => {
   defaultBody.title = selectTitle;
   defaultBody.content = selectContent;
 
-  const accessToken = 'eyJ0eXBlIjoiYWNjZXNzVG9rZW4iLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzA3NzUzOTk2LCJleHAiOjE3MDc3NTQyOTZ9.Sg9-5aSCx3Q6lwb4a8siZL0cQpo9o1MtLjw56Tp97C8'; 
-
   try {
-    const response = await axios.post(
-      'https://dev.jojoumc.shop/growup/growroom',
-      defaultBody, {
-        headers: {
-          Authorization: `${accessToken}`, 
-        },
-      }
-    );
-
-    console.log('서버 응답:', response.data);
+    const response = await GrowRoomWriteApi.postWrite(defaultBody);
+    console.log('서버 응답:', response);
 
     console.log('메뉴 닫기');
-
   } catch (error) {
     console.error('서버에 선택된 값을 보내는 중 오류가 발생했습니다:', error);
   }
 };
+
 
 export { defaultBody, setApiData, setApiDate, setApiForm };
