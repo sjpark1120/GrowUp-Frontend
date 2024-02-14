@@ -127,9 +127,10 @@ class UserInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: null,
-      endDate: null,
+      startDate: new Date(),
+      endDate: new Date(),
     };
+    
   }
 
   setChangeDate = (dates) => {
