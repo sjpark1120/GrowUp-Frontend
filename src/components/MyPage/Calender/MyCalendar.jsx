@@ -103,7 +103,6 @@ const MyCalendar = ({ calendarLists, onEventsChange }) => {
 
   //달력 생성
   const renderMonthGrid = () => {
-    console.log('calendar:', comments);
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
     const lastDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();

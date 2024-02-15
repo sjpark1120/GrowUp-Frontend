@@ -5,7 +5,7 @@ const CalendarApi = {
       try {
         const response = await AxiosInstance.get(`/growup/calender/inquiry-month?day=${dateString}`);
 
-        console.log(response.data);
+        console.log('getCalendar:' , response.data);
         return response.data.result;
       } catch (error) {
         console.error('Error in getCalendar:', error);
@@ -17,7 +17,7 @@ const CalendarApi = {
         try {
           const response = await AxiosInstance.post(`/growup/calender/enroll`,eventData);
   
-          console.log(response.data);
+          console.log('postEvent:', response.data);
           return response.data.result;
         } catch (error) {
           console.error('Error in postEvent:', error);
@@ -29,7 +29,7 @@ const CalendarApi = {
         try {
           const response = await AxiosInstance.patch(`/growup/calender/comment-modify`,eventData);
   
-          console.log(response.data);
+          console.log('modifyEvent:',response.data);
           return response.data;
         } catch (error) {
           console.error('Error in modifyEvent:', error);
@@ -41,7 +41,7 @@ const CalendarApi = {
         try {
           const response = await AxiosInstance.get(`/growup/calender/inquiry?day=${dateString}`);
   
-          console.log(response.data);
+          console.log('getPopup:',response.data);
           return response.data;
         } catch (error) {
           console.error('Error in getPopup:', error);
@@ -53,10 +53,10 @@ const CalendarApi = {
         try {
           const response = await AxiosInstance.patch(`/growup/calender/status-modify?calenderId=${calendarId}`);
   
-          console.log('취소선 적용: ',response.data);
+          console.log('modifyStatus: ',response.data);
           return response.data;
         } catch (error) {
-          console.error('Error in getPopup:', error);
+          console.error('Error in modifyStatus:', error);
           throw error;
         }
       },
@@ -64,7 +64,7 @@ const CalendarApi = {
       modifyColor: async ({ day, color }) => {
         try {
           const response = await AxiosInstance.patch(`/growup/calender/color-modify`, { day, color });
-          console.log(response.data);
+          console.log('modifyColor:',response.data);
           return response.data;
         } catch (error) {
           console.error('Error in modifyColor:', error);
@@ -75,7 +75,7 @@ const CalendarApi = {
       deleteEvent: async (calendarId) => {
         try {
           const response = await AxiosInstance.delete(`/growup/calender/delete?calenderId=${calendarId}`);
-          console.log(response.data);
+          console.log('deleteEvent:',response.data);
           return response.data;
         } catch (error) {
           console.error('Error in deleteEvent:', error);

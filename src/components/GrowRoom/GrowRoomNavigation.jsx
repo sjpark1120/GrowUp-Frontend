@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Label = styled.p`
@@ -20,11 +20,11 @@ const NavItem = ({ label, selected, onClick }) => {
   );
 };
 
-const GrowRoomNavigation = ({ navItems }) => {
-  const [selectedNavItem, setSelectedNavItem] = useState('전체');
-
+const GrowRoomNavigation = ({ navItems, selectedNavItem, onNavItemChange }) => {
+  
   const handleNavItemClick = (label) => {
-    setSelectedNavItem(label);
+    const selectedItem = label.replace(/\p{Emoji}/gu, ''); // 이모지를 제외
+    onNavItemChange(selectedItem);
   };
 
   return (

@@ -5,7 +5,7 @@ const TodoListApi = {
     try {
       const response = await AxiosInstance.get("/growup/todo/inquiry");
 
-      console.log(response.data);
+      console.log("getTodo:", response.data);
       return response.data.result.todoListList;
     } catch (error) {
       console.error("Error in getTodo:", error);

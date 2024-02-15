@@ -71,15 +71,18 @@ const dropdown_period=['1주일', '1개월', '1년'];
 
 const GrowRoomPage = () => {
   const [isActive, setIsActive] = useState(false);
-
   const [posts, setPosts] = useState([]);
+  const [selectedNavItem, setSelectedNavItem] = useState('전체');
+
+  const handleNavItemChange = (item) => {
+    setSelectedNavItem(item);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await GrowRoomApi.getPosts();
-    
-  console.log('data: ' + data);
+        console.log('불러올 post 분야:', selectedNavItem);
+        const data = await GrowRoomApi.getPosts(encodeURIComponent(selectedNavItem));
         setPosts(data);
       } catch (error) {
         console.error('post 데이터 불러오기 실패:', error);
@@ -87,7 +90,7 @@ const GrowRoomPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [selectedNavItem]);
 
   const handleButtonClick = () => {
     //모집중만 보기 버튼 클릭
@@ -111,7 +114,10 @@ const GrowRoomPage = () => {
         />
       <div style={{ paddingBottom: '50px', display: 'flex'}}>
         <Title>GROW ROOM </Title>
-        <GrowRoomNavigation navItems={navigation} />
+        <GrowRoomNavigation 
+        navItems={navigation}
+        selectedNavItem={selectedNavItem}
+        onNavItemChange={handleNavItemChange}  />
       </div>
       
       <div style={{ paddingBottom: '30px', display: 'flex', gap: '10px'}}>

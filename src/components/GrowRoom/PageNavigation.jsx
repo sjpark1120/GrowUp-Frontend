@@ -180,9 +180,9 @@ const PageNavigation = ({ data }) => {
   return (
     <div>
       <PostContainer>
-        {currentData.map((data, index) => (
+        {currentData.map((data) => (
           <PostBox
-            key={index}
+            growRoomId={data.growRoomId}
             title={data.title}
             popular={true}
             recruitment_field={data.recruitment_field}

@@ -96,7 +96,6 @@ function MyPage() {
       const calendarResponse = await CalendarApi.getCalendar(dateString);
       setTodoData(todoResponse);
       setCalendarData(calendarResponse.calenderMonthInquiryLists);
-      console.log('todo:', TodoData);
     } catch (error) {
       console.error('데이터 불러오기 실패:', error);
     }

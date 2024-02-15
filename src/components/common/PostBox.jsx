@@ -9,6 +9,7 @@ import tag_project from '../../icon/프로젝트.png';
 import tag_challenge from '../../icon/챌린지.png';
 import img_like from '../../icon/img-like.svg';
 import img_unlike from '../../icon/img-unlike.svg';
+import GrowRoomApi from '../../apis/GrowRoomApi';
 
 const Box = styled.div`
   display: flex;
@@ -47,11 +48,19 @@ font-size: 12px;
 font-weight: 400
 `
 
-const PostBox = ({postId, popular, recruitment_field, status, deadline, title, view, like }) => {
+const PostBox = ({growRoomId, popular, recruitment_field, status, deadline, title, view, like }) => {
   const [isActive, setIsActive] = useState(like === 'like');
 
-  const handleLikeClick = () => {
-    setIsActive(!isActive);
+  const handleLikeClick = async (event) => {
+    event.stopPropagation(); // 이벤트 버블링 방지
+    console.log('좋아요 누른 게시글 아이디:', growRoomId);
+    try {
+      const response = await GrowRoomApi.toggleLike(growRoomId);
+      console.log('좋아요 토글:', response);
+      setIsActive(!isActive);
+    } catch (error) {
+      console.error('좋아요 토글 중 오류 발생:', error);
+    }
   };
 
   const isLiked = () => {
@@ -75,8 +84,7 @@ const PostBox = ({postId, popular, recruitment_field, status, deadline, title, v
 
   const navigate = useNavigate(); 
   const handleClick = () => {
-    // Navigate to the specified route with postId parameter
-    navigate(`/growroom/${postId}`);
+    navigate(`/growroom/${growRoomId}`);
   };
 
   return (
