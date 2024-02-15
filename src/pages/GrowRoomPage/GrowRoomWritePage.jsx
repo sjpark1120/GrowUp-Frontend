@@ -83,10 +83,10 @@ background-color:#00D749;
   `;
 
 const select_category = ['스터디', '챌린지', '프로젝트'];
-const people = [1, 2, 3, 4, 5, 6, 7, 8, 9, '10명 이상'];
-const progressPeriod = ['1개월', '2개월', '3개월', '4개월', '5개월', '6개월 이상'];
-const itmedia = ['스터디', '인공지능 ', '데이터 분석', '사이버 보안', '모바일 앱', '웹 개발','소셜 미디어', '클라우드 컴퓨팅', '게임 개발', '블록 체인']
-const sports = ['축구 ', '농구 ', '식단 ', '필라테스 ', '스포츠 심리학', '헬스 ','물리치료', '레크레이션 ', '스포츠 체육학', '수영']
+const people = [3, 5, 10, 15, 20 ,25, 30];
+const progressPeriod = ['기간미정','1개월', '2개월', '3개월', '4개월', '5개월', '6개월 이상'];
+const itmedia = ['가상현실', '인공지능 ', '데이터 분석', '사이버 보안', '모바일 앱', '웹 개발','소셜 미디어', '클라우드 컴퓨팅', '게임 개발', '블록 체인']
+const sports = ['축구 ', '농구 ', '식단 ', '필라테스 ', '스포츠 심리학', '헬스 ','물리치료', '레크레이션 스포츠', '체육학', '수영']
 const study = ['학교 시험', '토익 / 토플', '스피치', '기획', '한국사', '편집','자격증', '수능', '컴퓨터활용능력 ', '언어']
 const art = ['시각디자인 ', '회화 ', '조소 ', '패션 ', '취미 미술', '일러스트레이션 ','캘리그라피 ', '뜨개질 ', '십자수 ', '소묘']
 const project = ['비즈니스 아이디어', '코딩 대회', '연구 프로젝트', '디자인 공모전', '스타트업 창업','기획 공모전', '봉사 프로젝트', '문학 작품 공모전', '사진 공모전', '음악 경연']
@@ -161,24 +161,24 @@ function GrowRoomWritePage() {
           </CategoryForm>
           <CategoryForm>
             <h2>스포츠/헬스</h2>
-            <Dropdown title="축구 / 농구 / 식단 / 필라테스 / 스포츠 심리학/..." optionsMap={sports} categoryType={5} />
+            <Dropdown title="축구 / 농구 / 식단 / 필라테스 / 스포츠 심리학/..." optionsMap={sports} categoryType={7} />
           </CategoryForm>
         </Group1>
         <Group1>
           <CategoryForm>
             <h2>공부/자격증</h2>
-            <Dropdown title="학교 시험 / 토익 / 토플/  스피치 / 기획 /..." optionsMap={study} categoryType={6}/>
+            <Dropdown title="학교 시험 / 토익 / 토플/  스피치 / 기획 /..." optionsMap={study} categoryType={5}/>
           </CategoryForm>
           <CategoryForm>
             <h2>미술/디자인</h2>
-            <Dropdown title="시각디자인 / 회화 / 조소 / 패션 / 취미 미술/..." optionsMap={art} categoryType={7}/>
+            <Dropdown title="시각디자인 / 회화 / 조소 / 패션 / 취미 미술/..." optionsMap={art} categoryType={8}/>
           </CategoryForm>
         </Group1>
 
         <Group1>
           <CategoryForm>
             <h2>공모전/프로젝트</h2>
-            <Dropdown title="비즈니스 아이디어 / 코딩 대회 / 연구 프로젝트/..." optionsMap={project} categoryType={8} />
+            <Dropdown title="비즈니스 아이디어 / 코딩 대회 / 연구 프로젝트/..." optionsMap={project} categoryType={6} />
           </CategoryForm>
           <CategoryForm>
             <h2>기타 기입</h2>
