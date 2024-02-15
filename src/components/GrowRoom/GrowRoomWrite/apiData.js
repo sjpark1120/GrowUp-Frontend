@@ -25,25 +25,24 @@ const setApiData = async (categoryType, index) => {
 
   // selectedOption에 따라 defaultBody 업데이트
   if (selectedOption === 1) {
-    console.log('Updating recruitmentId:', selectedIndex);
     defaultBody.recruitmentId = selectedIndex;
   } 
   else if (selectedOption === 2) {
-    console.log('Updating numberId:', selectedIndex);
     defaultBody.numberId = selectedIndex;
   } 
   else if (selectedOption === 3) {
-    console.log('Updating periodId:', selectedIndex);
     defaultBody.periodId = selectedIndex;
   } 
-  else if (selectedOption >= 4 && selectedOption <= 8) {
-    console.log('Entering categoryDetailIds condition');
-    console.log('Before push - categoryDetailIds:', defaultBody.categoryDetailIds);
-  
+  else if (selectedOption === 4){
     defaultBody.categoryDetailIds.push(selectedIndex);
-  
-    console.log('After push - categoryDetailIds:', defaultBody.categoryDetailIds);
   }
+
+  else if (selectedOption >= 5 && selectedOption <= 8) {
+    selectedIndex = selectedIndex + (selectedOption - 4) * 10;
+    defaultBody.categoryDetailIds.push(selectedIndex);
+}
+
+
 };
 
 const setApiDate = async (startDate, endDate) => {
