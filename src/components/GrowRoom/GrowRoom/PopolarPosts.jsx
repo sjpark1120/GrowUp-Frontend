@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import PostBox from '../../components/common/PostBox';
-import btn_left from '../../icon/Page button_1.png';
-import btn_right from '../../icon/Page button_2.png';
+import PostBox from '../../common/PostBox';
+import btn_left from '../../../icon/Page button_1.png';
+import btn_right from '../../../icon/Page button_2.png';
 
 const Title = styled.h2`
   color: black;

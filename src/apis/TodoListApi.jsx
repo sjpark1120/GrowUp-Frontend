@@ -36,6 +36,18 @@ const TodoListApi = {
       throw error;
     }
   },
+
+  getProfile: async () => {
+    try {
+      const response = await AxiosInstance.get("/growup/users/info");
+
+      console.log("getProfile:", response.data);
+      return response.data.result;
+    } catch (error) {
+      console.error("Error in getProfile:", error);
+      throw error;
+    }
+  },
 };
 
 export default TodoListApi;

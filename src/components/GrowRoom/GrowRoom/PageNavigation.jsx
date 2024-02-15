@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import gofirst_arrow from '../../icon/arrow12.png'
-import gofirst_arrow_disable from '../../icon/arrow11.png'
-import goprev_arrow from '../../icon/arrow6.png'
-import goprev_arrow_disable from '../../icon/arrow5.png'
-import golast_arrow from '../../icon/arrow10.png'
-import golast_arrow_disable from '../../icon/arrow9.png'
-import gonext_arrow from '../../icon/arrow4.png'
-import gonext_arrow_disable from '../../icon/arrow3.png'
+import gofirst_arrow from '../../../icon/arrow12.png'
+import gofirst_arrow_disable from '../../../icon/arrow11.png'
+import goprev_arrow from '../../../icon/arrow6.png'
+import goprev_arrow_disable from '../../../icon/arrow5.png'
+import golast_arrow from '../../../icon/arrow10.png'
+import golast_arrow_disable from '../../../icon/arrow9.png'
+import gonext_arrow from '../../../icon/arrow4.png'
+import gonext_arrow_disable from '../../../icon/arrow3.png'
 
-import PostBox from '../common/PostBox';
+import PostBox from '../../common/PostBox';
 
 const PostContainer = styled.div`
   display: flex;
@@ -130,7 +130,7 @@ const PageNavigation = ({ data }) => {
   const generatePageNumbers = () => {
     const pageNumbers = [];
     const maxPagesToShow = 5;
-  
+
     if (totalPages <= maxPagesToShow) {
       // 전체 페이지가 최대 페이지 수 이하이면 모든 페이지를 표시
       for (let i = 1; i <= totalPages; i++) {
@@ -140,7 +140,7 @@ const PageNavigation = ({ data }) => {
       // 동적으로 표시할 페이지 번호의 범위
       let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
       const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-  
+
       // 끝 5개 표시
       if (endPage === totalPages) {
         startPage = Math.max(1, endPage - maxPagesToShow + 1);
@@ -156,14 +156,14 @@ const PageNavigation = ({ data }) => {
         pageNumbers.push('...', totalPages);
       }
     }
-  
+
     return pageNumbers;
   };
-  
+
 
   const handleDynamicPageClick = (direction) => {
     let newPage;
-  
+
     if (direction === 'right') {
       newPage = Math.min(currentPage + 1, totalPages);
     } else if (direction === 'left') {
@@ -173,7 +173,7 @@ const PageNavigation = ({ data }) => {
     } else if (direction === 'dynamicLeft') {
       newPage = Math.max(currentPage - 5, 1);
     }
-  
+
     setCurrentPage(newPage);
   };
 
@@ -195,27 +195,27 @@ const PageNavigation = ({ data }) => {
       </PostContainer>
       <Paginaion>
         <GotoFirstBtn disabled={currentPage === 1} onClick={goToFirstPage} />
-<GotoPrevtBtn disabled={currentPage === 1} onClick={() => handleDynamicPageClick('left')} />
-{generatePageNumbers().map((page, index) => (
-  <NumberBtn
-    key={index}
-    onClick={() => {
-      if (typeof page === 'number') {
-        handlePageClick(page);
-      } else {
-        const direction = page === '...' && index === 1 ? 'dynamicLeft' : 'dynamicRight';
-        handleDynamicPageClick(direction);
-      }
-    }}
-    style={{
-      color: currentPage === page ? '#00D749' : '#8D8D8D',
-      border: currentPage === page ? '1px solid #00D749' : 'none',
-    }}
-  >
-    {page}
-  </NumberBtn>
-))}
-<GotoNexttBtn disabled={currentPage === totalPages} onClick={() => handleDynamicPageClick('right')} />
+        <GotoPrevtBtn disabled={currentPage === 1} onClick={() => handleDynamicPageClick('left')} />
+        {generatePageNumbers().map((page, index) => (
+          <NumberBtn
+            key={index}
+            onClick={() => {
+              if (typeof page === 'number') {
+                handlePageClick(page);
+              } else {
+                const direction = page === '...' && index === 1 ? 'dynamicLeft' : 'dynamicRight';
+                handleDynamicPageClick(direction);
+              }
+            }}
+            style={{
+              color: currentPage === page ? '#00D749' : '#8D8D8D',
+              border: currentPage === page ? '1px solid #00D749' : 'none',
+            }}
+          >
+            {page}
+          </NumberBtn>
+        ))}
+        <GotoNexttBtn disabled={currentPage === totalPages} onClick={() => handleDynamicPageClick('right')} />
         <GotoLastBtn disabled={currentPage === totalPages} onClick={goToLastPage} />
       </Paginaion>
     </div>

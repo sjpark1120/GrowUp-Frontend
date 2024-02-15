@@ -83,6 +83,7 @@ const PostBox = ({growRoomId, popular, recruitment_field, status, deadline, titl
   const formattedViews = view >= 1000 ? '999+' : view;
 
   const navigate = useNavigate(); 
+  
   const handleClick = () => {
     navigate(`/growroom/${growRoomId}`);
   };

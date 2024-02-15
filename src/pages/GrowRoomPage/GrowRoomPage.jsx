@@ -1,15 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
-import GrowRoomNavigation from '../../components/GrowRoom/GrowRoomNavigation';
+import GrowRoomNavigation from '../../components/GrowRoom/GrowRoom/GrowRoomNavigation';
 import { useNavigate } from 'react-router-dom';
 import GrowRoomApi from '../../apis/GrowRoomApi'
 
 import {dummyData} from '../.././DummyData'
 import banner from '../../icon/banner2.png'
-import Dropdown from '../../components/GrowRoom/DropDown';
-import SearchBar from '../../components/GrowRoom/SearchBar';
-import PageNavigation from '../../components/GrowRoom/PageNavigation';
-import PopularPosts from '../../components/GrowRoom/PopolarPosts';
+import Dropdown from '../../components/GrowRoom/GrowRoom/DropDown';
+import SearchBar from '../../components/GrowRoom/GrowRoom/SearchBar';
+import PageNavigation from '../../components/GrowRoom/GrowRoom/PageNavigation';
+import PopularPosts from '../../components/GrowRoom/GrowRoom/PopolarPosts';
 
 const TopBanner =styled.img`
 background-image: url(${banner});
@@ -82,7 +82,8 @@ const GrowRoomPage = () => {
     const fetchData = async () => {
       try {
         console.log('불러올 post 분야:', selectedNavItem);
-        const data = await GrowRoomApi.getPosts(encodeURIComponent(selectedNavItem));
+        const selectedItem = selectedNavItem.replace(/\p{Emoji}/gu, ''); // 이모지를 제외
+        const data = await GrowRoomApi.getPosts(encodeURIComponent(selectedItem));
         setPosts(data);
       } catch (error) {
         console.error('post 데이터 불러오기 실패:', error);

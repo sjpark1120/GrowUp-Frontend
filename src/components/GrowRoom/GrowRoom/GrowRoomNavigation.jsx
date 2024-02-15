@@ -12,7 +12,7 @@ const Label = styled.p`
 const NavItem = ({ label, selected, onClick }) => {
   return (
     <div
-      style={{ opacity: selected ? 1 : 0.5, display: 'flex', cursor: 'pointer' }}
+      style={{ opacity: selected ? 1 : 0.5, display: 'flex', cursor: 'pointer', fontWeight: selected ? 'bold' : 'normal' }}
       onClick={onClick}
     >
       <Label>{label}</Label>
@@ -23,8 +23,7 @@ const NavItem = ({ label, selected, onClick }) => {
 const GrowRoomNavigation = ({ navItems, selectedNavItem, onNavItemChange }) => {
   
   const handleNavItemClick = (label) => {
-    const selectedItem = label.replace(/\p{Emoji}/gu, ''); // 이모지를 제외
-    onNavItemChange(selectedItem);
+    onNavItemChange(label);
   };
 
   return (
