@@ -57,8 +57,7 @@ const WriteDropDown = ({ title, optionsMap, categoryType }) => {
     setSelectedMain(option);
     setSelectedCategory(categoryType);
     console.log('Main Selected Option:', option, 'Index:', index + 1, 'Category Type:', categoryType);
-    setApiData(option, index);
-   
+    setApiData(categoryType, index);
 
   };
   const handleClose = () => {
