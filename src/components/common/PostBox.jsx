@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom'; 
 
@@ -49,7 +49,11 @@ font-weight: 400
 `
 
 const PostBox = ({growRoomId, popular, recruitment_field, status, deadline, title, view, like }) => {
-  const [isActive, setIsActive] = useState(like === 'like');
+  const [isActive, setIsActive] = useState(like);
+
+  useEffect(() => {
+    setIsActive(like);
+  }, [like, growRoomId]);
 
   const handleLikeClick = async (event) => {
     event.stopPropagation(); // 이벤트 버블링 방지

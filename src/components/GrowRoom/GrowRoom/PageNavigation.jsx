@@ -184,12 +184,12 @@ const PageNavigation = ({ data }) => {
           <PostBox
             growRoomId={data.growRoomId}
             title={data.title}
-            popular={true}
+            popular={data.hot}
             recruitment_field={data.recruitment_field}
             status={data.status}
             view={data.view}
-            deadline={'2023.12.05'}
-            like={'like'}
+            deadline={data.endDate}
+            like={data.likedByUser}
           />
         ))}
       </PostContainer>
