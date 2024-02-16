@@ -6,14 +6,15 @@ import { closeLoginModal, openLoginModal } from '../redux/loginModal';
 function ProtectedRoute() {
   const user = useSelector((state) => state.user.value)
   const dispatch = useDispatch();
+  const isLogin = localStorage.getItem('isLogin');
   useEffect(() => {
-    if (user.isLogin) {
+    if (isLogin) {
       dispatch(closeLoginModal());
     } else {
       dispatch(openLoginModal());
     }
-  }, [user, dispatch]);
-  return user.isLogin ? (
+  }, [isLogin, dispatch]);
+  return isLogin ? (
     <Outlet />
   ) : (
     <Navigate to="/" />
