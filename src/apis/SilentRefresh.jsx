@@ -1,5 +1,3 @@
-import React from 'react'
-import { useDispatch } from 'react-redux';
 import AuthApi from './Auth';
 import AxiosInstance from './CustomAxios';
 
@@ -15,6 +13,8 @@ const onSilentRefresh = async () => {
     //console.error('silentRefresh failed:', error);
     if (error.response?.status === 401) {
       // refresh token 만료 - 로그인 페이지 이동
+      delete AxiosInstance.defaults.headers.common["Authorization"];
+      console.log("토큰삭제");
       console.log('로그인 만료')
     }
   }

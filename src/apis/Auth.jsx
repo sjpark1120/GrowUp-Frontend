@@ -21,6 +21,8 @@ const AuthApi = {
       return response.data;
     } catch (error) {
       console.error("Error in login:", error);
+      delete AxiosInstance.defaults.headers.common["Authorization"];
+      console.log("토큰삭제");
       throw error;
     }
   },

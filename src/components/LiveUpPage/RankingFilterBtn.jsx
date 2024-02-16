@@ -37,7 +37,9 @@ const RankingFilterBtn = () => {
     return (
         <div style={{ paddingLeft: '10px', gap: 10, display: 'inline-flex' }}>
             {navItems.map((item, index) => (
-                <NavItem label={item}
+                <NavItem
+                    key = {index} 
+                    label={item}
                     selected={selectedFilter === item}
                     onClick={() => handleFilterClick(item)} />
             ))}

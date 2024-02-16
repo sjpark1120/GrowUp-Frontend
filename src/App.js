@@ -46,6 +46,7 @@ function App() {
       //console.error('silentRefresh failed:', error);
       if (error.response?.status === 401) {
         // refresh token 만료 - 로그인 페이지 이동
+      dispatch(login({ isLogin: false }));
         console.log('로그인 만료')
       }
     }
@@ -55,10 +56,6 @@ function App() {
       <Route path="/" element={<Layout />}>
         
         <Route index element={<MainPage />} />
-        <Route path="/growroom" element={<GrowRoomPage />} />
-        <Route path="/growroom/:postId" element={<GrowRoomPostPage />} />
-        <Route path="/liveup" element={<LiveUpPage />} />
-        <Route path="/liveup/:roomid" element={<LiveUpJoinPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
         <Route path="/changepassword" element={<ChangePasswordPage />} /> 
@@ -67,6 +64,10 @@ function App() {
           <Route path="/growroom/write" element={<GrowRoomWritePage />} />
           <Route path="/mypage/edit" element={<EditProfile/>} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/growroom" element={<GrowRoomPage />} />
+          <Route path="/growroom/:postId" element={<GrowRoomPostPage />} />
+          <Route path="/liveup" element={<LiveUpPage />} />
+          <Route path="/liveup/:roomid" element={<LiveUpJoinPage />} />
         </Route>
       </Route>
     </Routes>
