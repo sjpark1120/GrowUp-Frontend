@@ -16,12 +16,14 @@ const AuthApi = {
         //console.log("액세스 토큰 헤더에 저장", response.data.result.accessToken)
         localStorage.setItem("refreshToken", response.data.result.refreshToken); //리프레시 토큰 저장
         localStorage.setItem("accessToken", response.data.result.accessToken); //accessToken 저장
+        localStorage.setItem("isLogin", true); //로그인여부 저장
         return response.data;
       }
       return response.data;
     } catch (error) {
       console.error("Error in login:", error);
       delete AxiosInstance.defaults.headers.common["Authorization"];
+      localStorage.removeItem('isLogin');
       console.log("토큰삭제");
       throw error;
     }
@@ -31,12 +33,12 @@ const AuthApi = {
     //로그아웃
     try {
       const response = await AxiosInstance.post("/growup/users/logout");
+      delete AxiosInstance.defaults.headers.common["Authorization"];
       localStorage.removeItem("accessToken");
+      localStorage.removeItem('isLogin');
       return response.data;
     } catch (error) {
       console.error("Error in logout:", error);
-      delete AxiosInstance.defaults.headers.common["Authorization"];
-      console.log("토큰삭제");
       throw error;
     }
   },
@@ -140,10 +142,12 @@ const AuthApi = {
         AxiosInstance.defaults.headers.common["Authorization"] = `${token}`;
       }
       const response = await AxiosInstance.post("/growup/users/token-reissue");
+      localStorage.setItem("isLogin", true); //로그인여부 저장
       return response.data;
     } catch (error) {
       //console.error('Error in silentRefresh:', error);
-      //delete AxiosInstance.defaults.headers.common["Authorization"];
+      delete AxiosInstance.defaults.headers.common["Authorization"];
+      localStorage.removeItem('isLogin');
       //console.log("토큰삭제", AxiosInstance.defaults.headers.common)
       throw error;
     }

@@ -5,7 +5,6 @@ import LiveUpNavigation from '../../components/LiveUpPage/LiveUpNavigation';
 import RankingFilterBtn from '../../components/LiveUpPage/RankingFilterBtn';
 import RankingBox from '../../components/LiveUpPage/RankingBox';
 import LiveUpPagination from '../../components/LiveUpPage/LiveUpPagnation';
-import { dummyLiveUpPost } from '../../LiveUpDummyDate';
 import LiveUpApi from '../../apis/LiveUpApi';
 const MainWrapper = styled.div`
   display: flex;
