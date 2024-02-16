@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import plus_btn from '../../icon/plus_btn.png'
+import plus_btn from '../../icon/plus_btn.png';
+import TodoListApi from '../../apis/TodoListApi';
 
 const TodoListContainer = styled.div`
   margin-left: auto;
@@ -57,7 +58,6 @@ const TodoText = styled.div`
   line-height: 140%;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-top: auto;
 `;
 
 const Input = styled.input`
@@ -74,41 +74,66 @@ const Input = styled.input`
   }
 `;
 
+const AddButton = styled.img`
+  cursor: pointer;
+`;
+
 const TodoList = ({ todoList }) => {
-  const [todos, setTodos] = useState(todoList);
+  const [todos, setTodos] = useState(todoList || []);
   const [newTodo, setNewTodo] = useState('');
 
   useEffect(() => {
     setTodos(todoList || []);
   }, [todoList]);
 
-
-  const handleAddTodo = () => {
+  const handleAddTodo = async () => {
     if (newTodo.trim() !== '') {
-      setTodos((prevTodos) => [...prevTodos, [newTodo, false]]);
-      setNewTodo('');
+      try {
+        const response = await TodoListApi.postTodo({ comment: newTodo });
+        console.log('새로운 todo가 등록되었습니다:', response);
+        const newTodoObj = await TodoListApi.getTodo();
+        setTodos(newTodoObj);
+        setNewTodo(''); // 입력 필드 초기화
+      } catch (error) {
+        console.error('새로운 todo 등록 중 오류 발생:', error);
+      }
     }
   };
 
-  const handleToggleComplete = (index) => {
-    const updatedTodos = [...todos];
-    updatedTodos[index][1] = !updatedTodos[index][1];
-    setTodos(updatedTodos);
+  const handleToggleComplete = async (index) => {
+    try {
+       //id를 /${todoList} querystring으로 전달
+      const todoListId = todos[index].todoListId;
+      const response = await TodoListApi.checkTodo(todoListId);
+      console.log('todo 상태 변경 완료:', response);
+      // 상태 변경 후 UI 업데이트
+      setTodos(prevTodos => {
+        return prevTodos.map((todo, i) => {
+          if (i === index) {
+            return { ...todo, status: todo.status === 'ACTIVE' ? 'NONACTIVE' : 'ACTIVE' };
+          }
+          return todo;
+        });
+      });
+    } catch (error) {
+      console.error('todo 상태 변경 중 오류 발생:', error);
+    }
   };
+  
 
   return (
     <TodoListContainer>
       <Title>✔️ TO DO LIST</Title>
       <TodoContainer>
-        {todos.map((todo, index) => (
+        {todos && todos.length > 0 && todos.map((todo, index) => (
           <div key={index} style={{ justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'flex' }}>
-            <CheckBox onClick={() => handleToggleComplete(index)} style={{ backgroundColor: todo[1] ? '#00D749' : 'transparent' }} />
-            <TodoText>{todo[0]}</TodoText>
+            <CheckBox onClick={() => handleToggleComplete(index)} style={{ backgroundColor: todo.status === 'ACTIVE' ? '#00D749' : 'transparent' }} />
+            <TodoText>{todo.comment}</TodoText>
           </div>
         ))}
       </TodoContainer>
       <InputContainer>
-        <img src={plus_btn} onClick={handleAddTodo} alt="add todo"/>
+        <AddButton src={plus_btn} onClick={handleAddTodo} alt="add todo"/>
         <Input
           placeholder="TO DO LIST 추가"
           value={newTodo}

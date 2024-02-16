@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import down from '../../icon/arrow_dropdown.png';
-import down_white from '../../icon/arrow_down_white.png';
+import down from '../../../icon/arrow_dropdown.png';
+import down_white from '../../../icon/arrow_down_white.png';
 import DropDownOption from './DropDownOption';
 
 const Container = styled.div`

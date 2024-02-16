@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import icon_search from '../../icon/search.png';
+import icon_search from '../../../icon/search.png';
 
 const SearchContainer = styled.div`
     display: flex;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Label = styled.p`
@@ -12,7 +12,7 @@ const Label = styled.p`
 const NavItem = ({ label, selected, onClick }) => {
   return (
     <div
-      style={{ opacity: selected ? 1 : 0.5, display: 'flex', cursor: 'pointer' }}
+      style={{ opacity: selected ? 1 : 0.5, display: 'flex', cursor: 'pointer', fontWeight: selected ? 'bold' : 'normal' }}
       onClick={onClick}
     >
       <Label>{label}</Label>
@@ -20,11 +20,10 @@ const NavItem = ({ label, selected, onClick }) => {
   );
 };
 
-const GrowRoomNavigation = ({ navItems }) => {
-  const [selectedNavItem, setSelectedNavItem] = useState('전체');
-
+const GrowRoomNavigation = ({ navItems, selectedNavItem, onNavItemChange }) => {
+  
   const handleNavItemClick = (label) => {
-    setSelectedNavItem(label);
+    onNavItemChange(label);
   };
 
   return (

@@ -1,30 +1,29 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
-import GrowRoomNavigation from '../../components/GrowRoom/GrowRoomNavigation';
+import GrowRoomNavigation from '../../components/GrowRoom/GrowRoom/GrowRoomNavigation';
 import { useNavigate } from 'react-router-dom';
-
+import GrowRoomApi from '../../apis/GrowRoomApi'
 
 import {dummyData} from '../.././DummyData'
 import banner from '../../icon/banner2.png'
-import Dropdown from '../../components/GrowRoom/DropDown';
-import SearchBar from '../../components/GrowRoom/SearchBar';
-import PageNavigation from '../../components/GrowRoom/PageNavigation';
-import PopularPosts from '../../components/GrowRoom/PopolarPosts';
+import Dropdown from '../../components/GrowRoom/GrowRoom/DropDown';
+import SearchBar from '../../components/GrowRoom/GrowRoom/SearchBar';
+import PageNavigation from '../../components/GrowRoom/GrowRoom/PageNavigation';
+import PopularPosts from '../../components/GrowRoom/GrowRoom/PopolarPosts';
 
 const TopBanner =styled.img`
-background-image: url(${banner});
-background-size: cover;
-width: 100%;
-height: 500px;
+min-width: 1280px;
+max-width: 100%;
+height: auto;
 margin-top: 122px;
-
   `;
 
 const MainWrapper = styled.div`
-  width: 1220px;
+  width: 1280px; //1220 + 60
   align-items: center;
   justify-content: center;
   margin: 160px auto;
+  padding: 0px 30px;
 `;
 
 const Title = styled.h2`
@@ -71,11 +70,33 @@ const dropdown_period=['1주일', '1개월', '1년'];
 
 const GrowRoomPage = () => {
   const [isActive, setIsActive] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [selectedNavItem, setSelectedNavItem] = useState('전체');
+
+  const handleNavItemChange = (item) => {
+    setSelectedNavItem(item);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log('불러올 post 분야:', selectedNavItem);
+        const selectedItem = selectedNavItem.replace(/\p{Emoji}/gu, ''); // 이모지를 제외
+        const data = await GrowRoomApi.getPosts(encodeURIComponent(selectedItem));
+        setPosts(data);
+      } catch (error) {
+        console.error('post 데이터 불러오기 실패:', error);
+      }
+    };
+
+    fetchData();
+  }, [selectedNavItem]);
 
   const handleButtonClick = () => {
     //모집중만 보기 버튼 클릭
     setIsActive(!isActive);
   };
+
   const navigate = useNavigate(); // useNavigate를 사용
 
   const handleWriteButtonClick = () => {
@@ -86,14 +107,17 @@ const GrowRoomPage = () => {
 
   return (
     <div>
-    <TopBanner />
+    <TopBanner src={banner} alt="banner" />
     <MainWrapper>
       <PopularPosts
         data = {dummyData} 
         />
       <div style={{ paddingBottom: '50px', display: 'flex'}}>
         <Title>GROW ROOM </Title>
-        <GrowRoomNavigation navItems={navigation} />
+        <GrowRoomNavigation 
+        navItems={navigation}
+        selectedNavItem={selectedNavItem}
+        onNavItemChange={handleNavItemChange}  />
       </div>
       
       <div style={{ paddingBottom: '30px', display: 'flex', gap: '10px'}}>
@@ -114,7 +138,7 @@ const GrowRoomPage = () => {
           <WriteBtn onClick={handleWriteButtonClick}>글쓰기</WriteBtn>
         </div>
       </div>
-      <PageNavigation data={dummyData}/>
+      <PageNavigation data={posts}/>
     </MainWrapper>
     </div>
   );

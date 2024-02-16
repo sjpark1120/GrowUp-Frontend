@@ -5,6 +5,10 @@ import eye_green from '../../icon/eye_green.png'
 import logo from '../../icon/Logo.png'
 import x from '../../icon/cancel.png'
 import { Link } from 'react-router-dom'
+import AuthApi from '../../apis/Auth'
+import { useDispatch } from 'react-redux'
+import { login } from '../../redux/user'
+import { closeLoginModal } from '../../redux/loginModal'
 
 const LoginBackGround = styled.div`
   width: 100%;
@@ -25,6 +29,7 @@ const LoginWindow = styled.div`
   height: 580px;
   box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.10);
   background-color: white;
+  border-radius: 8px;
 `
 const LoginTopBar = styled.div`
   width: 540px;
@@ -35,6 +40,7 @@ const LoginTopBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 8px 8px 0 0;
 `
 const LoginContainer = styled.div`
   margin-top: 40px;
@@ -119,6 +125,9 @@ const Loginbottom = styled.div`
   font-weight: 500;
   line-height: 140%;
   color: #8D8D8D;
+  a{
+    color: #8D8D8D;
+  }
 `
 const Logo = styled.img`
   
@@ -134,7 +143,7 @@ const ErrorText = styled.span`
   font-weight: 500;
   line-height: 140%;
 `
-function LoginBox({ onClose }) {
+function LoginBox() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState('');
@@ -145,6 +154,22 @@ function LoginBox({ onClose }) {
 
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleLogin = async (loginData) => {
+    try{
+      const response = await AuthApi.login(loginData);
+      console.log('login success: ', response);
+      dispatch(login({isLogin: true}));
+      dispatch(closeLoginModal()) //로그인 성공 후 로그인 창 끄기
+    } catch(error){
+      console.log('login failed: ', error);
+      if(error.response && error.response.data && error.response.data.message){
+        alert(error.response.data.message);
+      }
+    }
+  };
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -162,7 +187,7 @@ function LoginBox({ onClose }) {
     setPassword(e.target.value);
     setPasswordTouched(true);
     // 비밀번호 유효성 검사
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
     if (!passwordRegex.test(e.target.value)) {
       setPasswordError(true);
     } else {
@@ -172,6 +197,11 @@ function LoginBox({ onClose }) {
 
   const onSubmit = async(e) => {
     e.preventDefault();
+    const loginData ={
+      email,
+      password
+    };
+    handleLogin(loginData)
   }
   return (
     <>
@@ -180,7 +210,7 @@ function LoginBox({ onClose }) {
         <LoginTopBar>
           <Logo src={logo} />
           <Xicon src={x} 
-          onClick={onClose}/>
+          onClick={() => dispatch(closeLoginModal())}/>
         </LoginTopBar>
         <LoginContainer>
           <LoginTitle>로그인</LoginTitle>
@@ -199,7 +229,7 @@ function LoginBox({ onClose }) {
             style={emailTouched && emailError ? {borderColor: '#FF4747'} : {borderColor: '#E7E7E7'}} />
             <LoginLabel htmlFor='password'>
               비밀번호
-              {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자 모두 포함되어야 합니다.</ErrorText>}
+              {passwordTouched && passwordError && <ErrorText>ⓘ 최소 8자, 최대 20자, 영문자, 숫자, 특수문자(@$!%*?&) 모두 포함되어야 합니다.</ErrorText>}
               </LoginLabel>
             <PasswordContainer>
               <LoginInput id='password' 
@@ -215,11 +245,11 @@ function LoginBox({ onClose }) {
             disabled={emailError || passwordError} />
           </form>
           <Loginbottom>
-            <Link to='/findpassword' style={{ textDecoration: 'none' }} onClick={onClose}>
+            <Link to='/findpassword' style={{ textDecoration: 'none' }} onClick={() => dispatch(closeLoginModal())}>
               <span>비밀번호 찾기 </span>
             </Link>
             <span>| </span>
-            <Link to='/signup' style={{ textDecoration: 'none' }} onClick={onClose}>
+            <Link to='/signup' style={{ textDecoration: 'none' }} onClick={() => dispatch(closeLoginModal())}>
               <span>회원가입</span>
             </Link>
           </Loginbottom>

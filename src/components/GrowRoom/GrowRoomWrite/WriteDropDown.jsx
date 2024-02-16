@@ -1,10 +1,10 @@
-// WriteDropDown.jsx
-
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import down from '../../../icon/arrow_dropdown.png';
 import down_white from '../../../icon/arrow_down_white.png';
 import WriteDropDownOption from './WriteDropDownOption';
+import {  setApiData } from './apiData';
+
 
 const Container = styled.div`
   position: relative;
@@ -21,7 +21,7 @@ const DropDownContainer = styled.div`
 const DropDownHeader = styled.div`
   display: flex;
   width: 400px;
-  height:  50px;
+  height: 50px;
   padding: 6px 16px;
   justify-content: space-between;
   align-items: center;
@@ -40,10 +40,11 @@ const ArrowIcon = styled.img`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
 `;
 
-const WriteDropDown = ({ title, optionsMap ,categoryType }) => {
+const WriteDropDown = ({ title, optionsMap, categoryType }) => {
   const [mainDropdownOpen, setMainDropdownOpen] = useState(false);
   const [selectedMain, setSelectedMain] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+
 
 
   const toggleMainDropdown = () => {
@@ -52,37 +53,18 @@ const WriteDropDown = ({ title, optionsMap ,categoryType }) => {
     setSelectedCategory('');
   };
 
-  const mainSelected = (option) => {
+  const mainSelected = async (option, index) => {
     setSelectedMain(option);
     setSelectedCategory(categoryType);
-    console.log('Main Selected Option:', option, 'Category Type:', categoryType);
-    
+    console.log('Main Selected Option:', option, 'Index:', index + 1, 'Category Type:', categoryType);
+    setApiData(categoryType, index);
 
-    saveToServer(option, categoryType);
-
-    setTimeout(() => {
-      setMainDropdownOpen(false);
-    }, 500);
   };
-
-  const saveToServer = (selectedOption, selectedCategory) => {
-    // 선택된 항목과 카테고리를 서버에 저장하기 위한 비동기 요청 보내기
-    fetch('/api/saveOption', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ selectedOption, selectedCategory }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // 서버로부터의 응답 처리 (필요한 경우)
-        console.log('서버 응답:', data);
-      })
-      .catch((error) => {
-        console.error('옵션을 서버에 저장하는 중 오류가 발생했습니다:', error);
-      });
+  const handleClose = () => {
+    setMainDropdownOpen(false);
   };
+  
+
   return (
     <Container>
       <DropDownHeader isOpen={mainDropdownOpen} onClick={toggleMainDropdown}>
@@ -91,7 +73,7 @@ const WriteDropDown = ({ title, optionsMap ,categoryType }) => {
       </DropDownHeader>
       <DropDownContainer isOpen={mainDropdownOpen}>
         {mainDropdownOpen && optionsMap && (
-          <WriteDropDownOption options={optionsMap} onClick={mainSelected} categoryType={categoryType} />
+          <WriteDropDownOption options={optionsMap} onClick={mainSelected} categoryType={categoryType}onClose={handleClose} />
         )}
       </DropDownContainer>
     </Container>

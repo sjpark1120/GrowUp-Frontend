@@ -75,12 +75,13 @@ const OptionContainer = styled.div`
     `}
 `;
 
-const WriteDropDownOption = ({ options, onClick, categoryType }) => {
+const WriteDropDownOption = ({ options, onClick, categoryType,onClose  }) => {
     const [selectedOption, setSelectedOption] = useState(null);
   
-    const handleOptionClick = (option) => {
+    const handleOptionClick = (option, index) => {
       setSelectedOption(option);
-      onClick(option, categoryType); // 선택된 옵션과 categoryType을 함께 전달
+      onClick(option,index, categoryType); // 선택된 옵션과 categoryType을 함께 전달
+      onClose();
     };
   
     return (
@@ -90,7 +91,7 @@ const WriteDropDownOption = ({ options, onClick, categoryType }) => {
             key={index}
             selected={selectedOption === option}
             selectedOption={selectedOption}
-            onClick={() => handleOptionClick(option)}
+            onClick={() => handleOptionClick(option,index)}
           >
             {option}
           </OptionContainer>

@@ -1,13 +1,3 @@
-export const processUserInput = (input) => {
-  return input.split('\n').map((line, index) => {
-    if (line.startsWith('<del>') && line.endsWith('</del>')) {
-      const content = line.substring(5, line.length - 6);
-      return <del key={index}>{content}</del>;
-    } else {
-      return <div key={index}>{line}</div>;
-    }
-  });
-};
 
 export const dummyTodo = {
     userName: '그로우업',
@@ -29,6 +19,7 @@ export const dummyEvents = [
     text: '친구와 저녁 약속, React 학습하기',
     backgroundColor: '#EFECFF',
   },
+  
   {
     date: new Date(2024, 0, 10),
     text: '책 읽기 모임',
