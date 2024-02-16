@@ -187,13 +187,11 @@ const CalendarPopup = ({ selectedDate, onClose, dayCellRef }) => {
     try {
       const selectedColorCode = colorMap[colorName];
       const requestData = { day: dateString, color: colorName };
-      console.log('전송되는 데이터:', requestData);
       await CalendarApi.modifyColor(requestData);
-      console.log('서버에 배경색 변경 요청을 보냈습니다.');
       setSelectedColor(selectedColorCode);
-
       const updatedEventData = await CalendarApi.getPopup(dateString);
       updateClientState(updatedEventData);
+      console.log('배경색을 '+colorName+'(으)로 변경했습니다.');
     } catch (error) {
       console.error('배경색 변경 실패:', error);
     }
@@ -245,14 +243,13 @@ const CalendarPopup = ({ selectedDate, onClose, dayCellRef }) => {
         comment: inputText,
       };
       await CalendarApi.postEvent(eventData);
-      console.log('새로운 이벤트가 추가되었습니다.');
+      console.log('새로운 이벤트가 추가되었습니다: ', inputText);
     }
 
     const updatedEventData = await CalendarApi.getPopup(dateString);
     updateClientState(updatedEventData);
 
     setInputText('');
-    setIsEditingExistingEvent(false);
   };
 
   const handleSave = async () => {
@@ -264,7 +261,6 @@ const CalendarPopup = ({ selectedDate, onClose, dayCellRef }) => {
         const updatedEventData = await CalendarApi.getPopup(dateString);
         updateClientState(updatedEventData);
       }
-      setIsEditingExistingEvent(false);
     } catch (error) {
       console.error('취소선 적용 실패:', error);
     }

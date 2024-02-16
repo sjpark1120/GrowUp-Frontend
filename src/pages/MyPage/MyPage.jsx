@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MyCalendar from '../../components/MyPage/Calender/MyCalendar';
 import TodoList from '../../components/MyPage/TodoList';
-import { dummyTodo, dummyEvents } from '../../DummyData';
 import profile_img from '../../icon/profile_img.png';
 import pencil_btn from '../../icon/pencil_btn.png';
 import { useNavigate } from 'react-router-dom';
@@ -82,12 +81,13 @@ const PencilButton = styled.img`
 `;
 
 function MyPage() {
-  const [userData, setUserData] = useState(dummyTodo);
+  const [userData, setUserData] = useState(null);
   const [TodoData, setTodoData] = useState(null);
-  const [calendarData, setCalendarData] = useState();
+  const [calendarData, setCalendarData] = useState(null);
 
   const fetchData = async () => {
     try {
+      const userDataResponse = await TodoListApi.getProfile();
       const todoResponse = await TodoListApi.getTodo();
       const date = new Date();
       const year = date.getFullYear();
@@ -95,8 +95,9 @@ function MyPage() {
       const dateString = `${year}-${month}`;
       const calendarResponse = await CalendarApi.getCalendar(dateString);
       setTodoData(todoResponse);
+      setUserData(userDataResponse);
       setCalendarData(calendarResponse.calenderMonthInquiryLists);
-      console.log('todo:', TodoData);
+      console.log('유저데이터:', userDataResponse)
     } catch (error) {
       console.error('데이터 불러오기 실패:', error);
     }
@@ -115,10 +116,12 @@ function MyPage() {
     <div>
       <div style={{ width: 'auto', height: '40px', background: '#141414' }} />
       <MainWrapper>
+      {userData && (
         <HeaderTextWrapper>
-          <MainText style={{ color: '#00D749' }}>{userData.userName} </MainText>
+          <MainText style={{ color: '#00D749' }}>{userData.nickName} </MainText>
           <MainText style={{ color: '#090909' }}>님! 오늘도 화이팅 입니다!</MainText>
         </HeaderTextWrapper>
+      )}
         <TodoAndProfileWrapper>
           <ProfileInfoWrapper>
             <ProfileContainer onClick={handleProfileClick}>
@@ -127,7 +130,7 @@ function MyPage() {
             </ProfileContainer>
             <TimeInfoText>누적 성장 시간</TimeInfoText>
             <TimeValueText>
-              {userData.time}
+              {"시간 어디서 받아오죠"}
             </TimeValueText>
           </ProfileInfoWrapper>
           <TodoList todoList={TodoData} />

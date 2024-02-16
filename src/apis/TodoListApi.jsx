@@ -5,7 +5,7 @@ const TodoListApi = {
     try {
       const response = await AxiosInstance.get("/growup/todo/inquiry");
 
-      console.log(response.data);
+      console.log("getTodo:", response.data);
       return response.data.result.todoListList;
     } catch (error) {
       console.error("Error in getTodo:", error);
@@ -33,6 +33,18 @@ const TodoListApi = {
       return response.data.result;
     } catch (error) {
       console.error("Error in checkTodo:", error);
+      throw error;
+    }
+  },
+
+  getProfile: async () => {
+    try {
+      const response = await AxiosInstance.get("/growup/users/info");
+
+      console.log("getProfile:", response.data);
+      return response.data.result;
+    } catch (error) {
+      console.error("Error in getProfile:", error);
       throw error;
     }
   },
