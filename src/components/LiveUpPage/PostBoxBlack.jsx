@@ -10,6 +10,7 @@ import img_like from '../../icon/img-like.svg';
 import img_unlike from '../../icon/img-unlike.svg';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import LiveUpApi from '../../apis/LiveUpApi';
 
 const Box = styled.div`
   display: flex;
@@ -47,12 +48,22 @@ color: #848484;
 font-size: 12px; 
 font-weight: 400
 `
-const PostBoxBlack = ({ key, popular, recruitment_field, status, deadline, title, view, like }) => {
+const PostBoxBlack = ({ popular, recruitment_field, status, deadline, title, view, like, growRoomId }) => {
 
-  const [isActive, setIsActive] = useState(like === 'like');
+  const [isActive, setIsActive] = useState(like);
+
+  const handleLike = async (data) => {
+    try{
+      const response = await LiveUpApi.like(data);
+      //console.log("좋아요 테스트", response);
+      setIsActive(!isActive);
+    }catch (error){
+      console.error("좋아요 실패", error);
+    }
+  }
 
   const handleLikeClick = () => {
-    setIsActive(!isActive);
+    handleLike(growRoomId);
   };
 
   const isLiked = () => {
@@ -87,7 +98,7 @@ const PostBoxBlack = ({ key, popular, recruitment_field, status, deadline, title
 
   return (
     <Box style={{ opacity: status === '삭제' ? 0.5 : 1 }}>
-      <Link to={`/liveup/${key}`} style={{ textDecoration: 'none' }}>
+      <Link to={`/liveup/${growRoomId}`} style={{ textDecoration: 'none' }}>
         <div style={{ paddingBottom: '28px' }}>
           <div style={{ justifyContent: 'flex-start', gap: '10px', display: 'flex', paddingBottom: '20px' }}>
             {popular && <img src={tag_popular} alt="popular" />}

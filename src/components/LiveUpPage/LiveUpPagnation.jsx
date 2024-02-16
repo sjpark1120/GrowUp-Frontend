@@ -183,14 +183,15 @@ function LiveUpPagination({ data }) {
       <PostBoxContainer>
         {currentData.map((data, index) => (
             <PostBoxBlack
-              key={index}
-              deadline={'2024.02.09'}
+              key={data.growRoomId}
+              deadline={data.endDate}
               title={data.title}
               view={data.view}
               status={data.status}
-              like={'like'}
+              like={data.likedByUser}
               popular={true}
               recruitment_field={data.recruitment_field}
+              growRoomId={data.growRoomId}
             />
         ))}
       </PostBoxContainer>

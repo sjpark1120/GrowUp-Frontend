@@ -1,11 +1,14 @@
 import AxiosInstance from './CustomAxios';
 
 const LiveUpApi = {
-  getPosts: async () => {
+  getPosts: async (filter) => {
     try {
-      const response = await AxiosInstance.get('/growup/growroom', {
+      const response = await AxiosInstance.get('/growup/growroom',{
+        params: {
+          filter
+        }
       });
-      //console.log(response.data);
+      console.log("라이브업 글조회", response);
       return response.data;
     } catch (error) {
       console.error('Error in getPosts:', error);
@@ -13,13 +16,17 @@ const LiveUpApi = {
     }
   },
 
-  getPosts2: async () => {
+  like: async (growRoomId) => {
     try {
-      const response = await AxiosInstance.get('/growup/growroom/growRoominquiry',{});
-      console.log(response);
-      return response;
+      const response = await AxiosInstance.post('/growup/users/liked', null, {
+        params:{
+          growRoomId
+        }
+      });
+      //console.log("like success", response);
+      return response.data;
     } catch (error) {
-      console.error('Error in getPosts:', error);
+      console.error('Error in like:', error);
       throw error;
     }
   },
