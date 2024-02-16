@@ -125,9 +125,21 @@ const Header = () => {
     };
   }, []);
 
-  const handleLinkClick = (link) => {
-    setActiveLink(link);
-  };
+  useEffect(() => { 
+    let path = location.pathname;
+    if (path.startsWith("/growroom")) {
+      path = "/growroom";
+    } else if (path.startsWith("/liveup")) {
+      path = "/liveup";
+    }else if (path.startsWith("/mypage")) {
+      path = "/mypage";
+    }
+    setActiveLink(path);
+  }, [location.pathname]);
+
+  // const handleLinkClick = (link) => {
+  //   setActiveLink(link);
+  // };
 
   const navItems = [
     { id: 1, label: "MAIN", link: "/" },
@@ -162,7 +174,7 @@ const Header = () => {
                   activeLink === item.link ? "active" : ""
                 }`}
                 to={item.link}
-                onClick={() => handleLinkClick(item.link)}
+                // onClick={() => handleLinkClick(item.link)}
               >
                 {item.label}
               </Link>
