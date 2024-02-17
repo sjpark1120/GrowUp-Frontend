@@ -37,7 +37,8 @@ const ArrowIcon = styled.img`
   transition: transform 0.3s;
   transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
 `;
-const Dropdown = ({ title, optionsMap, options }) => {
+
+const Dropdown = ({ title, optionsMap, options, onHeaderTitleChange }) => {
   const [mainDropdownOpen, setMainDropdownOpen] = useState(false);
   const [selectedMain, setSelectedMain] = useState('');
   const [headerTitle, setHeaderTitle] = useState(title);
@@ -52,10 +53,10 @@ const Dropdown = ({ title, optionsMap, options }) => {
       setTimeout(() => {
         setMainDropdownOpen(false);
         setSelectedMain('');
-        setHeaderTitle(option);
+        setHeaderTitle(option);//선택한 내용을 헤더에 넣음
+        onHeaderTitleChange(option); //헤더 타이틀을 부모로 전달
       }, 500);
-    }
-    else{
+    } else {
       setSelectedMain(option);
     }
   };
@@ -64,6 +65,8 @@ const Dropdown = ({ title, optionsMap, options }) => {
     setTimeout(() => {
       setMainDropdownOpen(false);
       setSelectedMain('');
+      setHeaderTitle(option); //선택한 내용을 헤더에 넣음
+      onHeaderTitleChange(option); //헤더 타이틀을 부모로 전달
     }, 500);
   };
 

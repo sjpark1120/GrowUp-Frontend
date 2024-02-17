@@ -6,8 +6,6 @@ import banner1 from '../../icon/banner3.png';
 import banner2 from '../../icon/banner4.png';
 
 import PopularPosts from '../../components/GrowRoom/GrowRoom/PopolarPosts';
-import {dummyData} from '../../DummyData';
-
 const TopBanner =styled.img`
 min-width: 1280px;
 max-width: 100%;
@@ -29,13 +27,12 @@ const Banner = styled.img`
   margin-bottom: 100px;
 `
 function MainPage() {
+
   return (
     <div>
     <TopBanner src={banner} alt="banner" />
       <MainWrapper>
-        <PopularPosts
-          data={dummyData}
-        />
+        <PopularPosts/>
         <Banner src={banner1} alt="banner1" />
         <Banner src={banner2} alt="banner2" />
       </MainWrapper>
