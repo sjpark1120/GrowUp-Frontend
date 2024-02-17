@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PostBox from '../../common/PostBox';
 import btn_left from '../../../icon/Page button_1.png';
 import btn_right from '../../../icon/Page button_2.png';
+
+import GrowRoomApi from '../../../apis/GrowRoomApi';
 
 const Title = styled.h2`
   color: black;
@@ -23,10 +25,23 @@ const PageButton = styled.img`
   shadow: 0px 0px 50px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 `;
+const PopularPosts = () => {
+  const [hotPosts, setHotPosts] = useState([]);
 
-const PopularPosts = ({ data }) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const hotPost = await GrowRoomApi.getHotPosts();
+        setHotPosts(hotPost);
+      } catch (error) {
+        console.error('hot post 데이터 불러오기 실패:', error);
+      }
+    };
+
+    fetchData();
+  }, []); 
   const itemsPerPage = 4;
-  const totalItems = data.length;
+  const totalItems = hotPosts.length;
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -40,7 +55,7 @@ const PopularPosts = ({ data }) => {
     setCurrentIndex(prevIndex < 0 ? Math.floor((totalItems - 1) / itemsPerPage) * itemsPerPage : prevIndex);
   };
 
-  const weekPost = data.slice(currentIndex, currentIndex + itemsPerPage);
+  const weekPost = hotPosts.slice(currentIndex, currentIndex + itemsPerPage);
 
   return (
     <div>
@@ -54,14 +69,14 @@ const PopularPosts = ({ data }) => {
       <PostContainer>
         {weekPost.map((post, index) => (
           <PostBox
-            key={index}
-            deadline={post.deadline}
-            maintext={post.maintext}
-            views={post.views}
+            growRoomId={post.growRoomId}
+            title={post.title}
+            popular={post.hot}
+            recruitment_field={post.recruitment_field}
             status={post.status}
-            like={post.like}
-            popular={post.popular}
-            study={post.study}
+            view={post.view}
+            deadline={post.endDate}
+            like={post.likedByUser}
           />
         ))}
       </PostContainer>
