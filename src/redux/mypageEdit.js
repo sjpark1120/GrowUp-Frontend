@@ -114,7 +114,6 @@ const mypageEdit = handleActions(
       },
       myInfoError: null,
     }),
-
     [GETMYINFO_FAILURE]: (state, { payload: error }) => ({
       ...state,
       myInfoError: error,

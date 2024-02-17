@@ -177,7 +177,7 @@ export const Input = styled.input`
 
 const EditProfile = () => {
   const dispatch = useDispatch();
-  const { myInfo, isNickname } = useSelector(({ mypageEdit }) => ({
+  const { myInfo, existNicknameError } = useSelector(({ mypageEdit }) => ({
     myInfo: mypageEdit.myInfo,
     isNickname: mypageEdit.isNickname,
   }));
@@ -220,13 +220,26 @@ const EditProfile = () => {
     dispatch(getMyInfo());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (isNickname) setDoubleCheck(isNickname);
-  }, [isNickname]);
+  // useEffect(() => {
+  //   if (isNickname) setDoubleCheck(isNickname);
+  // }, [isNickname]);
+
+  // useEffect(() => {
+  //   console.log(existNicknameError);
+  // }, [existNicknameError]);
+
+  // const ws = new WebSocket("wss://dev.jojoumc.shop/call");
+
+  // 연결이 열릴 때 실행될 콜백 함수
+  // ws.onopen = function (event) {
+  //   console.log("Connected to the WebSocket server");
+  // };
+
+  // console.log(existNicknameError, "error");
 
   return (
     <Frame>
-      {isNickname ? (
+      {existNicknameError ? (
         <OverlayBox
           toggle={doubleCheck}
           setToggle={setDoubleCheck}

@@ -30,6 +30,7 @@ const AuthApi = {
     try {
       const response = await AxiosInstance.post("/growup/users/logout");
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       return response.data;
     } catch (error) {
       console.error("Error in logout:", error);

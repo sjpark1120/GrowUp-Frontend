@@ -20,10 +20,25 @@ export default function createRequestSaga(type, request) {
         meta: response,
       });
     } catch (e) {
+      let errorMessage = e.message; // 기본 에러 메시지
+      let serverError = {};
+
+      if (e.response && e.response.data) {
+        // 서버에서 전송한 에러 메시지 및 코드가 있을 경우
+        errorMessage = e.response.data.message;
+        serverError = {
+          code: e.response.data.code,
+          message: e.response.data.message,
+        };
+      }
+
       yield put({
         type: FAILURE,
-        payload: e,
-        error: true,
+        payload: {
+          error: true,
+          errorMessage,
+          serverError, // 추가적인 서버 에러 정보
+        },
       });
     }
     yield put(finishLoading(type));
