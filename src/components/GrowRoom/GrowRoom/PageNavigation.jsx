@@ -190,6 +190,7 @@ const PageNavigation = ({ data }) => {
             view={data.view}
             deadline={data.endDate}
             like={data.likedByUser}
+            key={data.growRoomId} 
           />
         ))}
       </PostContainer>
