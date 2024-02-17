@@ -3,7 +3,7 @@ import AxiosInstance from './CustomAxios';
 const LiveUpApi = {
   getPosts: async (filter) => {
     try {
-      const response = await AxiosInstance.get('/growup/growroom',{
+      const response = await AxiosInstance.get('/growup/participate/under',{
         params: {
           filter
         }
