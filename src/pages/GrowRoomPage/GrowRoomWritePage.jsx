@@ -6,6 +6,9 @@ import Dropdown from '../../components/GrowRoom/GrowRoomWrite/WriteDropDown';
 import DateRangePicker from '../../components/GrowRoom/GrowRoomWrite/DateRangePicker';
 import WriteComponent from '../../components/GrowRoom/GrowRoomWrite/WriteComponent'; 
 import { setApiForm } from '../../components/GrowRoom/GrowRoomWrite/apiData';
+import { getDefaultBody } from '../../components/GrowRoom/GrowRoomWrite/apiData';
+import GrowRoomWriteApi from '../../apis/GrowRoomWriteApi';
+
 
 const All = styled.div`
 margin-top:170px;
@@ -115,12 +118,45 @@ function GrowRoomWritePage() {
     setEtcCategory(e.target.value);
   };
   
-  const handleSubmitButtonClick = () => {
+  const handleSubmitButtonClick = async () => {
     console.log('Submit button clicked!');
-    const postId = 1; //임의로 정함(서버에서 들고어가나 해야함)
     setApiForm(title, content);
-    navigate(`/growroom/${postId}`, { state: { title, content ,etcCategory,postId} }); // 백틱(`)을 사용하여 수정
+
+    try {
+      console.log('서버에 보낼 데이터:', getDefaultBody());
+      const response = await GrowRoomWriteApi.postWrite(getDefaultBody());
+      const postId = response.growRoomId
+      const nick_name = response.nick_name
+      const view = response.view
+      const recruitment_field = response.recruitment_field
+      const number = response.number
+      const period = response.period
+      const startDate = response.startDate
+      const endDate = response.endDate
+      const categoryListDetail0 = response.categoryListDetail0
+      const categoryListDetail1 = response.categoryListDetail1
+      const categoryListDetail2 = response.categoryListDetail2
+      const title = response.title
+      const content = response.content
+      const likedNumber = response.likedNumber
+
+
+
+
+      navigate(`/growroom/${postId}`, { state: { 
+        postId,nick_name,view,recruitment_field,number,period,startDate,endDate,
+        categoryListDetail0,categoryListDetail1,categoryListDetail2,title,content,likedNumber
+      } }); // 백틱(`)을 사용하여 수정
+      console.log('메뉴 닫기');
+    } catch (error) {
+      console.error('서버에 선택된 값을 보내는 중 오류가 발생했습니다:', error);
+    }
+     //임의로 정함(서버에서 들고어가나 해야함)
   };
+
+
+
+
   const handleCancelButtonClick = () => {
     console.log('Cancel button clicked!');
     navigate('/growroom');

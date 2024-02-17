@@ -1,6 +1,8 @@
-// PostTitle.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
+
+import GrowRoomPostApi from '../../../apis/GrowRoomPostApi';
 
 const Container = styled.div`
   max-width: 1000px;
@@ -25,7 +27,7 @@ const Circle = styled.div`
 const UserName = styled.div`
   font-weight: bold;
   color: #333;
-  margin-right : 15px;
+  margin-right: 15px;
   border-right: solid 2px #B0B0B0;
   padding-right: 20px;
 `;
@@ -38,16 +40,17 @@ const Deadline = styled.div`
 const Views = styled.div`
   color: #B0B0B0;
   font-weight: 600;
-  font-size:12px;
+  font-size: 12px;
   padding-left: 550px;
   padding-right: 20px;
 `;
 
 const Like = styled.div`
-color: #B0B0B0;
-font-weight: 600;
-font-size:12px;
+  color: #B0B0B0;
+  font-weight: 600;
+  font-size: 12px;
 `;
+
 const WriteForm = styled.div`
   max-width: 1000px;
   display: flex;
@@ -59,90 +62,92 @@ const WriteForm = styled.div`
 `;
 
 const TitleLeft = styled.div`
-max-width: 500px;
-display: flex;
-flex: 1;
+  max-width: 500px;
+  display: flex;
+  flex: 1;
   color: #B0B0B0;
   font-weight: 600;
-  font-size:15px;
+  font-size: 15px;
   padding-left: 15px;
-  p{
-    margin-left : 200px;
+  p {
+    margin-left: 200px;
     color: black;
   }
 `;
+
 const TitleRight = styled.div`
-max-width: 500px;
-display: flex;
-flex: 1;
+  max-width: 500px;
+  display: flex;
+  flex: 1;
   color: #B0B0B0;
   font-weight: 600;
-  font-size:15px;
+  font-size: 15px;
   padding-left: 15px;
-  p{
-    margin-left : 200px;
+  p {
+    margin-left: 200px;
     color: black;
   }
 `;
-const PostTitle = ({ data, index }) => {
-  
-  const item = data.dummyData[index];
-  const categoryItem = data.categoryDummyData[index];
-  console.log(data)
+
+const PostTitle = ( ) => {
+  const location = useLocation();
+  const { state } = location || {};
+  const { postId,nick_name,view,recruitment_field,number,period,startDate,endDate,
+    categoryListDetail0,categoryListDetail1,categoryListDetail2,likedNumber } = state || {};
 
 
   return (
     <div>
-    <Container>
-      <Circle></Circle>
-      {item ? (
-        <>
-          <UserName>사용자</UserName>
-          <Deadline>{item.deadline}</Deadline>
-          <Views>조회수 : {item.views}회</Views>
-          <Like>관심등록 : {item.like}회</Like>
-          
-        </>
-      ) : (
-        <p>No data found for the specified index</p>
-      )}
-    </Container>
-<WriteForm>
-  {categoryItem ? (
-    <>
-      <TitleLeft>모집 구분<p>{categoryItem.모집구분}</p></TitleLeft>
-      <TitleRight>진행 기간<p>{`${categoryItem.startDate} ~ ${categoryItem.endDate}`}</p></TitleRight>
-    </>
-  ) : <p>No data found for the specified index</p>}
-</WriteForm>
-<WriteForm>
-  {categoryItem ? (
-    <>
-      <TitleLeft>모집 인원<p>{categoryItem.모집인원}</p></TitleLeft>
-      <TitleRight>진행 기간<p>{categoryItem.진행기간}</p></TitleRight>
-    </>
-  ) : <p>No data found for the specified index</p>}
-</WriteForm>
-<WriteForm>
-  {categoryItem ? (
-    <>
-        <TitleLeft>진행 방식<p>라이브업</p></TitleLeft>
-      <TitleRight>카테고리 
-      <p>
+      <Container>
+        <Circle></Circle>
+        {postId ? (
+          <>
+            <UserName>{nick_name}</UserName>
+            <Deadline>{period}</Deadline>
+            <Views>조회수 : {view}회</Views>
+            <Like>관심등록 : {likedNumber}회</Like>
+          </>
+        ) : (
+          <p>No data found for the specified index</p>
+        )}
+      </Container>
+      <WriteForm>
+        {postId ? (
+          <>
+            <TitleLeft>모집 구분<p>{recruitment_field}</p></TitleLeft>
+            <TitleRight>진행 기간<p>{`${startDate} ~ ${endDate}`}</p></TitleRight>
+          </>
+        ) : (
+          <p>No data found for the specified index</p>
+        )}
+      </WriteForm>
+      <WriteForm>
+        {postId ? (
+          <>
+            <TitleLeft>모집 인원<p>{number}</p></TitleLeft>
+            <TitleRight>진행 기간<p>{period}</p></TitleRight>
+          </>
+        ) : (
+          <p>No data found for the specified index</p>
+        )}
+      </WriteForm>
+      <WriteForm>
+        {postId ? (
+          <>
+            <TitleLeft>진행 방식<p>{recruitment_field}</p></TitleLeft>
+            <TitleRight>카테고리
+            <p>
+              <span>{categoryListDetail0}</span>{' '}
+              <span>{categoryListDetail1}</span>{' '}
+              <span>{categoryListDetail2}</span>
+            </p>
 
-    {categoryItem.IT미디어 && <span>{categoryItem.IT미디어}</span>}
-    {categoryItem.스포츠헬스 && <span>{categoryItem.스포츠헬스}</span>}
-    {categoryItem.공부자격증 && <span>{categoryItem.공부자격증}</span>}
-    {categoryItem.미술디자인 && <span>{categoryItem.미술디자인}</span>}
-    {categoryItem.공모전프로젝트 && <span>{categoryItem.공모전프로젝트}</span>}
-    {categoryItem.기타기입 && <span>{categoryItem.기타기입}</span>}
-  </p>
-      </TitleRight>
-    </>
-  ) : <p>No data found for the specified index</p>}
-</WriteForm>
-
-
+            </TitleRight>
+          </>
+        ) : (
+          <p>No data found for the specified index</p>
+        )}
+      </WriteForm>
     </div>
   );
 };
