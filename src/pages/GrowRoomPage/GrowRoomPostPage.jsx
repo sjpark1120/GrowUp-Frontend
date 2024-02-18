@@ -107,13 +107,10 @@ const GrowRoomPostPage = () => {
     fetchData();
   }, [state]);
   
-
-  
-
-  const handleLiveUpButtonClick = () => {
-    console.log('라이브업 입장 button clicked!');
-    navigate(`/liveup`);
-  };
+const handleLiveUpButtonClick = () => {
+  console.log('라이브업 입장 button clicked! :' + postData.growRoomId);
+  navigate(`/liveup/${postData.growRoomId}`);
+};
 
   return (
     <div>
