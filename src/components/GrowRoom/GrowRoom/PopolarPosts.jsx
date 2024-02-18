@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PostBox from '../../common/PostBox';
 import btn_left from '../../../icon/Page button_1.png';
 import btn_right from '../../../icon/Page button_2.png';
+import GrowRoomApi from '../../../apis/GrowRoomApi';
+import { useSelector } from "react-redux";
 
 const Title = styled.h2`
   color: black;
@@ -14,19 +16,40 @@ const Title = styled.h2`
 const PostContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   padding-bottom: 150px;
 `;
 
 const PageButton = styled.img`
-  shadow: 0px 0px 50px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.05);
   cursor: pointer;
+  margin-right: 10px;
 `;
 
-const PopularPosts = ({ data }) => {
+
+
+const PopularPosts = () => {
+  const [hotPosts, setHotPosts] = useState([]);
+  const user = useSelector((state) => state.user.value);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        user.isLogin
+          ? setHotPosts(await GrowRoomApi.getHotPosts())
+          : setHotPosts(await GrowRoomApi.getHotPostsNoToken())
+      } catch (error) {
+        console.error('hot post 데이터 불러오기 실패:', error);
+      }
+    };
+
+    fetchData();
+  }, []); 
+
   const itemsPerPage = 4;
-  const totalItems = data.length;
+  const totalItems = hotPosts.length;
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -40,7 +63,7 @@ const PopularPosts = ({ data }) => {
     setCurrentIndex(prevIndex < 0 ? Math.floor((totalItems - 1) / itemsPerPage) * itemsPerPage : prevIndex);
   };
 
-  const weekPost = data.slice(currentIndex, currentIndex + itemsPerPage);
+  const weekPost = hotPosts.slice(currentIndex, currentIndex + itemsPerPage);
 
   return (
     <div>
@@ -54,14 +77,15 @@ const PopularPosts = ({ data }) => {
       <PostContainer>
         {weekPost.map((post, index) => (
           <PostBox
-            key={index}
-            deadline={post.deadline}
-            maintext={post.maintext}
-            views={post.views}
+            key = {index}
+            growRoomId={post.growRoomId}
+            title={post.title}
+            popular={post.hot}
+            recruitment_field={post.recruitment_field}
             status={post.status}
-            like={post.like}
-            popular={post.popular}
-            study={post.study}
+            view={post.view}
+            deadline={post.endDate}
+            like={post.likedByUser}
           />
         ))}
       </PostContainer>
