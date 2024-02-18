@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 
-import GrowRoomPostApi from '../../../apis/GrowRoomPostApi';
 
 const Container = styled.div`
   max-width: 1000px;
@@ -89,57 +88,71 @@ const TitleRight = styled.div`
   }
 `;
 
-const PostTitle = ( ) => {
+const PostTitle = ({data}) => {
   const location = useLocation();
   const { state } = location || {};
-  const { postId,nick_name,view,recruitment_field,number,period,startDate,endDate,
-    categoryListDetail0,categoryListDetail1,categoryListDetail2,likedNumber } = state || {};
+  const {
+    postId,
+    nick_name,
+    view,
+    recruitment_field,
+    number,
+    period,
+    startDate,
+    endDate,
+    categoryListDetail0,
+    categoryListDetail1,
+    categoryListDetail2,
+    likedNumber,
+  } = state || {};
+  // state가 비어 있으면 data 프롭을 사용
+  const postData = state ? state : data;
 
-
+  console.log('PostTitle.jsx파일에서 postData',postData)
   return (
     <div>
       <Container>
         <Circle></Circle>
-        {postId ? (
+        {postData ? (
           <>
-            <UserName>{nick_name}</UserName>
-            <Deadline>{period}</Deadline>
-            <Views>조회수 : {view}회</Views>
-            <Like>관심등록 : {likedNumber}회</Like>
+            <UserName>{postData.nick_name}</UserName>
+            <Deadline>{postData.period}</Deadline>
+            <Views>조회수 : {postData.view}회</Views>
+            <Like>관심등록 : {postData.likedNumber}회</Like>
           </>
         ) : (
           <p>No data found for the specified index</p>
         )}
       </Container>
       <WriteForm>
-        {postId ? (
+        {postData ? (
           <>
-            <TitleLeft>모집 구분<p>{recruitment_field}</p></TitleLeft>
-            <TitleRight>진행 기간<p>{`${startDate} ~ ${endDate}`}</p></TitleRight>
+            <TitleLeft>모집 구분<p>{postData.recruitment_field}</p></TitleLeft>
+            <TitleRight>진행 기간<p>{`${postData.startDate} ~ ${postData.endDate}`}</p></TitleRight>
           </>
         ) : (
           <p>No data found for the specified index</p>
         )}
       </WriteForm>
       <WriteForm>
-        {postId ? (
+        {postData ? (
           <>
-            <TitleLeft>모집 인원<p>{number}</p></TitleLeft>
-            <TitleRight>진행 기간<p>{period}</p></TitleRight>
+            <TitleLeft>모집 인원<p>{postData.number}</p></TitleLeft>
+            <TitleRight>진행 기간<p>{postData.period}</p></TitleRight>
           </>
         ) : (
           <p>No data found for the specified index</p>
         )}
       </WriteForm>
       <WriteForm>
-        {postId ? (
+        {postData ? (
           <>
-            <TitleLeft>진행 방식<p>{recruitment_field}</p></TitleLeft>
+            <TitleLeft>진행 방식<p>{postData.recruitment_field}</p></TitleLeft>
             <TitleRight>카테고리
             <p>
-              <span>{categoryListDetail0}</span>{' '}
-              <span>{categoryListDetail1}</span>{' '}
-              <span>{categoryListDetail2}</span>
+              <span>{postData.categoryListDetail0}</span>{' '}
+              <span>{postData.categoryListDetail1}</span>{' '}
+              <span>{postData.categoryListDetail2}</span>
             </p>
 
             </TitleRight>
