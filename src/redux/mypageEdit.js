@@ -7,6 +7,7 @@ import * as mypageEditApi from "../apis/mypageEdit";
 
 const CHANGE_FIELD = "mypageEdit/CHANGE_FIELD";
 const INITIALIZE = "mypageEdit/INITIALIZE";
+const PASSWORD_CHECK_INITIALIZE = "mypageEdit/PASSWORD_CHECK_INITIALIZE";
 
 const [GETMYINFO, GETMYINFO_SUCCESS, GETMYINFO_FAILURE] =
   createRequestActionTypes("mypageEdit/GETMYINFO");
@@ -23,12 +24,16 @@ const [PASSWORDCHECK, PASSWORDCHECK_SUCCESS, PASSWORDCHECK_FAILURE] =
 const [CHANGEIMAGE, CHANGEIMAGE_SUCCESS, CHANGEIMAGE_FAILURE] =
   createRequestActionTypes("mypageEdit/changeImage");
 
+const [CHANGE_PASSOWRD, CHANGE_PASSOWRD_SUCCESS, CHANGE_PASSOWRD_FAILURE] =
+  createRequestActionTypes("mypageEdit/change_passowrd");
+
 export const changeField = createAction(CHANGE_FIELD, ({ key, value }) => ({
   key,
   value,
 }));
 
 export const initializeForm = createAction(INITIALIZE);
+export const passwordCheckInitialize = createAction(PASSWORD_CHECK_INITIALIZE);
 
 export const getMyInfo = createAction(GETMYINFO);
 export const existNickname = createAction(
@@ -42,6 +47,13 @@ export const changeNickname = createAction(
 export const passwordCheck = createAction(
   PASSWORDCHECK,
   (password) => password
+);
+export const change_password = createAction(
+  CHANGE_PASSOWRD,
+  ({ password, passwordCheck }) => ({
+    password,
+    passwordCheck,
+  })
 );
 export const changeImage = createAction(CHANGEIMAGE, (image) => image);
 
@@ -58,6 +70,10 @@ const passwordCheckSaga = createRequestSaga(
   PASSWORDCHECK,
   mypageEditApi.passwordCheck
 );
+const changePasswordSaga = createRequestSaga(
+  CHANGE_PASSOWRD,
+  mypageEditApi.change_password
+);
 const changeImageSaga = createRequestSaga(
   CHANGEIMAGE,
   mypageEditApi.photoChange
@@ -69,6 +85,7 @@ export function* mypageEditSaga() {
   yield takeLatest(CHANGENICKNAME, changeNicknameSaga);
   yield takeLatest(PASSWORDCHECK, passwordCheckSaga);
   yield takeLatest(CHANGEIMAGE, changeImageSaga);
+  yield takeLatest(CHANGE_PASSOWRD, changePasswordSaga);
 }
 
 const initialState = {
@@ -80,15 +97,22 @@ const initialState = {
     newPassword: "",
     newPasswordConfirm: "",
   },
+  passwordCheckInfo: null,
+  change_password_info: null,
   myInfoError: null,
   existNicknameError: null,
   changeNicknameError: null,
   passwordCheckError: null,
+  change_password_info_Error: null,
 };
 
 const mypageEdit = handleActions(
   {
     [INITIALIZE]: (state) => initialState,
+    [PASSWORD_CHECK_INITIALIZE]: (state) => ({
+      ...state,
+      passwordCheckInfo: null,
+    }),
     [CHANGE_FIELD]: (state, { payload: { key, value } }) => ({
       ...state,
       myInfo: {
@@ -114,7 +138,6 @@ const mypageEdit = handleActions(
       },
       myInfoError: null,
     }),
-
     [GETMYINFO_FAILURE]: (state, { payload: error }) => ({
       ...state,
       myInfoError: error,
@@ -137,9 +160,18 @@ const mypageEdit = handleActions(
       ...state,
       changeNicknameError: error,
     }),
-    [PASSWORDCHECK_SUCCESS]: (state, { payload: passwordCheck }) => ({
+    [CHANGE_PASSOWRD_SUCCESS]: (state, { payload: change_password_info }) => ({
       ...state,
-      passwordCheck,
+      change_password_info,
+      change_password_info_Error: null,
+    }),
+    [CHANGE_PASSOWRD_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      change_password_info_Error: error,
+    }),
+    [PASSWORDCHECK_SUCCESS]: (state, { payload: passwordCheckInfo }) => ({
+      ...state,
+      passwordCheckInfo,
       passwordCheckError: null,
     }),
     [PASSWORDCHECK_FAILURE]: (state, { payload: error }) => ({

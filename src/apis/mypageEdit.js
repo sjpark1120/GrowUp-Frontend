@@ -38,3 +38,11 @@ export const passwordCheck = (currentPwd) => {
     console.error(e);
   }
 };
+
+export const change_password = ({ password, passwordCheck }) => {
+  console.log(password, passwordCheck, "check");
+  return client.patch("/growup/users/password-restore", {
+    password,
+    passwordCheck,
+  });
+};
