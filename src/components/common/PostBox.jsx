@@ -89,9 +89,8 @@ const PostBox = ({growRoomId, popular, recruitment_field, status, deadline, titl
   const navigate = useNavigate(); 
   
   const handleClick = () => {
-    navigate(`/growroom/${growRoomId}`);
+    navigate(`/growroom/${growRoomId}`, { state: { growRoomId } });
   };
-
   return (
     <Box style={{ opacity: status === '삭제' ? 0.5 : 1 }} onClick={handleClick}>
       <div style={{ paddingBottom: '28px' }}>

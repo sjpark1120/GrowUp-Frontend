@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import PostBox from '../../common/PostBox';
 import btn_left from '../../../icon/Page button_1.png';
 import btn_right from '../../../icon/Page button_2.png';
-
 import GrowRoomApi from '../../../apis/GrowRoomApi';
+import { useSelector } from "react-redux";
 
 const Title = styled.h2`
   color: black;
@@ -16,23 +16,30 @@ const Title = styled.h2`
 const PostContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   padding-bottom: 150px;
 `;
 
 const PageButton = styled.img`
-  shadow: 0px 0px 50px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.05);
   cursor: pointer;
+  margin-right: 10px;
 `;
+
+
+
 const PopularPosts = () => {
   const [hotPosts, setHotPosts] = useState([]);
+  const user = useSelector((state) => state.user.value);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const hotPost = await GrowRoomApi.getHotPosts();
-        setHotPosts(hotPost);
+        user.isLogin
+          ? setHotPosts(await GrowRoomApi.getHotPosts())
+          : setHotPosts(await GrowRoomApi.getHotPostsNoToken())
       } catch (error) {
         console.error('hot post 데이터 불러오기 실패:', error);
       }
@@ -40,6 +47,7 @@ const PopularPosts = () => {
 
     fetchData();
   }, []); 
+
   const itemsPerPage = 4;
   const totalItems = hotPosts.length;
 
@@ -69,6 +77,7 @@ const PopularPosts = () => {
       <PostContainer>
         {weekPost.map((post, index) => (
           <PostBox
+            key = {index}
             growRoomId={post.growRoomId}
             title={post.title}
             popular={post.hot}
