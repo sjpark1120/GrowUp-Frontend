@@ -13,7 +13,6 @@ const GrowRoomApi = {
     }
   },
 
-
   getHotPosts: async (filters) => {
     try {
       const response = await AxiosInstance.get(`/growup/growroom/upper`);
@@ -22,6 +21,18 @@ const GrowRoomApi = {
       return response.data.result;
     } catch (error) {
       console.error("Error in getHotPosts:", error);
+      throw error;
+    }
+  },
+
+  getHotPostsNoToken: async (filters) => {
+    try {
+      const response = await AxiosInstance.get(`/growup/upperAbleNoToken`);
+
+      console.log("getHotPostsNoToken:", response.data);
+      return response.data.result;
+    } catch (error) {
+      console.error("Error in getHotPostsNoToken:", error);
       throw error;
     }
   },
