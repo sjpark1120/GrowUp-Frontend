@@ -36,6 +36,7 @@ const AuthApi = {
       const response = await AxiosInstance.post("/growup/users/logout");
       delete AxiosInstance.defaults.headers.common["Authorization"];
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("isLogin");
       localStorage.removeItem("userId", response.data.result.userId);
       return response.data;
     } catch (error) {
