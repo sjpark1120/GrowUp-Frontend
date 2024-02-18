@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import PostHeader from '../../components/GrowRoom/GrowRoomPost/PostHeader';
 import PostTitle from '../../components/GrowRoom/GrowRoomPost/PostTitle';
+import GrowRoomPostApi from '../../apis/GrowRoomPostApi';
+
 import { useNavigate } from 'react-router-dom';
 import CommentComponent from '../../components/GrowRoom/GrowRoomPost/CommentComponent';
 
@@ -59,38 +61,76 @@ const LiveUpBTN = styled.button`
     background-color: #B0B0B0;
   }
 `;
+const ServerPost = styled.div``;
 
 const GrowRoomPostPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location || {};
-  const { postId,nick_name,view,recruitment_field,number,period,startDate,endDate,
-    categoryListDetail0,categoryListDetail1,categoryListDetail2,title,content,likedNumber } = state || {};
+  const {
+    postId,
+    nick_name,
+    view,
+    recruitment_field,
+    number,
+    period,
+    startDate,
+    endDate,
+    categoryListDetail0,
+    categoryListDetail1,
+    categoryListDetail2,
+    title,
+    content,
+    likedNumber,
+  } = state || {};
 
-  console.log('Response:', postId,nick_name,view,recruitment_field,number,period,startDate,endDate,
-  categoryListDetail0,categoryListDetail1,categoryListDetail2,title,content,likedNumber); // Add this line
+  const [postData, setPostData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (postId) {
+          // 상태값이 있으면 상태값 사용
+          setPostData(state);
+        } else {
+          // 상태값이 없으면 API 호출
+          const postId2 = 65;
+          const response = await GrowRoomPostApi.getGrowRoomPosts(postId2);
+          console.log('서버에서 받은 데이터 형태', response);
+          setPostData(response);
+        }
+      } catch (error) {
+        console.error('데이터 가져오기 실패:', error);
+      }
+    };
+  
+    fetchData();
+  }, [postId, state]);
+  
+  useEffect(() => {
+    console.log('postData 데이터 형태', postData);
+  }, [postData]);
+  
 
   const handleLiveUpButtonClick = () => {
     console.log('라이브업 입장 button clicked!');
     navigate(`/liveup`);
   };
 
-
   return (
     <div>
       <PostHeader />
       <WriteForm>
         <TitleContainer>
-          <TitleText>{title}</TitleText>
+          <TitleText>{postData?.title}</TitleText>
         </TitleContainer>
       </WriteForm>
-      <PostTitle data={{ postId,nick_name,view,recruitment_field,number,period,startDate,endDate,
-    categoryListDetail0,categoryListDetail1,categoryListDetail2,likedNumber }} />
+      <PostTitle data={postData} />
       <WriteForm>
         <StudyInfo>스터디 소개</StudyInfo>
       </WriteForm>
       <WriteForm>
-        <ContentText>{content}</ContentText>
+        <ContentText>{postData?.content}</ContentText>
       </WriteForm>
       <WriteForm>
         <LiveUpBTN onClick={handleLiveUpButtonClick}>LIVE UP 입장</LiveUpBTN>
