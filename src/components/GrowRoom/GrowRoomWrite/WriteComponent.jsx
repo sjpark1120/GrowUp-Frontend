@@ -1,6 +1,8 @@
 // WriteComponent.jsx
 import React from 'react';
 import styled from 'styled-components';
+import { setApiForm } from './apiData';
+
 
 const Write = styled.div`
   height: 700px;
@@ -57,6 +59,8 @@ const WriteComponent = ({
   handleSubmitClick,
   handleCancelClick,
 }) => {
+
+
   return (
     <Write>
       <h4>제목</h4>
@@ -70,7 +74,6 @@ const WriteComponent = ({
         value={content}
         onChange={handleContentChange}
       />
-
 
     </Write>
   );

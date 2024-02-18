@@ -4,10 +4,13 @@ import tag_close from '../../icon/모집완료.png';
 import tag_open from '../../icon/모집중.png';
 import tag_popular from '../../icon/인기.png';
 import tag_study from '../../icon/스터디.png';
+import tag_project from '../../icon/프로젝트.png';
+import tag_challenge from '../../icon/챌린지.png';
 import img_like from '../../icon/img-like.svg';
 import img_unlike from '../../icon/img-unlike.svg';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import LiveUpApi from '../../apis/LiveUpApi';
 
 const Box = styled.div`
   display: flex;
@@ -45,12 +48,22 @@ color: #848484;
 font-size: 12px; 
 font-weight: 400
 `
-const PostBoxBlack = ({ key, popular, study, status, deadline, maintext, views, like }) => {
+const PostBoxBlack = ({ popular, recruitment_field, status, deadline, title, view, like, growRoomId }) => {
 
-  const [isActive, setIsActive] = useState(like === 'like');
+  const [isActive, setIsActive] = useState(like);
+
+  const handleLike = async (data) => {
+    try{
+      const response = await LiveUpApi.like(data);
+      //console.log("좋아요 테스트", response);
+      setIsActive(!isActive);
+    }catch (error){
+      console.error("좋아요 실패", error);
+    }
+  }
 
   const handleLikeClick = () => {
-    setIsActive(!isActive);
+    handleLike(growRoomId);
   };
 
   const isLiked = () => {
@@ -59,28 +72,41 @@ const PostBoxBlack = ({ key, popular, study, status, deadline, maintext, views, 
 
   const getStatus = () => {
     switch (status) {
-      case 'open':
+      case '모집중':
         return tag_open;
-      case 'close':
+      case '삭제':
         return tag_close;
       default:
         return '';
     }
   };
 
-  const formattedViews = views >= 1000 ? '999+' : views;
+  const getRecruitmentTag = (recruitment_field) => {
+    switch (recruitment_field) {
+      case '스터디':
+        return <img src={tag_study} alt="study" />;
+      case '프로젝트':
+        return <img src={tag_project} alt="project" />;
+      case '챌린지':
+        return <img src={tag_challenge} alt="challenge" />;
+      default:
+        return null;
+    }
+  };
+
+  const formattedViews = view >= 1000 ? '999+' : view;
 
   return (
-    <Box style={{ opacity: status === 'close' ? 0.5 : 1 }}>
-      <Link to={`/liveup/${key}`} style={{ textDecoration: 'none' }}>
+    <Box style={{ opacity: status === '삭제' ? 0.5 : 1 }}>
+      <Link to={`/liveup/${growRoomId}`} style={{ textDecoration: 'none' }}>
         <div style={{ paddingBottom: '28px' }}>
           <div style={{ justifyContent: 'flex-start', gap: '10px', display: 'flex', paddingBottom: '20px' }}>
             {popular && <img src={tag_popular} alt="popular" />}
-            {study && <img src={tag_study} alt="study" />}
+            {getRecruitmentTag(recruitment_field)}
             <img src={getStatus()} alt="Recruit Status" style={{ marginLeft: 'auto' }} />
           </div>
           <DeadLine>{`마감일 | ${deadline}`}</DeadLine>
-          <MainText>{`${maintext}`}</MainText>
+          <MainText>{`${title}`}</MainText>
         </div>
       </Link>
       <div style={{ borderTop: '1px #E6E6E6 solid', marginTop: 'auto', padding: '12px 0px 14px 0px', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex', alignSelf: 'stretch' }}>
