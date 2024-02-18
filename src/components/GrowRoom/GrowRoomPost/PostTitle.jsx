@@ -105,8 +105,8 @@ const PostTitle = ({data}) => {
     categoryListDetail2,
     likedNumber,
   } = state || {};
-  // state가 비어 있으면 data 프롭을 사용
-  const postData = state ? state : data;
+  // data 비어 있으면 state 프롭을 사용
+  const postData = data ? data : state;
 
   console.log('PostTitle.jsx파일에서 postData',postData)
   return (

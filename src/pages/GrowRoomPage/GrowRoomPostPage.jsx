@@ -94,8 +94,8 @@ const GrowRoomPostPage = () => {
           setPostData(state);
         } else {
           // 상태값이 없으면 API 호출
-          const postId2 = 65;
-          const response = await GrowRoomPostApi.getGrowRoomPosts(postId2);
+          const { growRoomId } = location.state || {};
+          const response = await GrowRoomPostApi.getGrowRoomPosts(growRoomId);
           console.log('서버에서 받은 데이터 형태', response);
           setPostData(response);
         }
@@ -105,11 +105,9 @@ const GrowRoomPostPage = () => {
     };
   
     fetchData();
-  }, [postId, state]);
+  }, [state]);
   
-  useEffect(() => {
-    console.log('postData 데이터 형태', postData);
-  }, [postData]);
+
   
 
   const handleLiveUpButtonClick = () => {
