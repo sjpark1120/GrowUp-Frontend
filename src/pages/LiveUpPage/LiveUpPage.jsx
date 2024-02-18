@@ -16,9 +16,8 @@ const MainWrapper = styled.div`
 
 const BannerImg =styled.img`
   width: 100%;
-  height: 500px;
+  height: auto;
   margin-top: 122px;
-
   `;
 
 const RankingContainer = styled.div`

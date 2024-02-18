@@ -74,7 +74,7 @@ const PostBoxBlack = ({ popular, recruitment_field, status, deadline, title, vie
     switch (status) {
       case '모집중':
         return tag_open;
-      case '삭제':
+      case '모집마감':
         return tag_close;
       default:
         return '';
@@ -97,8 +97,8 @@ const PostBoxBlack = ({ popular, recruitment_field, status, deadline, title, vie
   const formattedViews = view >= 1000 ? '999+' : view;
 
   return (
-    <Box style={{ opacity: status === '삭제' ? 0.5 : 1 }}>
-      <Link to={`/liveup/${growRoomId}`} style={{ textDecoration: 'none' }}>
+    <Box style={{ opacity: status === '모집마감' ? 0.5 : 1 }}>
+      <Link to={`/liveup/${growRoomId}`} style={{ textDecoration: 'none', pointerEvents: status === '모집마감' ? 'none' : 'auto' }}>
         <div style={{ paddingBottom: '28px' }}>
           <div style={{ justifyContent: 'flex-start', gap: '10px', display: 'flex', paddingBottom: '20px' }}>
             {popular && <img src={tag_popular} alt="popular" />}
