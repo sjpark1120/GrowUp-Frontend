@@ -33,6 +33,7 @@ import video_true from "../../icon/video_share_true.png";
 import OverlayBox from "../../components/LiveUpPage/OverlayBox";
 import { dummyData as dummy } from "../../DummyData";
 import kurentoUtils from "kurento-utils";
+import LiveUpParticipantList from "../../components/LiveUpPage/LiveUpParticipantList";
 
 function ScreenComponent({
   image,
@@ -863,7 +864,8 @@ function LiveUpJoinPage() {
         </Playbar>
       </ScreenBlock>
       <ParticipantsBlock>
-        <div className="title">
+        <LiveUpParticipantList />
+        {/* <div className="title">
           <div className="subtitle">LIVE UP 참여자</div>
           <ul className="btn">
             <li>전체</li>
@@ -929,7 +931,7 @@ function LiveUpJoinPage() {
               )}
             </div>
           </div>
-        </PageNationBar>
+        </PageNationBar> */}
       </ParticipantsBlock>
     </LiveUpJoinPageBlock>
   );
