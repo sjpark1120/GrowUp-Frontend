@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import PostHeader from '../../components/GrowRoom/GrowRoomPost/PostHeader';
 import PostTitle from '../../components/GrowRoom/GrowRoomPost/PostTitle';
 import GrowRoomPostApi from '../../apis/GrowRoomPostApi';
+import CommentApi from '../../apis/CommentApi';
 
 import { useNavigate } from 'react-router-dom';
 import CommentComponent from '../../components/GrowRoom/GrowRoomPost/CommentComponent';
@@ -61,7 +62,17 @@ const LiveUpBTN = styled.button`
     background-color: #B0B0B0;
   }
 `;
-const ServerPost = styled.div``;
+
+const BTN = styled.button`
+  border: none;
+  margin-right : 4px;
+  border-radius: 7px;
+  color: white;
+  background-color: #00D749;
+  &:hover {
+    background-color: #B0B0B0;
+  }
+`;
 
 const GrowRoomPostPage = () => {
   const navigate = useNavigate();
@@ -83,7 +94,6 @@ const GrowRoomPostPage = () => {
     content,
     likedNumber,
   } = state || {};
-
   const [postData, setPostData] = useState(null);
 
   useEffect(() => {
@@ -108,13 +118,32 @@ const GrowRoomPostPage = () => {
   }, [state]);
   
 
-  
+
 
   const handleLiveUpButtonClick = () => {
     console.log('라이브업 입장 button clicked!');
     navigate(`/liveup`);
   };
 
+  const handleEditButtonClick = (postId) => {
+    console.log('수정 button clicked ');
+    navigate(`/growroom/${postId}/edit`, { state: { postId } });
+  };
+  
+  
+  const handleDeleteButtonClick = async (postId) => {
+    try {
+      console.log('삭제 button clicked!');
+      if (postId) {
+        // postId가 있을 때만 삭제 시도
+        await GrowRoomPostApi.deleteGrowRoomPost(postId);
+        console.log('게시글 삭제 성공');
+        navigate(`/growroom`);
+      }
+    } catch (error) {
+      console.error('게시글 삭제 실패:', error);
+    }
+  }
   return (
     <div>
       <PostHeader />
@@ -132,9 +161,11 @@ const GrowRoomPostPage = () => {
       </WriteForm>
       <WriteForm>
         <LiveUpBTN onClick={handleLiveUpButtonClick}>LIVE UP 입장</LiveUpBTN>
+        <BTN onClick={() => handleEditButtonClick(postData?.growRoomId)}>수정</BTN>
+        <BTN onClick={() => handleDeleteButtonClick(postData?.growRoomId)}>삭제</BTN>
       </WriteForm>
       <WriteForm>
-        <CommentComponent />
+        <CommentComponent index = {postData?.growRoomId}/>
       </WriteForm>
     </div>
   );

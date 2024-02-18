@@ -6,6 +6,8 @@ import MainPage from "./pages/MainPage/MainPage";
 import GrowRoomPage from "./pages/GrowRoomPage/GrowRoomPage";
 import GrowRoomWritePage from "./pages/GrowRoomPage/GrowRoomWritePage";
 import GrowRoomPostPage from "./pages/GrowRoomPage/GrowRoomPostPage";
+import EditGrowRoomPostPage from "./pages/GrowRoomPage/EditGrowRoomPostPage";
+
 import LiveUpPage from "./pages/LiveUpPage/LiveUpPage";
 import LiveUpJoinPage from "./pages/LiveUpPage/LiveUpJoinPage";
 import FindPasswordPage from "./pages/JoinPage/FindPasswordPage";
@@ -66,6 +68,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/growroom" element={<GrowRoomPage />} />
           <Route path="/growroom/:postId" element={<GrowRoomPostPage />} />
+          <Route path="/growroom/:postId/edit" element={<EditGrowRoomPostPage/>}/>
           <Route path="/liveup" element={<LiveUpPage />} />
           <Route path="/liveup/:roomid" element={<LiveUpJoinPage />} />
         </Route>
