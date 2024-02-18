@@ -11,12 +11,16 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   changeField,
   changeNickname,
+  change_password,
   existNickname,
   getMyInfo,
+  initializeForm,
   passwordCheck,
+  passwordCheckInitialize,
 } from "../../redux/mypageEdit";
 
 import TodoListApi from "../../apis/TodoListApi";
+import { useNavigate } from "react-router-dom";
 
 const Frame = styled.div`
   width: 100%;
@@ -134,6 +138,9 @@ const MyInfo = styled.form`
           color: #3e3e3e;
           cursor: pointer;
         }
+        .passwordCheck {
+          top: 218px;
+        }
         .btn_nickname {
           top: 100px;
         }
@@ -177,23 +184,29 @@ export const Input = styled.input`
 
 const EditProfile = () => {
   const dispatch = useDispatch();
-  const { myInfo, existNicknameError } = useSelector(({ mypageEdit }) => ({
+  const {
+    myInfo,
+    isNickname,
+    existNicknameError,
+    passwordCheckError,
+    passwordCheckInfo,
+    change_password_info,
+    change_password_info_Error,
+  } = useSelector(({ mypageEdit }) => ({
     myInfo: mypageEdit.myInfo,
+    existNicknameError: mypageEdit.existNicknameError,
     isNickname: mypageEdit.isNickname,
+    passwordCheckError: mypageEdit.passwordCheckError,
+    passwordCheckInfo: mypageEdit.passwordCheckInfo,
+    change_password_info: mypageEdit.change_password_info,
+    change_password_info_Error: mypageEdit.change_password_info_Error,
   }));
-
-  // const selectMyInfo = createSelector(
-  //   (state) => state.mypageEdit.myInfo,
-  //   (myInfo) => ({ myInfo })
-  // );
-
-  // // 컴포넌트 내에서 사용
-  // const { myInfo } = useSelector(selectMyInfo);
 
   const [doubleCheck, setDoubleCheck] = useState(false);
   const [mail, setMail] = useState(false);
   const [passwordToggle, setPasswordToggle] = useState(false);
   const [withdraw, setWithdraw] = useState(false);
+  const navigate = useNavigate();
 
   const onChange = (e) => {
     const { value, name } = e.target;
@@ -216,30 +229,42 @@ const EditProfile = () => {
     dispatch(passwordCheck({ currentPwd: myInfo.password }));
   };
 
+  const onChangePassword = () => {
+    dispatch(
+      change_password({
+        password: myInfo.newPassword,
+        passwordCheck: myInfo.newPasswordConfirm,
+      })
+    );
+  };
+
+  const onInitializeForm = () => {
+    dispatch(initializeForm());
+  };
+
   useEffect(() => {
     dispatch(getMyInfo());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (isNickname) setDoubleCheck(isNickname);
-  // }, [isNickname]);
-
-  // useEffect(() => {
-  //   console.log(existNicknameError);
-  // }, [existNicknameError]);
-
-  // const ws = new WebSocket("wss://dev.jojoumc.shop/call");
-
-  // 연결이 열릴 때 실행될 콜백 함수
-  // ws.onopen = function (event) {
-  //   console.log("Connected to the WebSocket server");
-  // };
-
-  // console.log(existNicknameError, "error");
+  useEffect(() => {
+    if (existNicknameError?.error) setDoubleCheck(existNicknameError?.error);
+    if (isNickname?.isSuccess) setDoubleCheck(isNickname?.isSuccess);
+    if (passwordCheckError?.error) setPasswordToggle(passwordCheckError?.error);
+    if (passwordCheckInfo?.isSuccess)
+      setPasswordToggle(passwordCheckInfo?.isSuccess);
+    if (change_password_info?.isSuccess)
+      setPasswordToggle(change_password_info?.isSuccess);
+  }, [
+    existNicknameError,
+    isNickname,
+    passwordCheckError,
+    passwordCheckInfo,
+    change_password_info,
+  ]);
 
   return (
     <Frame>
-      {existNicknameError ? (
+      {isNickname?.isSuccess && (
         <OverlayBox
           toggle={doubleCheck}
           setToggle={setDoubleCheck}
@@ -248,23 +273,55 @@ const EditProfile = () => {
           title={"사용 가능한 닉네임 입니다!"}
           subTitle={"사용하기"}
         />
-      ) : (
+      )}
+      {existNicknameError?.error === true && (
         <OverlayCheck
           toggle={doubleCheck}
           setToggle={setDoubleCheck}
           title={"중복된 닉네임 입니다!"}
           subTitle={"중복확인"}
-          onCheck={() => setDoubleCheck(false)}
+          onCheck={onExistNickname}
+          value={myInfo.nickname}
+          name="nickname"
+          onChange={onChange}
+          errorMessage={existNicknameError}
         />
       )}
 
-      <OverlayCheck
-        toggle={passwordToggle}
-        setToggle={setPasswordToggle}
-        title={"비밀번호가 틀렸습니다!"}
-        subTitle={"인증하기"}
-        onCheck={() => setPasswordToggle(false)}
-      />
+      {passwordCheckInfo?.isSuccess && (
+        <OverlayBox
+          toggle={passwordToggle}
+          setToggle={setPasswordToggle}
+          title={"패스워드가 인증되었습니다."}
+          subTitle={"확인"}
+          // initialize={passwordCheck_initialize}
+        />
+      )}
+      {passwordCheckError?.error === true && (
+        <OverlayCheck
+          toggle={passwordToggle}
+          setToggle={setPasswordToggle}
+          title={"비밀번호가 틀렸습니다!"}
+          subTitle={"인증하기"}
+          errorMessage={passwordCheckError}
+          name="password"
+          onChange={onChange}
+          value={myInfo.password}
+          placeholder="기존 비밀번호"
+          onCheck={onPasswordCheck}
+        />
+      )}
+
+      {change_password_info?.isSuccess && (
+        <OverlayBox
+          toggle={passwordToggle}
+          setToggle={setPasswordToggle}
+          title={"패스워드가 변경되었습니다."}
+          subTitle={"확인"}
+          navigate={navigate}
+          onInitializeForm={onInitializeForm}
+        />
+      )}
 
       <OverlayBox
         toggle={mail}
@@ -318,7 +375,7 @@ const EditProfile = () => {
               <div className="btn btn_nickname" onClick={onExistNickname}>
                 중복확인
               </div>
-              <div className="exclude_nickname">
+              {/* <div className="exclude_nickname">
                 <div className="info_input_title">이메일 변경</div>
                 <div className="rule">* 이메일 변경 시 재인증 필요</div>
               </div>
@@ -330,7 +387,7 @@ const EditProfile = () => {
               />
               <div className="btn btn_email" onClick={onExistNickname}>
                 인증하기
-              </div>
+              </div> */}
             </div>
             <div className="nickname_email_input">
               <div className="exclude_nickname">
@@ -355,6 +412,12 @@ const EditProfile = () => {
                 value={myInfo.newPassword}
                 placeholder="새 비밀번호"
               />
+
+              {passwordCheckInfo?.isSuccess && (
+                <div className="btn passwordCheck" onClick={onChangePassword}>
+                  변경하기
+                </div>
+              )}
               <Input
                 type="password"
                 name="newPasswordConfirm"
@@ -362,6 +425,17 @@ const EditProfile = () => {
                 value={myInfo.newPasswordConfirm}
                 placeholder="새 비밀번호 확인"
               />
+              {change_password_info_Error?.errorMessage && (
+                <div
+                  style={{
+                    fontSize: ".7rem",
+                    color: "red",
+                    paddingLeft: ".5rem",
+                  }}
+                >
+                  {change_password_info_Error?.errorMessage}
+                </div>
+              )}
             </div>
             <div className="withdrawAndLogoutBtn">
               <div onClick={() => setWithdraw(true)}>탈퇴하기</div>

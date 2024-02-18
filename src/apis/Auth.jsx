@@ -16,6 +16,7 @@ const AuthApi = {
         //console.log("액세스 토큰 헤더에 저장", response.data.result.accessToken)
         localStorage.setItem("refreshToken", response.data.result.refreshToken); //리프레시 토큰 저장
         localStorage.setItem("accessToken", response.data.result.accessToken); //accessToken 저장
+        localStorage.setItem("userId", response.data.result.userId); // userId 저장
         localStorage.setItem("isLogin", true); //로그인여부 저장
         return response.data;
       }
@@ -35,6 +36,7 @@ const AuthApi = {
       const response = await AxiosInstance.post("/growup/users/logout");
       delete AxiosInstance.defaults.headers.common["Authorization"];
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("userId", response.data.result.userId);
       return response.data;
     } catch (error) {
       console.error("Error in logout:", error);
