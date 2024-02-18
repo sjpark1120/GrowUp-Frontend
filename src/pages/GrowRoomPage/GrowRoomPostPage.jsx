@@ -121,8 +121,8 @@ const GrowRoomPostPage = () => {
 
 
   const handleLiveUpButtonClick = () => {
-    console.log('라이브업 입장 button clicked!');
-    navigate(`/liveup`);
+    console.log('라이브업 입장 button clicked! :' + postData.growRoomId);
+    navigate(`/liveup/${postData.growRoomId}`);
   };
 
   const handleEditButtonClick = (postId) => {
