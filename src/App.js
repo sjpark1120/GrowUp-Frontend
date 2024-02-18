@@ -12,13 +12,14 @@ import FindPasswordPage from "./pages/JoinPage/FindPasswordPage";
 import ChangePasswordPage from "./pages/JoinPage/ChangePasswordPage";
 
 import MyPage from "./pages/MyPage/MyPage";
-import EditProfile from './pages/MyPage/EditProfile';
+import EditProfile from "./pages/MyPage/EditProfile";
 import AuthApi from "./apis/Auth";
 import AxiosInstance from "./apis/CustomAxios";
 import { useDispatch } from "react-redux";
 import { login } from "./redux/user";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import EmailVerifyPage from "./pages/JoinPage/EmailVerifyPage";
+import Screen from "./components/LiveUpPage/Screen";
 
 function Layout() {
   return (
@@ -38,31 +39,33 @@ function App() {
   const onSilentRefresh = async () => {
     try {
       const response = await AuthApi.silentRefresh();
-      console.log('silentRefresh success:', response);
-      AxiosInstance.defaults.headers.common["Authorization"] = `${response.result.newAccessToken}`;
-      console.log("로그인 연장", AxiosInstance.defaults.headers.common)
+      console.log("silentRefresh success:", response);
+      AxiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `${response.result.newAccessToken}`;
+      console.log("로그인 연장", AxiosInstance.defaults.headers.common);
       dispatch(login({ isLogin: true }));
     } catch (error) {
       //console.error('silentRefresh failed:', error);
       if (error.response?.status === 401) {
         // refresh token 만료 - 로그인 페이지 이동
-      dispatch(login({ isLogin: false }));
-        console.log('로그인 만료')
+        dispatch(login({ isLogin: false }));
+        console.log("로그인 만료");
       }
     }
   };
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        
         <Route index element={<MainPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
-        <Route path="/changepassword" element={<ChangePasswordPage />} /> 
-        <Route path="/emailverify" element={<EmailVerifyPage />} /> 
+        <Route path="/changepassword" element={<ChangePasswordPage />} />
+        <Route path="/emailverify" element={<EmailVerifyPage />} />
+        <Route path="/call" element={<Screen />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/growroom/write" element={<GrowRoomWritePage />} />
-          <Route path="/mypage/edit" element={<EditProfile/>} />
+          <Route path="/mypage/edit" element={<EditProfile />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/growroom" element={<GrowRoomPage />} />
           <Route path="/growroom/:postId" element={<GrowRoomPostPage />} />

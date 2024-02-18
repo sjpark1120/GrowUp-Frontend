@@ -11,6 +11,8 @@ const OverlayBox = ({
   subTitle,
   onChangeNickname,
   nickName,
+  onInitializeForm,
+  navigate,
 }) => {
   if (!toggle) return null;
 
@@ -44,7 +46,14 @@ const OverlayBox = ({
             onClick={(e) => {
               e.preventDefault();
               console.log(nickName, "nickName");
-              onChangeNickname(nickName);
+              if (nickName) onChangeNickname(nickName);
+              else {
+                if (title === "패스워드가 변경되었습니다.") {
+                  onInitializeForm();
+                  navigate("/");
+                }
+                setToggle(false);
+              }
               isSetVideoShare();
             }}
           >

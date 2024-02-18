@@ -9,12 +9,13 @@ import ScrollToTop from "./ScrollRestoration";
 
 import createSagaMiddleware from "@redux-saga/core";
 import rootReducer, { rootSaga } from "./redux";
-import { applyMiddleware, compose, legacy_createStore } from "redux";
+import { applyMiddleware, legacy_createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 const sagaMiddleware = createSagaMiddleware();
 const store = legacy_createStore(
   rootReducer,
-  compose(applyMiddleware(sagaMiddleware))
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 sagaMiddleware.run(rootSaga);
 
