@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CommentApi from '../../../apis/CommentApi';
 import TodoListApi from '../../../apis/TodoListApi';
+import ReplyComponent from './ReplyComponent';
 
 
 const All = styled.div`
@@ -110,6 +111,8 @@ const CommentComponent = ({ index }) => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [pinId, setPinId] = useState(null); // 추가: pinId 상태 추가
   const [userNickName, setUserNickName] = useState(null);
+  const [replyingPinId, setReplyingPinId] = useState(null);
+
 
   const postId = index;
 
@@ -214,6 +217,11 @@ const saveComment = async () => {
     }
   };
   
+  //대댓글
+  const startReplying = (pinId) => {
+    setReplyingPinId(pinId);
+  };
+
   const addReplyToComment = (parentPinId, replyData) => {
     setComments((prevComments) => {
       const updatedComments = [...prevComments];
@@ -221,7 +229,10 @@ const saveComment = async () => {
       updatedComments[parentCommentIndex].replies.push(replyData);
       return updatedComments;
     });
+    // 대댓글이 추가되었을 때 replyingPinId를 초기화하여 입력창이 사라지도록 처리
+    setReplyingPinId(null);
   };
+
   return (
     <All>
       <WriteForm>
@@ -247,6 +258,7 @@ const saveComment = async () => {
                     <CommentButtons>
                       <CommentButton onClick={() =>saveComment(pinId)}>저장</CommentButton>
                       <CommentButton onClick={() => setEditingIndex(null)}>취소</CommentButton>
+                     
                     </CommentButtons>
                   </>
                 ) : (
@@ -257,9 +269,18 @@ const saveComment = async () => {
                     <CommentButtons>
                       <CommentButton onClick={() => editComment(comment.pinId)}>수정</CommentButton>
                       <CommentButton onClick={() =>deleteComment(comment.pinId)}>삭제</CommentButton>
+                      <CommentButton onClick={() => startReplying(comment.pinId)}>대댓글</CommentButton>
                     </CommentButtons>
                   </>
                 ) : null}
+                {replyingPinId === comment.pinId && (
+                  <ReplyComponent
+                  postId={postId}
+                  parentPinId={comment.pinId}
+                  userNickName={userNickName}
+                  onAddReply={(replyData) => addReplyToComment(comment.pinId, replyData)}
+                />
+                )}
               </CommentContent>
             </CommentItem>
           ))}
