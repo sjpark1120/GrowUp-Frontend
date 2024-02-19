@@ -6,7 +6,7 @@ const CommentApi = {
     
         try {
         const response = await AxiosInstance.post(`/growup/growroom/${postId}`, defaultBody);
-        console.log('Server response:', response.data.result);
+        console.log('postComment Server response:', response.data.result);
 
         return response.data.result;
         } catch (error) {
@@ -27,7 +27,7 @@ const CommentApi = {
       },
 
     putComment: async (defaultBody,postId,pinId) => {
-        console.log('Sending data:', defaultBody);
+        console.log('putComment Sending data:', defaultBody,pinId);
     
         try {
         const response = await AxiosInstance.put(`/growup/growroom/${postId}/${pinId}`, defaultBody);

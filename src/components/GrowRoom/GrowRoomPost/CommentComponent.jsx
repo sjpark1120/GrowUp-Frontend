@@ -121,15 +121,13 @@ const CommentComponent = ({ index }) => {
         //대댓글도...................
     
         // 이전 댓글 상태 유지하면서 새로운 댓글 추가
-        setComments((prevComments) => [
-          ...prevComments,
-          ...existingComments.map((comment) => ({
-            pinId: comment.pinId,
-            text: comment.comment,
-            user: comment.nickName,
-            date: new Date(comment.createdAt).toLocaleString(),
-          })),
-        ]);
+        setComments(existingComments.map((comment) => ({
+          pinId: comment.pinId,
+          text: comment.comment,
+          user: comment.nickName,
+          date: new Date(comment.createdAt).toLocaleString(),
+        })));
+        
       } catch (error) {
         console.error('기존 댓글 데이터 가져오기 실패:', error);
       }
@@ -181,27 +179,29 @@ const CommentComponent = ({ index }) => {
     setNewComment(comments[commentIndex].text);
   };
 
-  const saveComment = async () => {
-    if (newComment.trim() !== '') {
-      try {
-        const response = await CommentApi.putComment({ comment: newComment }, postId, pinId);
-        console.log('서버 응답:', response);
-        const updatedComments = [...comments];
-        const editedCommentIndex = updatedComments.findIndex(
-          (comment) => comment.pinId === pinId
-        );
-        updatedComments[editedCommentIndex].text = newComment;
-        updatedComments[editedCommentIndex].date = new Date(
-          response.createdAt
-        ).toLocaleString();
-        setComments(updatedComments);
-        setEditingIndex(null);
-        setNewComment('');
-      } catch (error) {
-        console.error('댓글 저장 오류:', error);
-      }
+// ...
+
+const saveComment = async () => {
+  if (newComment.trim() !== '') {
+    try {
+      const response = await CommentApi.putComment({ comment: newComment }, postId, comments[editingIndex].pinId);
+      console.log('서버 응답:', response);
+      const updatedComments = [...comments];
+      updatedComments[editingIndex].text = newComment;
+      updatedComments[editingIndex].date = new Date(response.createdAt).toLocaleString();
+      setComments(updatedComments);
+      setEditingIndex(null);
+      setNewComment('');
+      setPinId(null);
+    } catch (error) {
+      console.error('댓글 저장 오류:', error);
     }
-  };
+  }
+};
+
+// ...
+
+  
 
   const deleteComment = async (pinId) => {
     try {
@@ -239,7 +239,7 @@ const CommentComponent = ({ index }) => {
                       onChange={(e) => setNewComment(e.target.value)}
                     />
                     <CommentButtons>
-                      <CommentButton onClick={saveComment}>저장</CommentButton>
+                      <CommentButton onClick={() =>saveComment(pinId)}>저장</CommentButton>
                       <CommentButton onClick={() => setEditingIndex(null)}>취소</CommentButton>
                     </CommentButtons>
                   </>
