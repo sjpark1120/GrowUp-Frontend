@@ -37,7 +37,7 @@ const AuthApi = {
       delete AxiosInstance.defaults.headers.common["Authorization"];
       localStorage.removeItem("accessToken");
       localStorage.removeItem("isLogin");
-      localStorage.removeItem("userId", response.data.result.userId);
+      localStorage.removeItem("userId");
       return response.data;
     } catch (error) {
       console.error("Error in logout:", error);
