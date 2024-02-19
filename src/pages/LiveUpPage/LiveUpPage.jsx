@@ -16,9 +16,8 @@ const MainWrapper = styled.div`
 
 const BannerImg =styled.img`
   width: 100%;
-  height: 500px;
+  height: auto;
   margin-top: 122px;
-
   `;
 
 const RankingContainer = styled.div`
@@ -51,8 +50,9 @@ const MyLiveUpTitle = styled.h1`
 
 function LiveUpPage() {
   const [posts, setPosts] = useState([]);
+  const [rank, setRank] = useState([]);
   const [filter, setfilter] = useState("전체");
-
+  const [rankFilter, setrankFilter] = useState('일간');
   const handleGetPost = async (data) => {
     try{
       const response = await LiveUpApi.getPosts(data);
@@ -62,19 +62,32 @@ function LiveUpPage() {
       console.error("post 불러오기 실패", error);
     }
   }
+  const handleGetRank = async (data) => {
+    try{
+      const response = await LiveUpApi.getRanking(data);
+      //console.log("테스트", response);
+      setRank(response.result.liveRoomDateTimeResList)
+      console.log(response.result.liveRoomDateTimeResList)
+    }catch (error){
+      console.error("Rank 불러오기 실패", error);
+    }
+  }
 
   useEffect(()=>{
-    console.log("useEffect")
     handleGetPost(filter);
   },[filter])
+
+  useEffect(()=>{
+    handleGetRank(rankFilter);
+  },[rankFilter])
 
   return (
     <MainWrapper>
       <BannerImg src={banner} alt="banner" />
       <RankingContainer>
         <RankingTitle>🥇LIVE UP 누적 랭킹</RankingTitle>
-        <RankingFilterBtn />
-        <RankingBox />
+        <RankingFilterBtn rankFilter={rankFilter} setrankFilter={setrankFilter}/>
+        <RankingBox data={rank}/>
       </RankingContainer>
       <MyLiveUpContainer>
         <MyLiveUpTitle>MY LIVE UP</MyLiveUpTitle>

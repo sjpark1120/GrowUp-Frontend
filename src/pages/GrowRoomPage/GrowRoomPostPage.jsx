@@ -163,7 +163,7 @@ const GrowRoomPostPage = () => {
         <BTN onClick={() => handleDeleteButtonClick(postData?.growRoomId)}>삭제</BTN>
       </WriteForm>
       <WriteForm>
-        <CommentComponent index = {postData?.growRoomId}/>
+        <CommentComponent index={postId || postData?.growRoomId} />
       </WriteForm>
     </div>
   );
