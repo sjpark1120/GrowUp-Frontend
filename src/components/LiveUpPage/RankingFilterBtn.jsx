@@ -23,15 +23,12 @@ const NavItem = ({ label, selected, onClick }) => {
     );
 };
 
-const navItems = ['전체', '주간', '월간'];
+const navItems = ['일간', '주간', '월간'];
 
 
-const RankingFilterBtn = () => {
-    const [selectedFilter, setSelectedFilter] = useState('전체');
-
+const RankingFilterBtn = ({ rankFilter, setrankFilter }) => {
     const handleFilterClick = (label) => {
-        setSelectedFilter(label);
-
+        setrankFilter(label);
     };
 
     return (
@@ -40,7 +37,7 @@ const RankingFilterBtn = () => {
                 <NavItem
                     key = {index} 
                     label={item}
-                    selected={selectedFilter === item}
+                    selected={rankFilter === item}
                     onClick={() => handleFilterClick(item)} />
             ))}
         </div>
