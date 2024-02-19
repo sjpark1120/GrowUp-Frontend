@@ -27,6 +27,10 @@ const [CHANGEIMAGE, CHANGEIMAGE_SUCCESS, CHANGEIMAGE_FAILURE] =
 const [CHANGE_PASSOWRD, CHANGE_PASSOWRD_SUCCESS, CHANGE_PASSOWRD_FAILURE] =
   createRequestActionTypes("mypageEdit/change_passowrd");
 
+const [WITHDRAW, WITHDRAW_SUCCESS, WITHDRAW_FAILURE] = createRequestActionTypes(
+  "mypageEdit/withdraw"
+);
+
 export const changeField = createAction(CHANGE_FIELD, ({ key, value }) => ({
   key,
   value,
@@ -56,6 +60,7 @@ export const change_password = createAction(
   })
 );
 export const changeImage = createAction(CHANGEIMAGE, (image) => image);
+export const withdraw = createAction(WITHDRAW, (currentPwd) => currentPwd);
 
 const getMyInfoSaga = createRequestSaga(GETMYINFO, mypageEditApi.getMyInfo);
 const existNicknameSaga = createRequestSaga(
@@ -78,6 +83,7 @@ const changeImageSaga = createRequestSaga(
   CHANGEIMAGE,
   mypageEditApi.photoChange
 );
+const withdrawSaga = createRequestSaga(WITHDRAW, mypageEditApi.withdraw);
 
 export function* mypageEditSaga() {
   yield takeLatest(GETMYINFO, getMyInfoSaga);
@@ -86,6 +92,7 @@ export function* mypageEditSaga() {
   yield takeLatest(PASSWORDCHECK, passwordCheckSaga);
   yield takeLatest(CHANGEIMAGE, changeImageSaga);
   yield takeLatest(CHANGE_PASSOWRD, changePasswordSaga);
+  yield takeLatest(WITHDRAW, withdrawSaga);
 }
 
 const initialState = {
@@ -96,7 +103,9 @@ const initialState = {
     password: "",
     newPassword: "",
     newPasswordConfirm: "",
+    withdrawPassword: "",
   },
+  isNickname: null,
   passwordCheckInfo: null,
   change_password_info: null,
   myInfoError: null,
@@ -104,6 +113,8 @@ const initialState = {
   changeNicknameError: null,
   passwordCheckError: null,
   change_password_info_Error: null,
+  change_image_Error: null,
+  withdraw_Error: null,
 };
 
 const mypageEdit = handleActions(
@@ -129,18 +140,21 @@ const mypageEdit = handleActions(
       },
       myInfoError: null,
     }),
+    [GETMYINFO_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      myInfoError: error,
+    }),
     [CHANGEIMAGE_SUCCESS]: (state, { payload: myInfo }) => ({
       ...state,
       myInfo: {
         ...state.myInfo,
-        email: myInfo.result.email,
-        nickname: myInfo.result.nickName,
+        image: myInfo.result.image,
       },
-      myInfoError: null,
+      change_image_Error: null,
     }),
-    [GETMYINFO_FAILURE]: (state, { payload: error }) => ({
+    [CHANGEIMAGE_FAILURE]: (state, { payload: error }) => ({
       ...state,
-      myInfoError: error,
+      change_image_Error: error,
     }),
     [EXISTNICKNAME_SUCCESS]: (state, { payload: isNickname }) => ({
       ...state,
@@ -154,6 +168,7 @@ const mypageEdit = handleActions(
     [CHANGENICKNAME_SUCCESS]: (state, { payload: isChangeNickname }) => ({
       ...state,
       isChangeNickname,
+      isNickname: null,
       changeNicknameError: null,
     }),
     [CHANGENICKNAME_FAILURE]: (state, { payload: error }) => ({
@@ -177,6 +192,15 @@ const mypageEdit = handleActions(
     [PASSWORDCHECK_FAILURE]: (state, { payload: error }) => ({
       ...state,
       passwordCheckError: error,
+    }),
+    [WITHDRAW_SUCCESS]: (state, { payload: withdrawInfo }) => ({
+      ...state,
+      withdrawInfo,
+      withdraw_Error: null,
+    }),
+    [WITHDRAW_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      withdraw_Error: error,
     }),
   },
   initialState

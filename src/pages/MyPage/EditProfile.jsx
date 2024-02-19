@@ -10,17 +10,19 @@ import OverlayWithdraw from "../../components/LiveUpPage/OverlayWithdraw";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeField,
+  changeImage,
   changeNickname,
   change_password,
   existNickname,
   getMyInfo,
   initializeForm,
+  withdraw as onWithdraw,
   passwordCheck,
   passwordCheckInitialize,
 } from "../../redux/mypageEdit";
-
-import TodoListApi from "../../apis/TodoListApi";
+import AuthApi from "../../apis/Auth";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../../redux/user";
 
 const Frame = styled.div`
   width: 100%;
@@ -242,6 +244,29 @@ const EditProfile = () => {
     dispatch(initializeForm());
   };
 
+  const onFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      dispatch(changeImage(file));
+      dispatch(getMyInfo());
+    }
+  };
+
+  const handleWithdraw = (currentPwd) => {
+    dispatch(onWithdraw(currentPwd));
+  };
+
+  // const handleLogout = async () => {
+  //   try {
+  //     const response = await AuthApi.logout();
+  //     console.log("logout success: ", response);
+  //     dispatch(logout());
+  //   } catch (error) {
+  //     console.log("logout failed: ", error);
+  //   }
+  // };
+
   useEffect(() => {
     dispatch(getMyInfo());
   }, [dispatch]);
@@ -335,7 +360,10 @@ const EditProfile = () => {
         setToggle={setWithdraw}
         title={"탈퇴 안내 사항"}
         subTitle={"탈퇴하기"}
-        onCheck={() => setWithdraw(false)}
+        handleWithdraw={handleWithdraw}
+        value={myInfo?.withdrawPassword}
+        onChange={onChange}
+        navigate={navigate}
       />
 
       <Benner />
@@ -344,10 +372,15 @@ const EditProfile = () => {
         <div className="infoBlock">
           <div className="myImageBlock">
             <div className="myImage">
-              <input type="file" id="fileInput" style={{ display: "none" }} />
+              <input
+                type="file"
+                id="fileInput"
+                style={{ display: "none" }}
+                onChange={onFileChange}
+              />
               <label htmlFor="fileInput">
                 <img
-                  src={mypageIcon}
+                  src={myInfo?.image ?? mypageIcon}
                   alt="mypageIcon"
                   style={{ cursor: "pointer" }}
                 />
