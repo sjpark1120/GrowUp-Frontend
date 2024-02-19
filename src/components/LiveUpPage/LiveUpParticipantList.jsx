@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
 
 import gofirst_arrow from '../../icon/arrow7.png'
 import gofirst_arrow_disable from '../../icon/arrow11.png'
@@ -270,6 +269,7 @@ function LiveUpParticipantList() {
               sevenDaysUp={true}
               nickName={data.nickName}
               userId={data.userId}
+              participateId={data.participateId}
               photoUrl={data.photoUrl}
               time={data.totalTime}
             />
