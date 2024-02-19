@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { format } from "date-fns"
 import { setApiDate } from './apiData';
 
-
 const DatePickerContainer = styled.div`
   .datepicker {
     width: 400px;
@@ -120,7 +119,12 @@ const DatePickerContainer = styled.div`
     color: white;
     border-radius: 0 10px 10px 0;
   }
-}
+
+  .grayed-out-date {
+    color: #ccc;
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
 `;
 
 class UserInfo extends Component {
@@ -159,10 +163,14 @@ class UserInfo extends Component {
           selectsRange={true}
           className="datepicker"
           dateFormat="yyyy년 MM월 dd일"
+          minDate={new Date()}
           selected={this.state.startDate}
           startDate={this.state.startDate}
           endDate={this.state.endDate}
           onChange={(dates) => this.setChangeDate(dates)}
+          dayClassName={(date) => {
+            return date < new Date() ? 'grayed-out-date' : '';
+          }}
         />
       </DatePickerContainer>
     );
