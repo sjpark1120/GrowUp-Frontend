@@ -84,11 +84,13 @@ function MyPage() {
   const [userData, setUserData] = useState(null);
   const [TodoData, setTodoData] = useState(null);
   const [calendarData, setCalendarData] = useState(null);
+  const [timeData, setTimeData] = useState(null);
 
   const fetchData = async () => {
     try {
       const userDataResponse = await TodoListApi.getProfile();
       const todoResponse = await TodoListApi.getTodo();
+      const timeResponse = await TodoListApi.getTime();
       const date = new Date();
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -96,6 +98,7 @@ function MyPage() {
       const calendarResponse = await CalendarApi.getCalendar(dateString);
       setTodoData(todoResponse);
       setUserData(userDataResponse);
+      setTimeData(timeResponse.totalTime);
       setCalendarData(calendarResponse.calenderMonthInquiryLists);
       console.log('유저데이터:', userDataResponse)
     } catch (error) {
@@ -129,9 +132,7 @@ function MyPage() {
               <PencilButton src={pencil_btn} alt="Edit Profile" />
             </ProfileContainer>
             <TimeInfoText>누적 성장 시간</TimeInfoText>
-            <TimeValueText>
-              {"시간 어디서 받아오죠"}
-            </TimeValueText>
+            <TimeValueText> {timeData} </TimeValueText>
           </ProfileInfoWrapper>
           <TodoList todoList={TodoData} />
         </TodoAndProfileWrapper>

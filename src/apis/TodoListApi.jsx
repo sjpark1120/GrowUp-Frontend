@@ -48,6 +48,18 @@ const TodoListApi = {
       throw error;
     }
   },
+
+  getTime: async () => {
+    try {
+      const response = await AxiosInstance.get(`/growup/users/inquiry-myTime`);
+
+      console.log("getTime:", response.data);
+      return response.data.result;
+    } catch (error) {
+      console.error("Error in getTime:", error);
+      throw error;
+    }
+  },
 };
 
 export default TodoListApi;
