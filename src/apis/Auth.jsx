@@ -115,6 +115,12 @@ const AuthApi = {
           },
         }
       );
+      if (response && response.status === 200) {
+        AxiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = `${response.data.result.accessToken}`;
+        console.log('토큰저자아아ㅏ아ㅏ아아 ')
+      }
       return response.data;
     } catch (error) {
       console.error("Error in findPasswordVerify:", error);
@@ -148,7 +154,7 @@ const AuthApi = {
       return response.data;
     } catch (error) {
       //console.error('Error in silentRefresh:', error);
-      delete AxiosInstance.defaults.headers.common["Authorization"];
+      //delete AxiosInstance.defaults.headers.common["Authorization"];
       localStorage.removeItem("isLogin");
       //console.log("토큰삭제", AxiosInstance.defaults.headers.common)
       throw error;

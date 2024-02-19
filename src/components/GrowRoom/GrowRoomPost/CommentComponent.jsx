@@ -101,6 +101,8 @@ const CommentButton = styled.button`
     color: black;
   }
 `;
+/////////////////////////////////////////////////////////////////////////////////////////
+
 
 const CommentComponent = ({ index }) => {
   const [comments, setComments] = useState([]);
@@ -117,7 +119,6 @@ const CommentComponent = ({ index }) => {
         // 페이지 로드시 기존 댓글 데이터를 가져와서 설정
         const existingComments = await CommentApi.getComment(postId);
         console.log('existingComments', existingComments);
-        //수정 해야한다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!아무래도 복사말고 바로 해야할듯. 그리고
         //대댓글도...................
     
         // 이전 댓글 상태 유지하면서 새로운 댓글 추가
@@ -127,7 +128,7 @@ const CommentComponent = ({ index }) => {
           user: comment.nickName,
           date: new Date(comment.createdAt).toLocaleString(),
         })));
-        
+
       } catch (error) {
         console.error('기존 댓글 데이터 가져오기 실패:', error);
       }
@@ -199,8 +200,6 @@ const saveComment = async () => {
   }
 };
 
-// ...
-
   
 
   const deleteComment = async (pinId) => {
@@ -215,7 +214,14 @@ const saveComment = async () => {
     }
   };
   
-
+  const addReplyToComment = (parentPinId, replyData) => {
+    setComments((prevComments) => {
+      const updatedComments = [...prevComments];
+      const parentCommentIndex = updatedComments.findIndex((comment) => comment.pinId === parentPinId);
+      updatedComments[parentCommentIndex].replies.push(replyData);
+      return updatedComments;
+    });
+  };
   return (
     <All>
       <WriteForm>

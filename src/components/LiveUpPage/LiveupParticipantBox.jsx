@@ -27,7 +27,7 @@ const Time = styled.div`
   color: #8D8D8D;
   height: 44px;
   width: 244px;
-  letter-spacing: 7px;
+  letter-spacing: 6px;
   font-size: 46px;
   font-style: normal;
   font-weight: 600;
@@ -61,23 +61,28 @@ const UserProfile = styled.div`
   gap: 10px;
 `
 
-function LiveupParticipantBox({ like, bestUp, sevenDaysUp, nickName, photoUrl, time }) {
+function LiveupParticipantBox({ like, bestUp, sevenDaysUp, nickName, photoUrl, time, userId }) {
   //const [isActive, setIsActive] = useState(like);
   const [isActive, setIsActive] = useState(like);
 
-  /* const handleLike = async (data) => {
+  const handleLike = async (growRoomId, participateId) => {
     try{
-      const response = await LiveUpApi.like(data);
+      const response = await LiveUpApi.participantlike(growRoomId, participateId);
       //console.log("좋아요 테스트", response);
       setIsActive(!isActive);
     }catch (error){
       console.error("좋아요 실패", error);
+      if(error.response && error.response.data && error.response.data.message){
+        alert(error.response.data.message);
+      }
     }
-  } */
+  }
 
   const handleLikeClick = () => {
-    //handleLike(growRoomId);
-    setIsActive(!isActive);
+    const path = window.location.pathname;
+    const segments = path.split('/');
+    const id = segments[segments.length - 1];
+    handleLike(id, userId);
   };
 
   const isLiked = () => {
