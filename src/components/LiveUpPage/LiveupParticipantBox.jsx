@@ -61,7 +61,7 @@ const UserProfile = styled.div`
   gap: 10px;
 `
 
-function LiveupParticipantBox({ like, bestUp, sevenDaysUp, nickName, photoUrl, time, userId }) {
+function LiveupParticipantBox({ like, bestUp, sevenDaysUp, nickName, photoUrl, time, userId, participateId }) {
   //const [isActive, setIsActive] = useState(like);
   const [isActive, setIsActive] = useState(like);
 
@@ -82,7 +82,7 @@ function LiveupParticipantBox({ like, bestUp, sevenDaysUp, nickName, photoUrl, t
     const path = window.location.pathname;
     const segments = path.split('/');
     const id = segments[segments.length - 1];
-    handleLike(id, userId);
+    handleLike(id, participateId);
   };
 
   const isLiked = () => {
