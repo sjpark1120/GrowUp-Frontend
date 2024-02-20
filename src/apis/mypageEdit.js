@@ -10,14 +10,25 @@ export const client = axios.create({
   },
 });
 
-export const getMyInfo = () => {
-  return client.get("/growup/users/info");
-};
+export const clientImage = axios.create({
+  baseURL: "https://dev.jojoumc.shop", //기본 서버 주소
+  withCredentials: true,
+  headers: {
+    // Accept: "application/json",
+    // "Content-Type": "application/json",
+    Authorization: `${localStorage.getItem("accessToken")}`,
+  },
+});
 
 export const photoChange = (image) => {
-  const formData = new FormData();
-  formData.append("photoImage", image);
-  return client.patch("/growup/users/photo-change", formData);
+  const photoImage = new FormData();
+  console.log(image, "image");
+  photoImage.append("photoImage", image);
+  return clientImage.patch("/growup/users/photo-change", photoImage);
+};
+
+export const getMyInfo = () => {
+  return client.get("/growup/users/info");
 };
 
 export const existNickname = async (nickName) => {
