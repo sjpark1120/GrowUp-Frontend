@@ -23,6 +23,7 @@ import {
 } from "../../redux/mypageEdit";
 import AuthApi from "../../apis/Auth";
 import { useNavigate } from "react-router-dom";
+import { client } from "../../apis/mypageEdit";
 
 const Frame = styled.div`
   width: 100%;
@@ -267,19 +268,24 @@ const EditProfile = () => {
     dispatch(onWithdraw(currentPwd));
   };
 
-  // const handleLogout = async () => {
-  //   try {
-  //     const response = await AuthApi.logout();
-  //     console.log("logout success: ", response);
-  //     dispatch(logout());
-  //   } catch (error) {
-  //     console.log("logout failed: ", error);
-  //   }
-  // };
-
   useEffect(() => {
     dispatch(getMyInfo());
   }, [dispatch]);
+
+  const [time, setTime] = useState(null);
+
+  useEffect(() => {
+    async function fetchTime() {
+      try {
+        const response = await client.get("/growup/users/inquiry-myTime");
+        const fetchedTime = response.data.result.totalTime;
+        setTime(fetchedTime);
+      } catch (error) {
+        console.error("Error fetching time:", error);
+      }
+    }
+    fetchTime();
+  }, []);
 
   useEffect(() => {
     if (existNicknameError?.error) setDoubleCheck(existNicknameError?.error);
@@ -296,7 +302,7 @@ const EditProfile = () => {
     passwordCheckInfo,
     change_password_info,
   ]);
-
+  console.log(myInfo?.photoUrl, "image", myInfo);
   return (
     <Frame>
       {isNickname?.isSuccess && (
@@ -390,7 +396,7 @@ const EditProfile = () => {
               />
               <label htmlFor="fileInput">
                 <img
-                  src={myInfo?.image ?? mypageIcon}
+                  src={myInfo?.photoUrl ?? mypageIcon}
                   alt="mypageIcon"
                   style={{ cursor: "pointer" }}
                 />
@@ -398,7 +404,7 @@ const EditProfile = () => {
             </div>
             <div className="time">
               <div className="time_title">누적 성장 시간</div>
-              <div className="time_time">123 : 50 : 35</div>
+              <div className="time_time">{time}</div>
             </div>
           </div>
           <div className="info_changeBlock">

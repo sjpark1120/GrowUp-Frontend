@@ -14,19 +14,17 @@ import { composeWithDevTools } from "redux-devtools-extension";
 const sagaMiddleware = createSagaMiddleware();
 const store = legacy_createStore(
   rootReducer,
-  compose(applyMiddleware(sagaMiddleware))
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 sagaMiddleware.run(rootSaga);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <React.StrictMode>
-      <Provider store={store}>
-        <ScrollToTop />
-        <GlobalStyles />
-        <App />
-      </Provider>
-    </React.StrictMode>
+    <Provider store={store}>
+      <ScrollToTop />
+      <GlobalStyles />
+      <App />
+    </Provider>
   </BrowserRouter>
 );
