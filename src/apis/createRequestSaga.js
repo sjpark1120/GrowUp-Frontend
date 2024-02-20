@@ -14,7 +14,7 @@ export default function createRequestSaga(type, request) {
     yield put(startLoading(type)); // 로딩 시작
     try {
       const response = yield call(request, action.payload);
-      console.log(response.data);
+      console.log(response?.data);
       yield put({
         type: SUCCESS,
         payload: response.data,
@@ -23,7 +23,7 @@ export default function createRequestSaga(type, request) {
     } catch (e) {
       let errorMessage = e.message; // 기본 에러 메시지
       let serverError = {};
-
+      console.log(e, "error");
       if (e.response && e.response.data) {
         // 서버에서 전송한 에러 메시지 및 코드가 있을 경우
         errorMessage = e.response.data.message;
