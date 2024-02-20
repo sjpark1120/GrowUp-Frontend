@@ -40,11 +40,11 @@ const ReplyCommentApi = {
     },
     
     
-    putReply: async (defaultBody,postId,pinId) => {
-        console.log('putReply Sending data:', defaultBody,pinId);
+    putReply: async (defaultBody,postId,pinId,pinCommentId) => {
+        console.log('putReply Sending data:', defaultBody, pinId, pinCommentId);
     
         try {
-        const response = await AxiosInstance.put(`/growup/growroom/${postId}/${pinId}`, defaultBody);
+        const response = await AxiosInstance.put(`/growup/growroom/${postId}/${pinId}/${pinCommentId}`, defaultBody);
         console.log('대댓글 put:', response.data.result);
         return response.data.result;
         } catch (error) {
