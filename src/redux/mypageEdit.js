@@ -137,6 +137,7 @@ const mypageEdit = handleActions(
         ...state.myInfo,
         email: myInfo.result.email,
         nickname: myInfo.result.nickName,
+        photoUrl: myInfo.result.photoUrl,
       },
       myInfoError: null,
     }),
