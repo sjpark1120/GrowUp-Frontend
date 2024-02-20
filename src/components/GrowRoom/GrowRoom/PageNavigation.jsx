@@ -107,7 +107,13 @@ const NumberBtn = styled.button`
   cursor: pointer;
 `
 
-const PageNavigation = ({ data }) => {
+const ErrorMsg = styled.p`
+  text-align: center;  
+  font-size: 18px;    
+  padding: 100px;
+`;
+
+const PageNavigation = ({ data, error }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12; // 한 페이지에 표시할 항목 수
   const totalPages = Math.ceil(data.length / itemsPerPage); // 전체 페이지 수
@@ -179,50 +185,58 @@ const PageNavigation = ({ data }) => {
 
     setCurrentPage(newPage);
   };
-  return (
-    <div>
-      <PostContainer>
-        {currentData.map((data) => (
-          <PostBox
-            growRoomId={data.growRoomId}
-            title={data.title}
-            popular={data.hot}
-            recruitment_field={data.recruitment_field}
-            status={data.status}
-            view={data.view}
-            deadline={data.endDate}
-            like={data.likedByUser}
-            key={data.growRoomId} 
-            updateLikeStatus={updateLikeStatus}
-          />
-        ))}
-      </PostContainer>
-      <Paginaion>
-        <GotoFirstBtn disabled={currentPage === 1} onClick={goToFirstPage} />
-        <GotoPrevtBtn disabled={currentPage === 1} onClick={() => handleDynamicPageClick('left')} />
-        {generatePageNumbers().map((page, index) => (
-          <NumberBtn
-            key={index}
-            onClick={() => {
-              if (typeof page === 'number') {
-                handlePageClick(page);
-              } else {
-                const direction = page === '...' && index === 1 ? 'dynamicLeft' : 'dynamicRight';
-                handleDynamicPageClick(direction);
-              }
-            }}
-            style={{
-              color: currentPage === page ? '#00D749' : '#8D8D8D',
-              border: currentPage === page ? '1px solid #00D749' : 'none',
-            }}
-          >
-            {page}
-          </NumberBtn>
-        ))}
-        <GotoNexttBtn disabled={currentPage === totalPages} onClick={() => handleDynamicPageClick('right')} />
-        <GotoLastBtn disabled={currentPage === totalPages} onClick={goToLastPage} />
-      </Paginaion>
-    </div>
-  );
+
+    return (
+      <div>
+        {error ? (
+          <ErrorMsg>{error}</ErrorMsg>
+        ) : (
+          <>
+            <PostContainer>
+              {currentData.map((data) => (
+                <PostBox
+                  growRoomId={data.growRoomId}
+                  title={data.title}
+                  popular={data.hot}a
+                  recruitment_field={data.recruitment_field}
+                  status={data.status}
+                  view={data.view}
+                  deadline={data.endDate}
+                  like={data.likedByUser}
+                  key={data.growRoomId} 
+                  updateLikeStatus={updateLikeStatus}
+                />
+              ))}
+            </PostContainer>
+            <Paginaion>
+              <GotoFirstBtn disabled={currentPage === 1} onClick={goToFirstPage} />
+              <GotoPrevtBtn disabled={currentPage === 1} onClick={() => handleDynamicPageClick('left')} />
+              {generatePageNumbers().map((page, index) => (
+                <NumberBtn
+                  key={index}
+                  onClick={() => {
+                    if (typeof page === 'number') {
+                      handlePageClick(page);
+                    } else {
+                      const direction = page === '...' && index === 1 ? 'dynamicLeft' : 'dynamicRight';
+                      handleDynamicPageClick(direction);
+                    }
+                  }}
+                  style={{
+                    color: currentPage === page ? '#00D749' : '#8D8D8D',
+                    border: currentPage === page ? '1px solid #00D749' : 'none',
+                  }}
+                >
+                  {page}
+                </NumberBtn>
+              ))}
+              <GotoNexttBtn disabled={currentPage === totalPages} onClick={() => handleDynamicPageClick('right')} />
+              <GotoLastBtn disabled={currentPage === totalPages} onClick={goToLastPage} />
+            </Paginaion>
+          </>
+        )}
+      </div>
+    );
 };
+
 export default PageNavigation;

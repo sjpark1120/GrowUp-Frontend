@@ -72,7 +72,7 @@ const dropdown_period=['1개월', '2개월', '3개월', '4개월', '5개월', '6
 
 const GrowRoomPage = () => {
   const [posts, setPosts] = useState([]);
-
+  const [errorMsg, setErrorMsg] = useState(false);
   const [selectedNavItem, setSelectedNavItem] = useState('전체');
   const [selectedCategory, setSelectedCategory] = useState('전체'); 
   const [selectedPeriod, setSelectedPeriod] = useState('전체');
@@ -109,21 +109,16 @@ const GrowRoomPage = () => {
         '\u{1F947}', // 🥇
       ];
     
-  
+
     const emojis = new RegExp(emojisToRemove.join('|'), 'gu');
     return text.replace(emojis, '');
   }
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const selectedItem = removeEmojis(selectedNavItem);
   
-        console.log('Selected NavItem:', selectedItem);
-        console.log('Selected Category:', selectedCategory);
-        console.log('Selected Period:', selectedPeriod);
-        console.log('Is Active:', isActive);
-        console.log('Search Query:', searchQuery);
+        console.log('선택된 네비게이션: ', selectedItem, '/', selectedCategory, '/', selectedPeriod, '/', isActive, '/', searchQuery);
   
         const post = await GrowRoomApi.getPosts({
           filter: encodeURIComponent(selectedItem),
@@ -134,13 +129,20 @@ const GrowRoomPage = () => {
         });
   
         setPosts(post);
+        setErrorMsg(null);
       } catch (error) {
         console.error('post 데이터 불러오기 실패:', error);
+        if (error.response && error.response.data && error.response.data.code === 'GROWROOM4021') {
+          setErrorMsg(`'${searchQuery}'에 대한 검색결과가 없습니다.`);
+        } else {
+          setErrorMsg('데이터를 불러오는 중 오류가 발생했습니다.');
+        }
       }
     };
   
     fetchData();
-  }, [selectedNavItem, selectedCategory, selectedPeriod, isActive, searchQuery, like]); 
+  }, [selectedNavItem, selectedCategory, selectedPeriod, isActive, searchQuery, like]);
+  
 
   
   const navigate = useNavigate();
@@ -185,7 +187,7 @@ const GrowRoomPage = () => {
       </div>
 
       </div>
-      <PageNavigation data={posts}/>
+      <PageNavigation data={posts} error={errorMsg}/>
     </MainWrapper>
     </div>
     </LikeProvider>

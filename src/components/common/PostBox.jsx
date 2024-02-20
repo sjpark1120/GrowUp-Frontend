@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -53,7 +54,6 @@ const PostBox = ({ growRoomId, popular, recruitment_field, status, deadline, tit
   const isActive = likes[growRoomId] ?? like; // growRoomId에 해당하는 좋아요 데이터가 없을 경우 기존 like 사용
 
   useEffect(() => {
-    console.log('updatedLike:', isActive);
   }, [isActive, updateLikeStatus]);
 
   const handleLikeClick = async (event) => {
