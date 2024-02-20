@@ -170,7 +170,7 @@ const Screen = () => {
   };
 
   return (
-    <div>
+    <div style={{ paddingTop: "3rem" }}>
       <h1>Video Conference</h1>
       <video ref={localVideoRef} autoPlay style={{ width: "30%" }}></video>
       <video ref={remoteVideoRef} autoPlay style={{ width: "30%" }}></video>

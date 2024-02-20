@@ -19,8 +19,8 @@ const Box = styled.div`
   padding-top: 24px;
   flex-direction: column;
   border-radius: 16px;
-  border: 1px solid #F7F7F7;
-  background: #FFF;
+  border: 1px solid #f7f7f7;
+  background: #fff;
 `;
 
 const Title = styled.p`
@@ -28,10 +28,10 @@ const Title = styled.p`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  color: #1C1C1C;
+  color: #1c1c1c;
   font-size: 16px;
   font-weight: 500;
-  line-height: 22.40px;
+  line-height: 22.4px;
 `;
 
 const DeadLine = styled.p`
@@ -66,7 +66,7 @@ const PostBox = ({ growRoomId, popular, recruitment_field, status, deadline, tit
       // 새로운 상태로 업데이트
       console.log('Updated State:', updatedState);
     } catch (error) {
-      console.error('좋아요 토글 중 오류 발생:', error);
+      console.error("좋아요 토글 중 오류 발생:", error);
     }
   };
   const isLiked = () => {
@@ -75,43 +75,70 @@ const PostBox = ({ growRoomId, popular, recruitment_field, status, deadline, tit
 
   const getRecruitmentTag = (recruitment_field) => {
     switch (recruitment_field) {
-      case '스터디':
+      case "스터디":
         return <img src={tag_study} alt="study" />;
-      case '프로젝트':
+      case "프로젝트":
         return <img src={tag_project} alt="project" />;
-      case '챌린지':
+      case "챌린지":
         return <img src={tag_challenge} alt="challenge" />;
       default:
         return null;
     }
   };
 
-  const formattedViews = view >= 1000 ? '999+' : view;
+  const formattedViews = view >= 1000 ? "999+" : view;
 
   const navigate = useNavigate();
-
   const handleClick = () => {
     navigate(`/growroom/${growRoomId}`, { state: { growRoomId } });
   };
 
   return (
-    <Box style={{ opacity: status === '삭제' ? 0.5 : 1 }} onClick={handleClick}>
-      <div style={{ paddingBottom: '28px' }}>
-        <div style={{ justifyContent: 'flex-start', gap: '10px', display: 'flex', paddingBottom: '20px' }}>
+    <Box style={{ opacity: status === "삭제" ? 0.5 : 1 }} onClick={handleClick}>
+      <div style={{ paddingBottom: "28px" }}>
+        <div
+          style={{
+            justifyContent: "flex-start",
+            gap: "10px",
+            display: "flex",
+            paddingBottom: "20px",
+          }}
+        >
           {popular && <img src={tag_popular} alt="popular" />}
 
           {getRecruitmentTag(recruitment_field)}
 
-          {status === '삭제' && <img src={tag_close} alt="Recruit Status" style={{ marginLeft: 'auto' }} />}
+          {status === "삭제" && (
+            <img
+              src={tag_close}
+              alt="Recruit Status"
+              style={{ marginLeft: "auto" }}
+            />
+          )}
         </div>
 
         <DeadLine>{`마감일 | ${deadline}`}</DeadLine>
 
         <Title>{`${title}`}</Title>
       </div>
-      <div style={{ borderTop: '1px #F7F7F7 solid', marginTop: 'auto', padding: '12px 0px 14px 0px', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex', alignSelf: 'stretch' }}>
+      <div
+        style={{
+          borderTop: "1px #F7F7F7 solid",
+          marginTop: "auto",
+          padding: "12px 0px 14px 0px",
+          justifyContent: "space-between",
+          alignItems: "center",
+          display: "inline-flex",
+          alignSelf: "stretch",
+        }}
+      >
         <Views>{`조회수 ${formattedViews}회`}</Views>
-        <img onClick={handleLikeClick} src={isLiked()} alt="Like" style={{ cursor: 'pointer' }} />
+        <img
+          onClick={handleLikeClick}
+          src={isLiked()}
+          alt="Like"
+          style={{ cursor: "pointer" }}
+        />
       </div>
     </Box>
   );

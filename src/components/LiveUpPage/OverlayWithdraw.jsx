@@ -4,7 +4,16 @@ import logo from "../../icon/Logo.png";
 import cancel from "../../icon/cancel.png";
 import { Input } from "../../pages/MyPage/EditProfile";
 
-const OverlayWithdraw = ({ toggle, setToggle, title, subTitle, onCheck }) => {
+const OverlayWithdraw = ({
+  toggle,
+  setToggle,
+  title,
+  subTitle,
+  handleWithdraw,
+  value,
+  onChange,
+  navigate,
+}) => {
   if (!toggle) return null;
   return (
     <Overlay>
@@ -41,8 +50,19 @@ const OverlayWithdraw = ({ toggle, setToggle, title, subTitle, onCheck }) => {
           <div className="withdrawBox">
             <Input
               style={{ width: "338px", height: "40px", marginBottom: 0 }}
+              value={value}
+              name="withdrawPassword"
+              type="password"
+              onChange={onChange}
             />
-            <button className="start_btn" onClick={onCheck}>
+            <button
+              className="start_btn"
+              onClick={() => {
+                handleWithdraw(value);
+                setToggle(false);
+                navigate("/");
+              }}
+            >
               {subTitle}
             </button>
           </div>
