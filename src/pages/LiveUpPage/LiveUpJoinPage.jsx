@@ -589,7 +589,7 @@ function LiveUpJoinPage() {
   let webRtcPeer = useRef(null);
 
   useEffect(() => {
-    const ws = new WebSocket(`wss://dev.jojoumc.shop/call`);
+    const ws = new WebSocket(`wss://test-ubuntudb.shop/call `);
     ws.onopen = () => {
       console.log("WebSocket connection opened");
       setWebSocket(ws);
@@ -825,6 +825,7 @@ function LiveUpJoinPage() {
     if (webRtcPeer.current) {
       webRtcPeer.current.dispose();
       webRtcPeer.current = null;
+      console.log(webRtcPeer, "webRtcPeer");
     }
   };
   useEffect(() => {
