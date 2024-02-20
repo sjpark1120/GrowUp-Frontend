@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import gofirst_arrow from '../../../icon/arrow12.png'
@@ -18,7 +18,7 @@ const PostContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 40px 16px;
-  padding-bottom: 150px;
+  padding-bottom: 50px;
 `;
 
 const Paginaion = styled.div`
@@ -123,6 +123,12 @@ const PageNavigation = ({ data, error }) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = data.slice(startIndex, endIndex);
+
+  
+  useEffect(() => {
+    //항상 1페이지가 되도록
+    setCurrentPage(1);
+  }, [data]);
 
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
