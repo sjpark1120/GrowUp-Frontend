@@ -23,8 +23,6 @@ import {
 } from "../../redux/mypageEdit";
 import AuthApi from "../../apis/Auth";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../redux/user";
-import AuthApi from "../../apis/Auth";
 
 const Frame = styled.div`
   width: 100%;
