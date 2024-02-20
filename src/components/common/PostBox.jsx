@@ -101,7 +101,7 @@ const PostBox = ({
     navigate(`/growroom/${growRoomId}`, { state: { growRoomId } });
   };
   return (
-    <Box style={{ opacity: status === "삭제" ? 0.5 : 1 }} onClick={handleClick}>
+    <Box style={{ opacity: status === "모집마감" ? 0.5 : 1 , pointerEvents: status === '모집마감' ? 'none' : 'auto' }} onClick={handleClick}>
       <div style={{ paddingBottom: "28px" }}>
         <div
           style={{
