@@ -1,5 +1,4 @@
 import React from 'react'
-import Img from '../../icon/Ellipse 129.png'
 import styled from 'styled-components'
 
 const RankWrapper = styled.div`
@@ -18,10 +17,15 @@ font-weight: 800;
 line-height: 140%;
 display: inline;
 `
-const ProfileImg = styled.img`
+const ProfileImg = styled.div`
   width: 45px;
-height: 45px;
-border-radius: 45px;
+  height: 45px;
+  border-radius: 45px;
+  background-color: ${props => props.src ? 'transparent' : 'gray'};
+  background-image: url(${props => props.src});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 `
 const RankerName = styled.div`
   color: #FFF;
@@ -35,14 +39,14 @@ font-size: 12px;
 font-weight: 600;
 line-height: 140%;
 `
-function UserRanking({ rankingData }) {
+function UserRanking({ rankingData, rank }) {
   return (
     <RankWrapper>
-    <RankingNum>{rankingData.rank}</RankingNum>
-    <ProfileImg src={Img}/>
+    <RankingNum>{rank}</RankingNum>
+    <ProfileImg src={rankingData.photoUrl}/>
     <div>
-      <RankerName>{rankingData.name}</RankerName>
-      <RankerTime>{rankingData.time}</RankerTime>
+      <RankerName>{rankingData.nickName}</RankerName>
+      <RankerTime>{rankingData.totalTime}</RankerTime>
     </div>
     </RankWrapper>
   )

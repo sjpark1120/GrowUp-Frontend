@@ -86,7 +86,7 @@ background-color:#00D749;
   }
   `;
 
-const select_category = ['스터디', '챌린지', '프로젝트'];
+const select_category = ['스터디', '프로젝트', '챌린지'];
 const people = [3, 5, 10, 15, 20 ,25, 30];
 const progressPeriod = ['기간미정','1개월', '2개월', '3개월', '4개월', '5개월', '6개월 이상'];
 const itmedia = ['가상현실', '인공지능 ', '데이터 분석', '사이버 보안', '모바일 앱', '웹 개발','소셜 미디어', '클라우드 컴퓨팅', '게임 개발', '블록 체인']

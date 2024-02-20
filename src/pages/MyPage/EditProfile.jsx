@@ -8,6 +8,7 @@ import OverlayBox from "../../components/LiveUpPage/OverlayBox";
 import OverlayCheck from "../../components/LiveUpPage/OverlayCheck";
 import OverlayWithdraw from "../../components/LiveUpPage/OverlayWithdraw";
 import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/user";
 import {
   changeField,
   changeImage,
@@ -23,6 +24,7 @@ import {
 import AuthApi from "../../apis/Auth";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/user";
+import AuthApi from "../../apis/Auth";
 
 const Frame = styled.div`
   width: 100%;
@@ -238,6 +240,16 @@ const EditProfile = () => {
         passwordCheck: myInfo.newPasswordConfirm,
       })
     );
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await AuthApi.logout();
+      console.log("logout success: ", response);
+      dispatch(logout());
+    } catch (error) {
+      console.log("logout failed: ", error);
+    }
   };
 
   const onInitializeForm = () => {
@@ -472,7 +484,7 @@ const EditProfile = () => {
             </div>
             <div className="withdrawAndLogoutBtn">
               <div onClick={() => setWithdraw(true)}>탈퇴하기</div>
-              <div>로그아웃</div>
+              <div onClick={handleLogout}>로그아웃</div>
             </div>
           </div>
         </div>
