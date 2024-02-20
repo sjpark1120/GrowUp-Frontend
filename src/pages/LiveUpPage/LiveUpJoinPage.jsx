@@ -12,64 +12,14 @@ import button_1 from "../../icon/Page button_c1.png";
 import timer from "../../icon/timer.png";
 import share from "../../icon/screen_share_false.png";
 import video from "../../icon/video_share.png";
-import rank from "../../icon/Frame 790.png";
-import name from "../../icon/Frame 791.png";
-import register from "../../icon/Frame 792.png";
-import DarkPostBox from "../../components/common/DarkPostBox";
-import arrow9 from "../../icon/arrow9.png";
-import arrow10 from "../../icon/arrow10.png";
-import arrow11 from "../../icon/arrow11.png";
-import arrow12 from "../../icon/arrow12.png";
-import arrow3 from "../../icon/arrow3.png";
-import arrow4 from "../../icon/arrow4.png";
-import arrow5 from "../../icon/arrow5.png";
-import arrow6 from "../../icon/arrow6.png";
-import logo from "../../icon/Logo.png";
-import cancel from "../../icon/cancel.png";
 import screen_img from "../../icon/image 39.png";
 import screen_img_true from "../../icon/screen_share-1.png";
 import timer_true from "../../icon/screen_share.png";
 import video_true from "../../icon/video_share_true.png";
 import OverlayBox from "../../components/LiveUpPage/OverlayBox";
-import { dummyData as dummy } from "../../DummyData";
 import kurentoUtils from "kurento-utils";
 import { client } from "../../apis/mypageEdit";
 import LiveUpParticipantList from "../../components/LiveUpPage/LiveUpParticipantList";
-
-
-function ScreenComponent({
-  image,
-  name,
-  style,
-  status,
-  onClick,
-  index,
-  selected,
-}) {
-  return (
-    <div
-      className="screen"
-      style={{
-        ...style,
-        opacity: status === "selected" ? 0.5 : 1,
-        border: index === selected ? "1px solid #00D749" : "1px solid #b0b0b0",
-      }}
-      onClick={onClick}
-    >
-      <img src={image} alt="" />
-      <div className="screen_name">{name}</div>
-    </div>
-  );
-}
-
-const screenData = [
-  { image: screen_img, name: "[UMC] GROW UP - Figma asdfasdfsdfasd" },
-  { image: screen_img, name: "[UMC] GROW UP - Figma asdfasdfsdfasd" },
-  { image: screen_img, name: "[UMC] GROW UP - Figma asdfasdfsdfasd" },
-  { image: screen_img, name: "[UMC] GROW UP - Figma asdfasdfsdfasd" },
-  { image: screen_img, name: "[UMC] GROW UP - Figma asdfasdfsdfasd" },
-  { image: screen_img, name: "[UMC] GROW UP - Figma asdfasdfsdfasd" },
-];
 
 const LiveUpJoinPageBlock = styled.div`
   display: flex;
@@ -510,48 +460,6 @@ export const Overlay = styled.div`
 `;
 
 function LiveUpJoinPage() {
-  const len = dummy?.length || 0;
-  const itemsPerPage = 20;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(len / itemsPerPage);
-  const postList = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    const reversedPosts = dummy ? [...dummy].reverse() : [];
-    const currentPosts = reversedPosts ?? [];
-    return currentPosts.slice(start, start + itemsPerPage);
-  }, [currentPage, dummy]);
-
-  const pagination = useMemo(() => {
-    return Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-      <div
-        style={{
-          border: currentPage === page ? "1px solid #00D749" : "none",
-        }}
-        className="pagenationBtn"
-        key={page}
-        onClick={() => setCurrentPage(page)}
-      >
-        {page}
-      </div>
-    ));
-  }, [totalPages, currentPage]);
-
-  const dummyData = useMemo(() => {
-    return postList.map((data, index) => (
-      <DarkPostBox
-        style={{ marginRight: (1 + index) % 4 !== 0 ? "16px" : "" }}
-        key={index}
-        deadline={data.deadline}
-        maintext={data.maintext}
-        views={data.views}
-        status={data.status}
-        like={data.like}
-        popular={data.popular}
-        study={data.study}
-      />
-    ));
-  }, [postList]);
-
   const [videoToggle, setVideoToggle] = useState(false);
   const [screenShare, setScreenShare] = useState(false);
   const [videoShare, setVideoShare] = useState(false);
@@ -580,7 +488,38 @@ function LiveUpJoinPage() {
       .catch((e) => {
         console.log(e, "error");
       });
-  });
+    client
+      .patch(`/growup/participate/enter?growRoomId=${param.roomid}`)
+      .then((res) => {
+        console.log(res, "enter");
+      })
+      .catch((e) => {
+        console.log(e, "error");
+      });
+  }, []);
+
+  const out = () => {
+    client
+      .patch(`/growup/participate/out?growRoomId=${param.roomid}`)
+      .then((res) => {
+        console.log(res, "enter");
+      })
+      .catch((e) => {
+        console.log(e, "error");
+      });
+  };
+
+  const enterHead = () => {
+    console.log("enterHead");
+    client
+      .post(`/growup/participate/enter-Head?growRoomId=${param.roomid}`)
+      .then((res) => {
+        console.log(res, "head");
+      })
+      .catch((e) => {
+        console.log(e, "error");
+      });
+  };
 
   // 화면 공유
   const param = useParams();
@@ -599,6 +538,7 @@ function LiveUpJoinPage() {
 
     ws.onmessage = (message) => {
       const parsedMessage = JSON.parse(message.data);
+      console.log(message, "message");
       console.info("Received message:", parsedMessage);
       switch (parsedMessage.id) {
         case "presenterResponse":
@@ -646,6 +586,7 @@ function LiveUpJoinPage() {
   };
 
   const onIceCandidate = (candidate) => {
+    console.log("onIce", candidate);
     const message = {
       id: "onIceCandidate",
       candidate: candidate,
@@ -772,41 +713,10 @@ function LiveUpJoinPage() {
     }
   };
 
-  const startVidoeViewing = () => {
-    const options = {
-      remoteVideo: remoteVideoRef.current,
-      onicecandidate: onIceCandidate,
-      configuration: {
-        iceServers: [
-          { urls: "stun:3.37.25.119:3478" },
-          {
-            urls: "turn:3.37.25.119:3478",
-            username: "admin",
-            credential: "pass",
-          },
-        ],
-      },
-    };
-    webRtcPeer.current = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
-      options,
-      function (error) {
-        if (error) return console.error(error);
-        this.generateOffer((err, offerSdp) => {
-          if (err) return console.error(err);
-          sendMessage({
-            id: "viewer",
-            sdpOffer: offerSdp,
-            roomId: param.roomid,
-          });
-        });
-      }
-    );
-  };
-
   const sendMessage = (message) => {
     if (webSocket && webSocket.readyState === WebSocket.OPEN) {
       const jsonMessage = JSON.stringify(message);
-      console.log("Sending message:", jsonMessage);
+      console.log("Sending message:ㄴㅇㄹ", jsonMessage);
       webSocket.send(jsonMessage);
     }
   };
@@ -830,6 +740,7 @@ function LiveUpJoinPage() {
       console.log(webRtcPeer, "webRtcPeer");
     }
   };
+
   useEffect(() => {
     if (screenShare === true && isOwner === false) {
       startViewing();
@@ -853,6 +764,7 @@ function LiveUpJoinPage() {
           to={"/liveup"}
           onClick={() => {
             stop(param.roomid);
+            if (!isOwner) out();
           }}
         >
           <StyledImage src={button_1} alt="button_1" />
@@ -872,68 +784,76 @@ function LiveUpJoinPage() {
           )}
         </Screen>
         <Playbar>
-          <div
-            className="time"
-            style={{ color: timerToggle ? "#00D749" : "" }}
-          >{`${Math.floor(time / 3600)
-            .toString()
-            .padStart(2, "0")} : ${Math.floor((time % 3600) / 60)
-            .toString()
-            .padStart(2, "0")} : ${(time % 60)
-            .toString()
-            .padStart(2, "0")}`}</div>
           {isOwner ? (
-            <div className="icons">
-              <img
-                src={timerToggle ? timer_true : timer}
-                onClick={() => setTimerToggle(!timerToggle)}
-                alt="timer"
-              />
-              <img
-                src={screenShare ? screen_img_true : share}
-                onClick={() => {
-                  if (videoShare) return;
-                  if (screenShare) {
-                    setScreenShare(false);
-                    stop();
-                  } else {
-                    setScreenShare(true);
-                    startPresentation();
-                  }
-                }}
-                alt="share"
-              />
-              <img
-                src={videoShare ? video_true : video}
-                onClick={() => {
-                  if (screenShare) return;
-                  if (videoShare) {
-                    stop();
-                    setVideoShare(false);
-                  } else {
-                    setVideoToggle(true);
-                    console.log(videoToggle, "videoToggle");
-                  }
-                }}
-                alt="video"
-              />
-            </div>
+            <>
+              <div
+                className="time"
+                style={{ color: timerToggle ? "#00D749" : "" }}
+              >{`${Math.floor(time / 3600)
+                .toString()
+                .padStart(2, "0")} : ${Math.floor((time % 3600) / 60)
+                .toString()
+                .padStart(2, "0")} : ${(time % 60)
+                .toString()
+                .padStart(2, "0")}`}</div>
+              <div className="icons">
+                <img
+                  src={timerToggle ? timer_true : timer}
+                  onClick={() => {
+                    enterHead();
+                    setTimerToggle(!timerToggle);
+                  }}
+                  alt="timer"
+                />
+                <img
+                  src={screenShare ? screen_img_true : share}
+                  onClick={() => {
+                    if (videoShare) return;
+                    if (screenShare) {
+                      setScreenShare(false);
+                      stop();
+                    } else {
+                      setScreenShare(true);
+                      startPresentation();
+                    }
+                  }}
+                  alt="share"
+                />
+                <img
+                  src={videoShare ? video_true : video}
+                  onClick={() => {
+                    if (screenShare) return;
+                    if (videoShare) {
+                      stop();
+                      setVideoShare(false);
+                    } else {
+                      setVideoToggle(true);
+                      console.log(videoToggle, "videoToggle");
+                    }
+                  }}
+                  alt="video"
+                />
+              </div>
+            </>
           ) : (
-            <div className="icons">
-              <img
-                src={screenShare ? screen_img_true : share}
-                onClick={() => {
-                  if (videoShare) return;
-                  if (screenShare) {
-                    setScreenShare(false);
-                    stop();
-                  } else {
-                    setScreenShare(true);
-                  }
-                }}
-                alt="share"
-              />
-            </div>
+            <>
+              <div className="time"></div>
+              <div className="icons">
+                <img
+                  src={screenShare ? screen_img_true : share}
+                  onClick={() => {
+                    if (videoShare) return;
+                    if (screenShare) {
+                      setScreenShare(false);
+                      stop();
+                    } else {
+                      setScreenShare(true);
+                    }
+                  }}
+                  alt="share"
+                />
+              </div>
+            </>
           )}
         </Playbar>
       </ScreenBlock>
