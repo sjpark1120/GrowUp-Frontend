@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import GrowRoomNavigation from '../../components/GrowRoom/GrowRoom/GrowRoomNavigation';
 import { useNavigate } from 'react-router-dom';
 import GrowRoomApi from '../../apis/GrowRoomApi'
+import { useLike, LikeProvider } from '../../redux/LikeContext'; 
 
 import banner from '../../icon/banner2.png'
 import Dropdown from '../../components/GrowRoom/GrowRoom/DropDown';
@@ -71,12 +72,13 @@ const dropdown_period=['1개월', '2개월', '3개월', '4개월', '5개월', '6
 
 const GrowRoomPage = () => {
   const [posts, setPosts] = useState([]);
-
+  const [errorMsg, setErrorMsg] = useState(false);
   const [selectedNavItem, setSelectedNavItem] = useState('전체');
   const [selectedCategory, setSelectedCategory] = useState('전체'); 
   const [selectedPeriod, setSelectedPeriod] = useState('전체');
   const [isActive, setIsActive] = useState('전체');
   const [searchQuery, setSearchQuery] = useState(''); 
+  const { like, updateLikeStatus } = useLike() || {}; 
 
   const handleButtonClick = () => {
     setIsActive((prevIsActive) => (prevIsActive === '전체' ? '모집중' : '전체'));
@@ -107,21 +109,16 @@ const GrowRoomPage = () => {
         '\u{1F947}', // 🥇
       ];
     
-  
+
     const emojis = new RegExp(emojisToRemove.join('|'), 'gu');
     return text.replace(emojis, '');
   }
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const selectedItem = removeEmojis(selectedNavItem);
   
-        console.log('Selected NavItem:', selectedItem);
-        console.log('Selected Category:', selectedCategory);
-        console.log('Selected Period:', selectedPeriod);
-        console.log('Is Active:', isActive);
-        console.log('Search Query:', searchQuery);
+        console.log('선택된 네비게이션: ', selectedItem, '/', selectedCategory, '/', selectedPeriod, '/', isActive, '/', searchQuery);
   
         const post = await GrowRoomApi.getPosts({
           filter: encodeURIComponent(selectedItem),
@@ -132,28 +129,34 @@ const GrowRoomPage = () => {
         });
   
         setPosts(post);
+        setErrorMsg(null);
       } catch (error) {
         console.error('post 데이터 불러오기 실패:', error);
+        if (error.response && error.response.data && error.response.data.code === 'GROWROOM4021') {
+          setErrorMsg(`'${searchQuery}'에 대한 검색결과가 없습니다.`);
+        } else {
+          setErrorMsg('데이터를 불러오는 중 오류가 발생했습니다.');
+        }
       }
     };
   
     fetchData();
-  }, [selectedNavItem, selectedCategory, selectedPeriod, isActive, searchQuery]);
+  }, [selectedNavItem, selectedCategory, selectedPeriod, isActive, searchQuery, like]);
+  
 
   
-  const navigate = useNavigate(); // useNavigate를 사용
-
+  const navigate = useNavigate();
   const handleWriteButtonClick = () => {
-    // "/growroom/write" 경로로 이동
     navigate('/growroom/write');
   };
 
 
   return (
+    <LikeProvider>
     <div>
     <TopBanner src={banner} alt="banner" />
     <MainWrapper>
-      <PopularPosts/>
+    <PopularPosts />
       <div style={{ paddingBottom: '50px', display: 'flex'}}>
         <Title>GROW ROOM </Title>
         <GrowRoomNavigation 
@@ -184,9 +187,10 @@ const GrowRoomPage = () => {
       </div>
 
       </div>
-      <PageNavigation data={posts}/>
+      <PageNavigation data={posts} error={errorMsg}/>
     </MainWrapper>
     </div>
+    </LikeProvider>
   );
 };
 

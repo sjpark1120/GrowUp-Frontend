@@ -186,6 +186,11 @@ function LiveUpParticipantList() {
   const endIndex = startIndex + itemsPerPage;
   const currentData = participant.slice(startIndex, endIndex);
 
+  useEffect(() => {
+    //항상 1페이지가 되도록
+    setCurrentPage(1);
+  }, [participant]);
+
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
   };

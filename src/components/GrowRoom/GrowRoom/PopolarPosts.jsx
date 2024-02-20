@@ -5,6 +5,7 @@ import btn_left from '../../../icon/Page button_1.png';
 import btn_right from '../../../icon/Page button_2.png';
 import GrowRoomApi from '../../../apis/GrowRoomApi';
 import { useSelector } from "react-redux";
+import { useLike } from '../../../redux/LikeContext'; 
 
 const Title = styled.h2`
   color: black;
@@ -33,6 +34,7 @@ const PageButton = styled.img`
 const PopularPosts = () => {
   const [hotPosts, setHotPosts] = useState([]);
   const user = useSelector((state) => state.user.value);
+  const { like, updateLikeStatus } = useLike();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,9 +77,9 @@ const PopularPosts = () => {
         </div>
       </div>
       <PostContainer>
-        {weekPost.map((post, index) => (
+      {weekPost.map((post, index) => (
           <PostBox
-            key = {index}
+            key={index}
             growRoomId={post.growRoomId}
             title={post.title}
             popular={post.hot}
@@ -86,6 +88,7 @@ const PopularPosts = () => {
             view={post.view}
             deadline={post.endDate}
             like={post.likedByUser}
+            updateLikeStatus={updateLikeStatus}
           />
         ))}
       </PostContainer>
