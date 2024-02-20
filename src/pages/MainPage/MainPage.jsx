@@ -6,6 +6,9 @@ import banner1 from '../../icon/banner3.png';
 import banner2 from '../../icon/banner4.png';
 
 import PopularPosts from '../../components/GrowRoom/GrowRoom/PopolarPosts';
+import {LikeProvider } from '../../redux/LikeContext'; 
+
+
 const TopBanner =styled.img`
 min-width: 1280px;
 max-width: 100%;
@@ -29,6 +32,7 @@ const Banner = styled.img`
 function MainPage() {
 
   return (
+    <LikeProvider>
     <div>
     <TopBanner src={banner} alt="banner" />
       <MainWrapper>
@@ -38,6 +42,7 @@ function MainPage() {
       </MainWrapper>
 
     </div>
+    </LikeProvider>
   )
 }
 

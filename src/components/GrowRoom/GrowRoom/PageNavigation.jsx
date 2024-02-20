@@ -11,6 +11,8 @@ import gonext_arrow from '../../../icon/arrow4.png'
 import gonext_arrow_disable from '../../../icon/arrow3.png'
 
 import PostBox from '../../common/PostBox';
+import { useLike } from '../../../redux/LikeContext'; 
+
 
 const PostContainer = styled.div`
   display: flex;
@@ -109,6 +111,7 @@ const PageNavigation = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12; // 한 페이지에 표시할 항목 수
   const totalPages = Math.ceil(data.length / itemsPerPage); // 전체 페이지 수
+  const { like, updateLikeStatus } = useLike();
 
   // 현재 페이지에 해당하는 데이터 추출
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -176,7 +179,6 @@ const PageNavigation = ({ data }) => {
 
     setCurrentPage(newPage);
   };
-
   return (
     <div>
       <PostContainer>
@@ -191,6 +193,7 @@ const PageNavigation = ({ data }) => {
             deadline={data.endDate}
             like={data.likedByUser}
             key={data.growRoomId} 
+            updateLikeStatus={updateLikeStatus}
           />
         ))}
       </PostContainer>

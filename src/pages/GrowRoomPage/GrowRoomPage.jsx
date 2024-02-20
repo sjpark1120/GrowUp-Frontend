@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import GrowRoomNavigation from '../../components/GrowRoom/GrowRoom/GrowRoomNavigation';
 import { useNavigate } from 'react-router-dom';
 import GrowRoomApi from '../../apis/GrowRoomApi'
+import { useLike, LikeProvider } from '../../redux/LikeContext'; 
 
 import banner from '../../icon/banner2.png'
 import Dropdown from '../../components/GrowRoom/GrowRoom/DropDown';
@@ -77,6 +78,7 @@ const GrowRoomPage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('전체');
   const [isActive, setIsActive] = useState('전체');
   const [searchQuery, setSearchQuery] = useState(''); 
+  const { like, updateLikeStatus } = useLike() || {}; 
 
   const handleButtonClick = () => {
     setIsActive((prevIsActive) => (prevIsActive === '전체' ? '모집중' : '전체'));
@@ -111,7 +113,7 @@ const GrowRoomPage = () => {
     const emojis = new RegExp(emojisToRemove.join('|'), 'gu');
     return text.replace(emojis, '');
   }
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -138,22 +140,21 @@ const GrowRoomPage = () => {
     };
   
     fetchData();
-  }, [selectedNavItem, selectedCategory, selectedPeriod, isActive, searchQuery]);
+  }, [selectedNavItem, selectedCategory, selectedPeriod, isActive, searchQuery, like]); 
 
   
-  const navigate = useNavigate(); // useNavigate를 사용
-
+  const navigate = useNavigate();
   const handleWriteButtonClick = () => {
-    // "/growroom/write" 경로로 이동
     navigate('/growroom/write');
   };
 
 
   return (
+    <LikeProvider>
     <div>
     <TopBanner src={banner} alt="banner" />
     <MainWrapper>
-      <PopularPosts/>
+    <PopularPosts />
       <div style={{ paddingBottom: '50px', display: 'flex'}}>
         <Title>GROW ROOM </Title>
         <GrowRoomNavigation 
@@ -187,6 +188,7 @@ const GrowRoomPage = () => {
       <PageNavigation data={posts}/>
     </MainWrapper>
     </div>
+    </LikeProvider>
   );
 };
 
