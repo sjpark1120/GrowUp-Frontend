@@ -53,7 +53,7 @@ const LeftBtn = styled.img`
     cursor: pointer;
 `
 
-function RankingBox() {
+function RankingBox({ data }) {
   const swiperRef = useRef();
   const [isScrollRight, setIsScrollRight] = useState(true);
   const scrollRight = () => {
@@ -67,8 +67,8 @@ function RankingBox() {
   return (
     <div style={{ position: 'relative'}}>
       <RankingSwiper ref={swiperRef}>
-        {dummyRanking.map((rankingData, idx) => (
-          <UserRanking key={idx} rankingData={rankingData} />
+        {data.map((rankingData, idx) => (
+          <UserRanking key={idx} rankingData={rankingData} rank={idx+1} />
         ))}
         {isScrollRight ? (
           <OverflowBoxRight>

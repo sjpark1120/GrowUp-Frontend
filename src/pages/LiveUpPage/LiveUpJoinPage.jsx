@@ -34,6 +34,8 @@ import OverlayBox from "../../components/LiveUpPage/OverlayBox";
 import { dummyData as dummy } from "../../DummyData";
 import kurentoUtils from "kurento-utils";
 import { client } from "../../apis/mypageEdit";
+import LiveUpParticipantList from "../../components/LiveUpPage/LiveUpParticipantList";
+
 
 function ScreenComponent({
   image,
@@ -936,73 +938,7 @@ function LiveUpJoinPage() {
         </Playbar>
       </ScreenBlock>
       <ParticipantsBlock>
-        <div className="title">
-          <div className="subtitle">LIVE UP 참여자</div>
-          <ul className="btn">
-            <li>전체</li>
-            <li>
-              <img src={rank} alt="rank" />
-            </li>
-            <li>
-              <img src={name} alt="name" />
-            </li>
-            <li>
-              <img src={register} alt="register" />
-            </li>
-          </ul>
-        </div>
-        <CardBlock>{dummyData}</CardBlock>
-        <PageNationBar>
-          <div className="page">
-            <div
-              onClick={() => {
-                setCurrentPage(1);
-              }}
-            >
-              {currentPage !== 1 ? (
-                <img src={arrow11} alt="" />
-              ) : (
-                <img src={arrow12} alt="" />
-              )}
-            </div>
-            <div
-              className="arrow_left"
-              onClick={() => {
-                if (currentPage !== 1) setCurrentPage(currentPage - 1);
-              }}
-            >
-              {currentPage !== 1 ? (
-                <img src={arrow5} alt="" />
-              ) : (
-                <img src={arrow6} alt="" />
-              )}
-            </div>
-            {pagination}
-            <div
-              className="arrow_right"
-              onClick={() => {
-                if (currentPage !== totalPages) setCurrentPage(currentPage + 1);
-              }}
-            >
-              {currentPage === totalPages ? (
-                <img src={arrow4} alt="" />
-              ) : (
-                <img src={arrow3} alt="" />
-              )}
-            </div>
-            <div
-              onClick={() => {
-                setCurrentPage(totalPages);
-              }}
-            >
-              {currentPage !== totalPages ? (
-                <img src={arrow9} alt="" />
-              ) : (
-                <img src={arrow10} alt="" />
-              )}
-            </div>
-          </div>
-        </PageNationBar>
+        <LiveUpParticipantList />
       </ParticipantsBlock>
     </LiveUpJoinPageBlock>
   );
