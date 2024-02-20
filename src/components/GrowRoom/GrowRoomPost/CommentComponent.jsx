@@ -5,7 +5,6 @@ import CommentApi from '../../../apis/CommentApi';
 import TodoListApi from '../../../apis/TodoListApi';
 import ReplyComponent from './ReplyComponent';
 
-
 const All = styled.div`
   padding-bottom: 70px;
 `;
@@ -62,6 +61,7 @@ const Circle = styled.div`
 
 const CommentContent = styled.div`
   flex: 1;
+  margin-bottom:5px;
 `;
 
 const CommentMeta = styled.div`
@@ -102,61 +102,49 @@ const CommentButton = styled.button`
     color: black;
   }
 `;
-/////////////////////////////////////////////////////////////////////////////////////////
-
 
 const CommentComponent = ({ index }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [editingIndex, setEditingIndex] = useState(null);
-  const [pinId, setPinId] = useState(null); // 추가: pinId 상태 추가
+  const [pinId, setPinId] = useState(null);
   const [userNickName, setUserNickName] = useState(null);
   const [replyingPinId, setReplyingPinId] = useState(null);
-
-
   const postId = index;
+  const isEditing = editingIndex !== null;
+
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        // 페이지 로드시 기존 댓글 데이터를 가져와서 설정
         const existingComments = await CommentApi.getComment(postId);
-        console.log('existingComments', existingComments);
-        //대댓글도...................
-    
-        // 이전 댓글 상태 유지하면서 새로운 댓글 추가
+
+        
         setComments(existingComments.map((comment) => ({
           pinId: comment.pinId,
           text: comment.comment,
           user: comment.nickName,
           date: new Date(comment.createdAt).toLocaleString(),
+          replies: [],
         })));
-
       } catch (error) {
         console.error('기존 댓글 데이터 가져오기 실패:', error);
       }
     };
-    
 
     fetchComments();
-  }, [postId, pinId]); // postId 또는 pinId가 변경될 때마다 실행
-
-
+  }, [postId, pinId]);
 
   const addComment = async () => {
     if (newComment.trim() !== '') {
       try {
         const userDataResponse = await TodoListApi.getProfile();
         setUserNickName(userDataResponse);
-        console.log('유저데이터:', userDataResponse);
-
-        console.log('userDataResponse.nickName',userDataResponse.nickName)
-
         if (userDataResponse && userDataResponse.nickName) {
           const response = await CommentApi.postComment({ comment: newComment }, postId);
           const latestComment = response[response.length - 1];
           const newPinId = latestComment.pinId;
-  
+
           setPinId(newPinId);
           setComments([
             ...comments,
@@ -183,27 +171,22 @@ const CommentComponent = ({ index }) => {
     setNewComment(comments[commentIndex].text);
   };
 
-// ...
-
-const saveComment = async () => {
-  if (newComment.trim() !== '') {
-    try {
-      const response = await CommentApi.putComment({ comment: newComment }, postId, comments[editingIndex].pinId);
-      console.log('서버 응답:', response);
-      const updatedComments = [...comments];
-      updatedComments[editingIndex].text = newComment;
-      updatedComments[editingIndex].date = new Date(response.createdAt).toLocaleString();
-      setComments(updatedComments);
-      setEditingIndex(null);
-      setNewComment('');
-      setPinId(null);
-    } catch (error) {
-      console.error('댓글 저장 오류:', error);
+  const saveComment = async () => {
+    if (newComment.trim() !== '') {
+      try {
+        const response = await CommentApi.putComment({ comment: newComment }, postId, comments[editingIndex].pinId);
+        const updatedComments = [...comments];
+        updatedComments[editingIndex].text = newComment;
+        updatedComments[editingIndex].date = new Date(response.createdAt).toLocaleString();
+        setComments(updatedComments);
+        setEditingIndex(null);
+        setNewComment('');
+        setPinId(null);
+      } catch (error) {
+        console.error('댓글 저장 오류:', error);
+      }
     }
-  }
-};
-
-  
+  };
 
   const deleteComment = async (pinId) => {
     try {
@@ -211,16 +194,17 @@ const saveComment = async () => {
       const updatedComments = comments.filter((comment) => comment.pinId !== pinId);
       setComments(updatedComments);
       setEditingIndex(null);
-      setPinId(null); 
+      setPinId(null);
     } catch (error) {
       console.error('댓글 삭제 오류:', error);
     }
   };
-  
-  //대댓글
+
   const startReplying = (pinId) => {
     setReplyingPinId(pinId);
   };
+
+
 
   const addReplyToComment = (parentPinId, replyData) => {
     setComments((prevComments) => {
@@ -229,7 +213,6 @@ const saveComment = async () => {
       updatedComments[parentCommentIndex].replies.push(replyData);
       return updatedComments;
     });
-    // 대댓글이 추가되었을 때 replyingPinId를 초기화하여 입력창이 사라지도록 처리
     setReplyingPinId(null);
   };
 
@@ -244,6 +227,7 @@ const saveComment = async () => {
           {comments.map((comment) => (
             <CommentItem key={comment.pinId}>
               <Circle />
+              
               <CommentContent>
                 <user>
                   <strong>{comment.user}</strong>
@@ -256,9 +240,8 @@ const saveComment = async () => {
                       onChange={(e) => setNewComment(e.target.value)}
                     />
                     <CommentButtons>
-                      <CommentButton onClick={() =>saveComment(pinId)}>저장</CommentButton>
+                      <CommentButton onClick={() => saveComment(pinId)}>저장</CommentButton>
                       <CommentButton onClick={() => setEditingIndex(null)}>취소</CommentButton>
-                     
                     </CommentButtons>
                   </>
                 ) : (
@@ -266,39 +249,43 @@ const saveComment = async () => {
                 )}
                 {editingIndex !== comment.pinId ? (
                   <>
+
                     <CommentButtons>
                       <CommentButton onClick={() => editComment(comment.pinId)}>수정</CommentButton>
-                      <CommentButton onClick={() =>deleteComment(comment.pinId)}>삭제</CommentButton>
+                      <CommentButton onClick={() => deleteComment(comment.pinId)}>삭제</CommentButton>
                       <CommentButton onClick={() => startReplying(comment.pinId)}>대댓글</CommentButton>
                     </CommentButtons>
+                    
                   </>
                 ) : null}
                 {replyingPinId === comment.pinId && (
                   <ReplyComponent
-                  postId={postId}
-                  parentPinId={comment.pinId}
-                  userNickName={userNickName}
-                  onAddReply={(replyData) => addReplyToComment(comment.pinId, replyData)}
-                />
+                    postId={postId}
+                    parentPinId={comment.pinId}
+                    userNickName={userNickName}
+                    onAddReply={(replyData) => addReplyToComment(comment.pinId, replyData)}
+                  />
                 )}
               </CommentContent>
             </CommentItem>
           ))}
         </ul>
       </WriteForm>
-
+      {!isEditing && (
       <WriteForm>
         <Circle>
+
           <textarea
             placeholder="댓글을 입력하세요..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           />
+
         </Circle>
         {editingIndex !== null ? (
           <>
             <CommentButtons>
-              <CommentButton onClick={saveComment}>저장</CommentButton>
+              <CommentButton onClick={() => saveComment(pinId)}>저장</CommentButton>
               <CommentButton onClick={() => setEditingIndex(null)}>취소</CommentButton>
             </CommentButtons>
           </>
@@ -306,6 +293,8 @@ const saveComment = async () => {
           <CommentButton onClick={addComment}>댓글 달기</CommentButton>
         )}
       </WriteForm>
+                )}
+
     </All>
   );
 };
