@@ -29,6 +29,14 @@ AxiosInstance.interceptors.response.use(
         error.config.headers.Authorization = accessToken;
       }
       return AxiosInstance(error.config);
+    }else if (error.response?.data.code === "JWT4100") {
+      console.log("토큰 만료입니다 다시 토큰 재발급후 시도")
+      error.config.sent = true;
+      const accessToken = await onSilentRefresh();
+      if (accessToken) {
+        error.config.headers.Authorization = accessToken;
+      }
+      return AxiosInstance(error.config);
     }
     return Promise.reject(error);
   }
