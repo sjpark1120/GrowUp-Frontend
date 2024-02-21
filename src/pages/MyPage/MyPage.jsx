@@ -68,9 +68,10 @@ const ProfileContainer = styled.div`
 `;
 
 const ProfileImage = styled.img`
-  width: 196px;
-  height: auto;
-`;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;,
+  `;
 
 const PencilButton = styled.img`
   position: absolute;
@@ -119,24 +120,26 @@ function MyPage() {
     <div>
       <div style={{ width: 'auto', height: '40px', background: '#141414' }} />
       <MainWrapper>
-      {userData && (
-        <HeaderTextWrapper>
-          <MainText style={{ color: '#00D749' }}>{userData.nickName} </MainText>
-          <MainText style={{ color: '#090909' }}>님! 오늘도 화이팅 입니다!</MainText>
-        </HeaderTextWrapper>
-      )}
-        <TodoAndProfileWrapper>
-          <ProfileInfoWrapper>
-            <ProfileContainer onClick={handleProfileClick}>
-              <ProfileImage src={profile_img} alt="Profile" />
-              <PencilButton src={pencil_btn} alt="Edit Profile" />
-            </ProfileContainer>
-            <TimeInfoText>누적 성장 시간</TimeInfoText>
-            <TimeValueText> {timeData} </TimeValueText>
-          </ProfileInfoWrapper>
-          <TodoList todoList={TodoData} />
-        </TodoAndProfileWrapper>
-        <MyCalendar calendarLists={calendarData} onEventsChange={fetchData} />
+        {userData && (
+          <>
+            <HeaderTextWrapper>
+              <MainText style={{ color: '#00D749' }}>{userData.nickName} </MainText>
+              <MainText style={{ color: '#090909' }}>님! 오늘도 화이팅 입니다!</MainText>
+            </HeaderTextWrapper>
+            <TodoAndProfileWrapper>
+              <ProfileInfoWrapper>
+                <ProfileContainer onClick={handleProfileClick}>
+                  <ProfileImage src={userData.photoUrl} alt="Profile" />
+                  <PencilButton src={pencil_btn} alt="Edit Profile" />
+                </ProfileContainer>
+                <TimeInfoText>누적 성장 시간</TimeInfoText>
+                <TimeValueText> {timeData} </TimeValueText>
+              </ProfileInfoWrapper>
+              <TodoList todoList={TodoData} />
+            </TodoAndProfileWrapper>
+            <MyCalendar calendarLists={calendarData} onEventsChange={fetchData} />
+          </>
+        )}
       </MainWrapper>
     </div>
   );
