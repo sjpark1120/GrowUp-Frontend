@@ -22,7 +22,12 @@ const Circle = styled.div`
   background-color: #B0B0B0;
   margin-right: 15px;
 `;
-
+const ProfileImage = styled.img`
+  width: 56px;
+  border-radius:50%;
+  height: 56px;
+  margin-right:15px;
+`;
 const UserName = styled.div`
   font-weight: bold;
   color: #333;
@@ -112,7 +117,7 @@ const PostTitle = ({data}) => {
   return (
     <div>
       <Container>
-        <Circle></Circle>
+        <ProfileImage src={postData.photo_url} alt="Profile" />
         {postData ? (
           <>
             <UserName>{postData.nick_name}</UserName>
