@@ -38,7 +38,7 @@ const LiveUpApi = {
           filter
         }
       });
-      //console.log("get Ranking success", response);
+      console.log("get Ranking success", response);
       return response.data;
     } catch (error) {
       console.error('Error in get Ranking :', error);
