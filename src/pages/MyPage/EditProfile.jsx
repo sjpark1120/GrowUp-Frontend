@@ -398,7 +398,7 @@ const EditProfile = () => {
                 <img
                   src={myInfo?.photoUrl ?? mypageIcon}
                   alt="mypageIcon"
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", width: "200px", height: "200px", borderRadius: "50%", }}
                 />
               </label>
             </div>
