@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import CommentApi from '../../../apis/CommentApi';
 import TodoListApi from '../../../apis/TodoListApi';
 import ReplyComponent from './ReplyComponent';
+import profile_img from '../../../icon/profile_img.png';
 
 const All = styled.div`
   padding-bottom: 70px;
@@ -103,6 +104,14 @@ const CommentButton = styled.button`
   }
 `;
 
+
+const ProfileImage = styled.img`
+  width: 56px;
+  border-radius:50%;
+  height: 56px;
+  margin-right:15px;
+`;
+
 const CommentComponent = ({ index }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -119,21 +128,27 @@ const CommentComponent = ({ index }) => {
       try {
         const existingComments = await CommentApi.getComment(postId);
 
-        
+        console.log('existingComments.comment',existingComments.comment)
+
         setComments(existingComments.map((comment) => ({
           pinId: comment.pinId,
           text: comment.comment,
           user: comment.nickName,
           date: new Date(comment.createdAt).toLocaleString(),
+          profilePic:comment.profilePic,
+
           replies: [],
         })));
+        
       } catch (error) {
         console.error('기존 댓글 데이터 가져오기 실패:', error);
       }
+
     };
 
     fetchComments();
   }, [postId, pinId]);
+  
 
   const addComment = async () => {
     if (newComment.trim() !== '') {
@@ -153,6 +168,7 @@ const CommentComponent = ({ index }) => {
               text: newComment,
               user: userDataResponse.nickName,
               date: new Date(latestComment.createdAt).toLocaleString(),
+
             },
           ]);
           setNewComment('');
@@ -226,7 +242,7 @@ const CommentComponent = ({ index }) => {
         <ul>
           {comments.map((comment) => (
             <CommentItem key={comment.pinId}>
-              <Circle />
+              <ProfileImage src={comment.profilePic} alt="Profile" />
               
               <CommentContent>
                 <user>
