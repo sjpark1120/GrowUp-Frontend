@@ -48,7 +48,7 @@ const PopularPosts = () => {
     };
 
     fetchData();
-  }, []); 
+  }, [user.isLogin]); 
 
   const itemsPerPage = 4;
   const totalItems = hotPosts.length;
