@@ -21,10 +21,12 @@ sagaMiddleware.run(rootSaga);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <Provider store={store}>
-      <ScrollToTop />
-      <GlobalStyles />
-      <App />
-    </Provider>
+    <React.StrictMode>
+      <Provider store={store}>
+        <ScrollToTop />
+        <GlobalStyles />
+        <App />
+      </Provider>
+    </React.StrictMode>
   </BrowserRouter>
 );
