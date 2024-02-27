@@ -5,7 +5,9 @@
 다른 사람과 함께 성장할 수 있는 웹 커뮤니티 
 
 ## 🌲배포 주소
-**https://growup-umc5th.netlify.app/**
+배포주소: **https://growup-umc5th.netlify.app/**
+
+시연영상: **https://youtu.be/zsk_1Pd_65o?si=sitLWXOhn7uqvydX**
 
 
 ## 🌱프로젝트 소개
